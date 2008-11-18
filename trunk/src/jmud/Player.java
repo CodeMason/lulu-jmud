@@ -27,8 +27,9 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class Player implements Serializable, Target {
+	private static final long serialVersionUID = 6040847714517522106L;
 
-    final static int MAP_START_ROOM = 1;
+	final static int MAP_START_ROOM = 1;
 
     private static Map<String, Field> flagsByAlias = new HashMap<String, Field>();
     private static Set<Field> flags = new HashSet<Field>();
