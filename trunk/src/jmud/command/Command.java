@@ -1,5 +1,7 @@
 package jmud.command;
 
+import java.util.ArrayList;
+
 /*
  * Command.java
  *
@@ -46,7 +48,14 @@ public abstract class Command {
      */
     public abstract boolean exec();
 
-    /** return the list of commands this command should respond too */
-    //public static String[] names(){ return new String[]{""}; }
+    /** return the list of commands this command should respond to */
+    //protected static String[] names(){ return new String[]{""}; }
+    protected ArrayList<String> aliases = new ArrayList<String>();
+    public ArrayList<String> getAliases() {
+    	return this.aliases;
+    }
+    public boolean hasAlias(String alias) {
+    	return this.aliases.contains(alias);
+    }
 }
 
