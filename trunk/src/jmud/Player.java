@@ -1,35 +1,25 @@
 package jmud;
 
-/*
- * Player.java
+/**
+ * A role playing personna to be controlled and used to interact with the game;
+ * this class has a lot of the game code for controlling player state in response
+ * to events like taking damage, poison, etc. We'll probably want to move this
+ * into separate classes, e.g. DamageEvent, or DamageHandler
  *
  * Created on April 21, 2002, 4:24 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
-
-/**
- * A role playing personna to be controlled and used to interact with the game
- *
- * @author  Chris Maguire
- * @version 0.02
  */
 
-import jmud.slot.Slot;
 import jmud.item.Item;
+import jmud.slot.Slot;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class Player implements Serializable, Target {
 	private static final long serialVersionUID = 6040847714517522106L;
 
-	final static int MAP_START_ROOM = 1;
+	static final int MAP_START_ROOM = 1;
 
     private static Map<String, Field> flagsByAlias = new HashMap<String, Field>();
     private static Set<Field> flags = new HashSet<Field>();
@@ -38,7 +28,7 @@ public class Player implements Serializable, Target {
 
     // settings
     @Flag(name = "debug", aliases = {"debug"})
-    public boolean debug = false;
+    public boolean debug;
 
     @Flag(name = "auto look", aliases = {"auto look", "autolook"})
     public boolean autoLook = true; // should the player automatically look when entering a new room?
@@ -53,9 +43,11 @@ public class Player implements Serializable, Target {
 
     // health
     private int maxHP = 1;
+    @SuppressWarnings({"RedundantFieldInitialization"})
     private int currHP = 0;
 
     // armor
+    @SuppressWarnings({"RedundantFieldInitialization"})
     private int iAC = 0;
 
     // stats
@@ -100,10 +92,12 @@ public class Player implements Serializable, Target {
                 // DEBUG: are we getting any fields?
                 //System.out.println(field.getName());
 
+                // DEBUG: field has annotation?
+                /*
                 for(Annotation a : field.getDeclaredAnnotations()) {
-                    // DEBUG: field has annotation?
-                    //System.out.println("[Field " + field.getName() + " has annotation " + a.toString() + "]");
+                    System.out.println("[Field " + field.getName() + " has annotation " + a.toString() + "]");
                 }
+                */
 
                 if((flag = field.getAnnotation(Flag.class)) != null) {
 
@@ -559,6 +553,12 @@ public class Player implements Serializable, Target {
         this.autoLook = autoLook;
     }
 
+    /**
+     * Grab an item, if possible
+     *
+     * @param item the item to grab
+     * @return true if the player was able to grab the item, false otherwise
+     */
     public boolean grab(Item item) {
         // if we can find a slot that is a grabber and isn't full then we're good to go
         for(Slot slot : slots.values()) {
@@ -570,6 +570,11 @@ public class Player implements Serializable, Target {
         return false;
     }
 
+    /**
+     * Check if the player has a free "grabber" (e.g. a free hand, but not limited to hands)
+     *
+     * @return true if the player has a free appendage to grab something with
+     */
     public boolean hasFreeGrabber() {
         // if we can find a slot that is a grabber and isn't full then we're good to go
         for(Slot slot : slots.values()) {

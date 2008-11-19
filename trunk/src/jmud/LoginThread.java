@@ -121,6 +121,7 @@ class LoginThread extends Thread {
     public void run() {
 
         // run indefinitely
+        //noinspection InfiniteLoopStatement
         while(true) {
             try {
                 // when a channel registers, all we do is:
@@ -157,7 +158,7 @@ class LoginThread extends Thread {
 
                     loginSelector.selectedKeys().clear();
                 } else {
-                    if(loginSelector.selectedKeys().size() > 0) {
+                    if(!loginSelector.selectedKeys().isEmpty()) {
                         // DEBUG:
                         System.out.println("Removing leftover ready keys with: loginSelector.selectedKeys().clear()");
                         // How do "ready" keys get left over?
@@ -193,6 +194,7 @@ class LoginThread extends Thread {
 
             // register the socket channel with the login selector and attach a new login
             // object to the socket channels selector key
+            //noinspection ObjectAllocationInLoop
             channel.register(loginSelector, SelectionKey.OP_READ, new Login());
 
             //channel.write(getWelcomeMessage());
@@ -207,7 +209,7 @@ class LoginThread extends Thread {
             // - get the attachment attached to that key
             // - cast the attachment to a Login
             // - set the state for that login
-            ((Login) channel.keyFor(loginSelector).attachment()).setState(Login.LOGIN);
+            ((Login) channel.keyFor(loginSelector).attachment()).setState(Login.LoginState.LOGIN);
             //so now we've started the whole login process
         }
     }
@@ -353,7 +355,7 @@ class LoginThread extends Thread {
      *
      * @param loginString Complete login information (either a login or a password)
      * @param channel     Socket Channel that the user is on
-     * @throws java.io.IOException if there io problems
+     * @throws IOException if there io problems
      */
     protected void handleCompletedLoginState(String loginString, SocketChannel channel) throws IOException {
         Player player;
@@ -384,7 +386,7 @@ class LoginThread extends Thread {
             //System.out.println("LoginThread: handleCompletedLoginState: state is " + login.getState() + " (" + login.PASSWORD + ")");
 
             //If the player has entered their password then attempt to validate the user
-            if(login.getState() == Login.PASSWORD) {
+            if(login.getState() == Login.LoginState.PASSWORD) {
 
                 // attempt to validate the users login and password
                 if(null != (player = (checkLogin(login)))) {
@@ -438,7 +440,7 @@ class LoginThread extends Thread {
                 //System.out.println("LoginThread: handleCompletedRequest: setting login state to pwd");
 
                 // update the login state
-                login.setState(Login.PASSWORD);
+                login.setState(Login.LoginState.PASSWORD);
 
                 // give the user the password prompt
                 try {
@@ -458,7 +460,7 @@ class LoginThread extends Thread {
      * @throws Exception java.nio.charset.CharacterCodingException
      */
     protected ByteBuffer getLoginRequest() throws Exception {
-        ByteBuffer buffer = null;
+        ByteBuffer buffer;
 
         // make a message
         CharBuffer chars = CharBuffer.allocate(6);
@@ -480,7 +482,7 @@ class LoginThread extends Thread {
      * @throws Exception no idea what this would throw
      */
     protected ByteBuffer getPasswordRequest() throws Exception {
-        ByteBuffer buffer = null;
+        ByteBuffer buffer;
 
         // make a message
         CharBuffer chars = CharBuffer.allocate(9);
@@ -529,7 +531,7 @@ class LoginThread extends Thread {
      * @throws Exception java.nio.charset.CharacterCodingException
      */
     protected ByteBuffer getWelcomeMessage(String name) throws Exception {
-        ByteBuffer buffer = null;
+        ByteBuffer buffer;
 
         // make a message
         CharBuffer chars = CharBuffer.allocate(500);

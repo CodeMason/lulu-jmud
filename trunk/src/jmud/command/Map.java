@@ -9,14 +9,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-/*
+/**
+ * Represents a player's map of the world
+ *
  * Created on Jun 24, 2005
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
  *
  * TODO Determine how many rooms in a straight line a player can see
  *      (i.e. can they see 2 rooms to the south?)
@@ -43,21 +39,15 @@ import java.util.ListIterator;
  *      had colour)
  *   2) Not great UP and DOWN handling (unless we had characters or colours)
  */
-
-/**
- * Represents a player's map of the world
- *
- * @author chrism
- */
 public class Map {
     final int X = 0; // The X coord is always the first item in the coords array
     final int Y = 1; // and Y is the 2nd
 
     private Room[] rooms; // filled in from the database
-    int iMinX = 0; // these will tells us how big the 2D array needs to be
-    int iMinY = 0; // We'll take Max - Min to get the real width
-    int iMaxX = 0; // and then translate each room into the array coords
-    int iMaxY = 0;
+    int iMinX; // these will tells us how big the 2D array needs to be
+    int iMinY; // We'll take Max - Min to get the real width
+    int iMaxX; // and then translate each room into the array coords
+    int iMaxY;
     // rooms to draw
     LinkedList listRooms = new LinkedList();
     // rooms connected to already-being-drawn rooms to check for further connected rooms
@@ -65,8 +55,8 @@ public class Map {
     // room IDs of processed rooms
     LinkedList listAddedRoomIDs = new LinkedList();
     char cMap[][]; // actual 2D map array
-    int iMapWidth = 0;  // map size
-    int iMapHeight = 0; // map size
+    int iMapWidth;  // map size
+    int iMapHeight; // map size
 
     public Map() {
     }

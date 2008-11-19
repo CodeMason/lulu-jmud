@@ -10,33 +10,20 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
-/*
- * MysqlConnector.java
+/**
+ * Provides access to the database and functions to return specific data from the database
  *
  * Created on April 30, 2002, 9:49 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
  *
  * ToDo: finish the list of attributes in loadAttrIDs()
  * ToDo: finish the loadModIDs() function
  */
-
-/**
- * Provides access to the database and functions to return specific data from the database
- *
- * @author Chris Maguire
- * @version 0.1
- */
-
+@SuppressWarnings({"ObjectAllocationInLoop"})
 public class MysqlConnector {
 
     protected Connection conn;
     protected ResultSet rs;
-    protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=Quadra04";
+    protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=_____";
     protected Statement stmt;
 
     private final int ATTRIBUTE_PARAM_INDEX = 1;
@@ -51,12 +38,7 @@ public class MysqlConnector {
     int iDexterityAttributeID;
     int iDamageModifierID;
 
-    /**
-     * Constructs a new MysqlConnector for accessing the database
-     */
-    public MysqlConnector() {
-
-    }
+    public MysqlConnector() {}
 
     /**
      * Create a connection to the database and a database statement
@@ -111,11 +93,11 @@ public class MysqlConnector {
      * Find all the attribute IDs in the database and assign them to local variables
      * so that attributes can be referred to by variable rather than constant
      *
-     * @throws java.sql.SQLException if something goes awry with the db calls
+     * @throws SQLException if something goes awry with the db calls
      */
     public void loadAttrIDs() throws SQLException {
-        String strAttribute = "";
-        int iAttributeID = 0;
+        String strAttribute;
+        int iAttributeID;
 
         System.out.print("loading attribute IDs: ");
 
@@ -130,11 +112,11 @@ public class MysqlConnector {
             iAttributeID = rs.getInt(2);
 
             // assign the attributes to their variables
-            if(strAttribute.equalsIgnoreCase("strength")) {
+            if("strength".equalsIgnoreCase(strAttribute)) {
                 iStrengthAttributeID = iAttributeID;
                 // DEBUG:
                 System.out.print(".");
-            } else if(strAttribute.equalsIgnoreCase("dexterity")) {
+            } else if("dexterity".equalsIgnoreCase(strAttribute)) {
                 iDexterityAttributeID = iAttributeID;
                 // DEBUG:
                 System.out.print(".");
@@ -155,8 +137,8 @@ public class MysqlConnector {
      * so that modifiers can be referred to by variable rather than constant
      */
     public void loadModIDs() throws SQLException {
-        String strModifier = "";
-        int iModifierID = 0;
+        String strModifier;
+        int iModifierID;
 
         // DEBUG:
         System.out.print("loading modifier IDs: ");
@@ -242,7 +224,7 @@ public class MysqlConnector {
      * this to happen.
      *
      * @param rooms The Room array to fill with persisted Room objects.
-     * @throws java.sql.SQLException if something comes off the rails with the database calls
+     * @throws SQLException if something comes off the rails with the database calls
      * @see MysqlConnector#getRoomCount()
      */
     public void getRooms(Room rooms[]) throws SQLException {
@@ -295,6 +277,7 @@ public class MysqlConnector {
      * @param rooms     Array to fill with rooms
      * @return A Hash Table of the indexes of the visited rooms in the array keyed on the rooms' IDs.
      */
+    @SuppressWarnings({"ObjectAllocationInLoop"})
     public Hashtable getPlayerRooms(int iPlayerID, Room[] rooms) throws SQLException {
         int iRoomIndex = 0;
         Hashtable hashRooms = new Hashtable();
@@ -317,7 +300,7 @@ public class MysqlConnector {
             rooms[iRoomIndex] = new Room(rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7));
 
             // put the array index of this room into a hash keyed on the rooms ID
-            hashRooms.put(new Integer(rooms[iRoomIndex].getID()), new Integer(iRoomIndex));
+            hashRooms.put(rooms[iRoomIndex].getID(), iRoomIndex);
 
             // increment the array index
             iRoomIndex++;
@@ -436,7 +419,6 @@ public class MysqlConnector {
      * @param hashRooms table of room indexes mapped to their IDs
      */
     public void getPlayerRoomConnections(int iPlayerID, Room[] rooms, Hashtable hashRooms) throws SQLException {
-        int iRoomArrayIndex = 0;
         Room roomOrig;
         Room roomDest;
 
@@ -459,10 +441,10 @@ public class MysqlConnector {
             // retrieve the room from the array
 
             // get the orig room based on it's array index based on it's ID
-            roomOrig = rooms[((Integer) hashRooms.get(new Integer(rs.getInt(1))))];
+            roomOrig = rooms[((Integer) hashRooms.get(rs.getInt(1)))];
 
             // get the dest room based on it's array index based on it's ID
-            roomDest = rooms[((Integer) hashRooms.get(new Integer(rs.getInt(2))))];
+            roomDest = rooms[((Integer) hashRooms.get(rs.getInt(2)))];
 
             // add a connection from the orig room to the dest room for a certain direction reference
             roomOrig.addRoom(roomDest, rs.getString(3));
@@ -476,7 +458,7 @@ public class MysqlConnector {
      *
      * @param iRoomID The Room object to update
      * @param strDesc The new short description for the Room object
-     * @throws java.sql.SQLException on statment creation or update execution
+     * @throws SQLException on statment creation or update execution
      */
     public void setRoomShortDesc(int iRoomID, String strDesc) throws SQLException {
         int iResult;
@@ -492,7 +474,7 @@ public class MysqlConnector {
      *
      * @param playerList The <code>LinkedList</code> to append new <code>Player</code>
      *                   objects to.
-     * @throws java.sql.SQLException on sproc prepare, sproc execute or recordset close
+     * @throws SQLException on sproc prepare, sproc execute or recordset close
      */
     public void getPlayers(LinkedList<Player> playerList) throws SQLException {
 
@@ -502,6 +484,7 @@ public class MysqlConnector {
         // loop through the returned records and create Players from the records
         // to add to the passed in list of players
         while(rs.next()) {
+            //noinspection ObjectAllocationInLoop
             playerList.add(new Player(rs.getInt(1),
                 rs.getString(2),
                 rs.getString(3),
@@ -515,7 +498,8 @@ public class MysqlConnector {
                 rs.getInt(11)));
 
             // DEBUG:
-            System.out.println(((Player) playerList.getLast()).getName() + " loaded \n");
+            //noinspection ObjectAllocationInLoop
+            System.out.println(new StringBuilder().append(((Player) playerList.getLast()).getName()).append(" loaded \n").toString());
         }
 
         rs.close();
@@ -527,11 +511,12 @@ public class MysqlConnector {
      * @param login    player login to use (i.e. player name)
      * @param password player password
      * @return the player from the database
-     * @throws java.sql.SQLException on sproc prepares, sproc executes, recordset close, sproc param assignments
+     * @throws SQLException on sproc prepares, sproc executes, recordset close, sproc param assignments
      */
+    @SuppressWarnings({"ObjectAllocationInLoop"})
     public Player getPlayer(String login, String password) throws SQLException {
         int playerID;
-        Player player = null;
+        Player player;
         List<Object[]> slots = new LinkedList<Object[]>();
         List<String> aliases = new LinkedList<String>();
         List<Slot> itemSlots;
@@ -587,6 +572,7 @@ public class MysqlConnector {
                 Constructor<Slot> constructor = clazz.getConstructor(new Class[]{String.class});
                 Slot slot = constructor.newInstance(rs.getString(1));
                 //player.addSlot(slot);
+                //noinspection ObjectAllocationInLoop
                 slots.add(new Object[]{slot, rs.getInt(3)});
 
                 // DEBUG:
@@ -662,7 +648,7 @@ public class MysqlConnector {
      *                 <code>MobType</code> ID. (There will be empty spaces in the array
      *                 but I'm not overly worried about that now as the <code>MobType</code>
      *                 Array is only a temporary object (NOT a temporary solution! <grin>).
-     * @throws java.sql.SQLException on sproc prepare, sproc exexcute or recordset close
+     * @throws SQLException on sproc prepare, sproc exexcute or recordset close
      */
     public void getMobTypes(MobType mobTypes[]) throws SQLException {
         // DEBUG:
@@ -695,7 +681,7 @@ public class MysqlConnector {
      * not quite there.
      *
      * @return The number of <code>MobType</code>s stored in the database.
-     * @throws java.sql.SQLException on sproc prepare, sproc execute or rs close
+     * @throws SQLException on sproc prepare, sproc execute or rs close
      * @see MysqlConnector#getMobTypes(MobType[])
      */
     public int getMobTypeCount() throws SQLException {
@@ -735,7 +721,7 @@ public class MysqlConnector {
      *                 for the Mud.
      * @param mobTypes The previously populated <code>MobType</code> Array containing
      *                 all the <code>MobType</code>s for the Mud.
-     * @throws java.sql.SQLException on sproc prepare or execute and recordset close
+     * @throws SQLException on sproc prepare or execute and recordset close
      */
     public void getMobs(Room rooms[], MobType mobTypes[]) throws SQLException {
 
@@ -768,24 +754,20 @@ public class MysqlConnector {
     }
 
     /**
-     * Populate a <code>LinkedList</code> with Command + Alias pairs.
+     * Populate a <code>List</code> with Command + Alias pairs.
      *
      * @param commands list of commands to get aliases for
-     * @throws java.sql.SQLException if the stored procedure prepare call screws up
+     * @throws SQLException if the stored procedure prepare call screws up
      */
-    public void getCommandAliases(LinkedList<String[]> commands) throws SQLException {
+    public void getCommandAliases(List<String[]> commands) throws SQLException {
 
-        // execute a hard coded query on the database
-        //rs = stmt.executeQuery(GET_COMMAND_ALIAS_PAIRS_SQL);
-        //cstmtGetCommandAliasPairs = conn.prepareCall("{call spGetCommandAliasPairs}");
-        //rs = cstmtGetCommandAliasPairs.executeQuery();
         rs = conn.prepareCall("{call spGetCommandAliasPairs}").executeQuery();
 
         // loop through the resultant records
         while(rs.next()) {
             /*
             Create a new array with a Command + Alias pair and add it
-            to the <code>LinkedList</code>
+            to the <code>List</code>
             */
             commands.add(new String[]{rs.getString(1), rs.getString(2)});
         }
@@ -798,7 +780,7 @@ public class MysqlConnector {
      *
      * @param iPlayerID player to insert into room
      * @param iRoomID   room to insert player into
-     * @throws java.sql.SQLException creating the sproc statement, setting the values, calling the sproc
+     * @throws SQLException creating the sproc statement, setting the values, calling the sproc
      */
     public void insertPlayerRoom(int iPlayerID, int iRoomID) throws SQLException {
         CallableStatement cstmtInsertPlayerRoom = conn.prepareCall("{call spInsertPlayerRoom(?,?)}");

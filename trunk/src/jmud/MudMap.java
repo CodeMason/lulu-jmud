@@ -1,28 +1,17 @@
 package jmud;
 
-/*
- * Map.java
+import java.sql.SQLException;
+
+/**
+ * Handles interaction with the MUD world in the form of a graph of rooms
  *
  * Created on April 22, 2002, 10:28 PM
  */
-
-/**
- *
- * @author Chris Maguire
- */
-
-//import java.io.File;
-
-import java.sql.SQLException;
-
 public class MudMap {
 
     private static int iStartRoom;
     private Room[] rooms;
 
-    /**
-     * Creates new Map
-     */
     public MudMap() {
     }
 

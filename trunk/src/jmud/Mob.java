@@ -1,15 +1,9 @@
 package jmud;
 
-/*
- * Mob.java
- *
- * Created on April 28, 2002, 8:56 AM
- */
-
 /**
  * Represents a mobile entity in the mud
  *
- * @author Chris Maguire
+ * Created on April 28, 2002, 8:56 AM
  */
 public class Mob implements Target {
 

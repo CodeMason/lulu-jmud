@@ -8,32 +8,21 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-/*
-* AcceptThread.java
-*
-* Created on ?
-*
-* History
-*
-* Programmer:     Change:                                           Date:
-* ----------------------------------------------------------------------------------
-* Chris M         Cleaned up comments                               Feb 14, 2007
-*
-* ToDo Find out if one selector can listen for multiple events. We might be able to have
-*      one thread that listens to all events (connections, login information, commands, etc.).
-*      Although, having multiple threads can be handy (e.g. for setting priority).
-*/
-
 /**
  * AcceptThread waits for incoming connections.  When a connection is made,
  * a socket channel is created, added to a list of accepted connections and
  * registered with a selector that will wait for input on that channel.
  *
+ * ToDo Find out if one selector can listen for multiple events. We might be able to have
+ * one thread that listens to all events (connections, login information, commands, etc.).
+ * Although, having multiple threads can be handy (e.g. for setting priority).
+ *
+ * ToDo No one else needs access to the accept (new connection) selector so we don't need
+ * to have it as a parameter: we can just create one in the constructor.
+ *
  * @author Chris Maguire
  * @version 0.1
- *          <p/>
- *          ToDo No one else needs access to the accept (new connection) selector so we don't need
- *          to have it as a parameter: we can just create one in the constructor.
+
  */
 class AcceptThread extends Thread {
     private ServerSocketChannel ssc;

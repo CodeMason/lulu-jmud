@@ -4,33 +4,19 @@ import jmud.*;
 
 import java.nio.channels.SocketChannel;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-//import java.net.Socket;
 
-/*
- * Attack.java
+/**
+ * Executable command attack: handles a player attacking something
  *
  * Created on March 14 2003 10:17 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 14, 2007
  *
  * ToDo Calculate the damage done to the target based on the player's stats and
  *      the targets armor class
  * ToDo Either use a random attack verb (e.g. "smashes", "impales") when a player
  *      hits a target or based the verb on the amount of damage.
  * ToDo Choose an attack verb that fits the players weapon (e.g. swords don't whip or crush)
- */
-
-/**
- * Executable command attack: handles a player attacking something
  *
- * @author Chris maguire
- * @version 0.1
  */
 public class Attack extends Command {
 
@@ -81,15 +67,14 @@ public class Attack extends Command {
     public boolean exec() {
         Target target;
         SocketChannel sc = playerChannel.getSocketChannel();
-        Iterator i;
         int iDamage = 1;
         int iThac0 = 10;
-        int iHitRoll = 0;
+        int iHitRoll;
         boolean bHit;
         List<Mob> mobs;
         List<PlayerChannel> players;
         HashSet<String> mobNames = new HashSet<String>();
-        StringBuffer strbAllNames = new StringBuffer("Multiple matches: ");
+        StringBuilder strbAllNames = new StringBuilder("Multiple matches: ");
         boolean needComma = false;
 
         // DEBUG:
@@ -214,7 +199,7 @@ public class Attack extends Command {
         /* ToDo: We need to implement a strategy here to handle the attack:
             - what appendages are we attacking with?
             - what non-appendage attacks are we using?
-            - If we have multiple attacks avaiable (e.g. right-hand sword, left-foot boot), what ration
+            - If we have multiple attacks avaiable (e.g. right-hand sword, left-foot boot), what ratio
               of each attack should we use (e.g. for every two swings of the sword, throw in a kick):
             - We could even add some logic:
                - if I miss with the sword, kick the target
@@ -268,6 +253,7 @@ public class Attack extends Command {
 
             // broadcast a "HIT!" message
             try {
+                // ToDo Again, we need to replace "smashes" with something player, weapon and--potentially--mob specific
                 room.sendMessageToAll(""
                     + playerChannel.getPlayer().getName()
                     + " smashes "
@@ -289,6 +275,8 @@ public class Attack extends Command {
             // broadcast a "KILLED!" message
             // now this is retarded, but you can't rewind an iterator, have to get a new one
             try {
+                // ToDo Again, we need to replace the boring "killed" with a variety of verbs, maybe depending on the
+                // amount of excess damage, speed of the kill, number of mobs of this type already killed
                 room.sendMessageToAll(""
                     + playerChannel.getPlayer().getName()
                     + " killed "

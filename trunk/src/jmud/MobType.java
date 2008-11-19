@@ -1,20 +1,12 @@
 package jmud;
 
-/*
- * MobType.java
- *
- * Created on April 28, 2002, 8:56 AM
- */
-
 /**
  * A type of Mob (Mobile Object) that specifies the type, acronym and description of the mob.
  *
- * @author chrisma
- * @version 0.0.1
+ * Created on April 28, 2002, 8:56 AM
  */
 public class MobType {
 
-    //private int iID;
     private String strType;
     private String strAcronym;
     private String strDesc;

@@ -2,31 +2,19 @@ package jmud;
 
 import java.nio.channels.SocketChannel;
 
-/*
- * PlayerChannel.java
- *
- * Created on June 12, 2002, 9:20 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
-
 /**
  * A SocketChannel and associated Player
  *
- * @author  Chris Maguire
- * @version 0.01
+ * Created on June 12, 2002, 9:20 PM
+ *
  */
 public class PlayerChannel {
 
     private Player player;
     private SocketChannel socketchannel;
 
-    // used for writing to a players SocketChannel
-    // (which is wierd because why wouldn't the PlayerChannel be used to send a message
-    //  to a player)
+    // used for writing to a player's SocketChannel
+    // (which is weird because why wouldn't the PlayerChannel be used to send a message to a player)
     private ChannelWriter cw = new ChannelWriter();
 
     /**
@@ -50,11 +38,7 @@ public class PlayerChannel {
     public boolean equals(Object obj) {
         // if the classes match (i.e. both are player channels)
         // and the players match (cast o to PlayerChannel and get player)
-        if(obj.getClass() == this.getClass() &&
-            ((PlayerChannel) obj).player.equals(this.player)) {
-            return true;
-        }
-        return false;
+        return obj.getClass() == this.getClass() && ((PlayerChannel) obj).player.equals(this.player);
     }
 
     /*
@@ -94,7 +78,7 @@ public class PlayerChannel {
     /**
      * Sends a message to a player via their socket chanenl
      *
-     * @param strMessage
+     * @param strMessage the message to send
      * @throws Exception
      */
     public void sendMessage(String strMessage) throws Exception {
