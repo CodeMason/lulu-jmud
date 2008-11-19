@@ -1,0 +1,8 @@
+#summary news
+#labels Featured
+
+= News =
+
+Nov 18, 2008 - Number of developers doubles (from 1 to 2)
+
+Nov 18, 2008 - Up to date source code is committed to the Google Code repository
