@@ -1,42 +1,32 @@
 package jmud;
 
-/*
- * Login.java
- *
- * Created on May 2, 2002, 8:23 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
- */
-
 /**
  * Represents the state of a login process
  *
- * @author chrisma
- * @version 0.1
+ * Created on May 2, 2002, 8:23 PM
+ *
+ * ToDo: consider tracking the login attempts per username; I always thankful when I've tried to login
+ * several times with the wrong user name and it doesn't kick me out when I start trying with the right
+ * username
  */
 public class Login {
 
     // how many times the user can screw up their login
     public static int MAX_FAILS = 3;
-    public static int LOGIN = 0;
-    public static int PASSWORD = 1;
 
-    private boolean bLoggedIn = false;
-    private int iState = 0;
-    private int iFailedLoginAttempts = 0;
-    private StringBuffer strLogin;
-    private StringBuffer strPassword;
+    public enum LoginState{
+        LOGIN,
+        PASSWORD
+    }
 
-    /**
-     * Creates new Login
-     */
+    private LoginState state;
+    private int failedLoginAttempts;
+    private StringBuffer login;
+    private StringBuffer password;
+
     public Login() {
-        strLogin = new StringBuffer();
-        strPassword = new StringBuffer();
+        login = new StringBuffer();
+        password = new StringBuffer();
     }
 
     /**
@@ -45,14 +35,13 @@ public class Login {
     public void setLoginFailed() {
 
         // increment the number of failed login attempts
-        iFailedLoginAttempts++;
+        failedLoginAttempts++;
 
         // clear the login and password they tried
-        strLogin.delete(0, strLogin.length());
-        strPassword.delete(0, strPassword.length());
+        login.delete(0, login.length());
+        password.delete(0, password.length());
 
-        // set the state to "LOGIN"
-        iState = LOGIN;
+        state = LoginState.LOGIN;
     }
 
     /**
@@ -64,14 +53,14 @@ public class Login {
 
         // I use >= just in case they've managed to fail more than the max number
         // of times
-        return iFailedLoginAttempts >= MAX_FAILS;
+        return failedLoginAttempts >= MAX_FAILS;
     }
 
     /**
      * Store the current user name that the user is trying
      */
     public void saveLogin(String strLogin) {
-        this.strLogin = new StringBuffer(strLogin);
+        this.login = new StringBuffer(strLogin);
     }
 
     /**
@@ -80,14 +69,14 @@ public class Login {
      * @return StringBuffer containing the user name entered by the user
      */
     public StringBuffer getLogin() {
-        return strLogin;
+        return login;
     }
 
     /**
      * Store the current password that the user has entered
      */
-    public void savePassword(String strPassword) {
-        this.strPassword = new StringBuffer(strPassword);
+    public void savePassword(String password) {
+        this.password = new StringBuffer(password);
     }
 
     /**
@@ -96,7 +85,7 @@ public class Login {
      * @return StringBuffer containing the password entered by the user
      */
     public StringBuffer getPassword() {
-        return strPassword;
+        return password;
     }
 
     /**
@@ -104,10 +93,10 @@ public class Login {
      * store what step the user is at: are they entering their username or their
      * password?
      *
-     * @param iState Should be Login.LOGIN for "Login" and Login.PASSWORD for "Password"
+     * @param state Should be Login.LOGIN for "Login" and Login.PASSWORD for "Password"
      */
-    public void setState(int iState) {
-        this.iState = iState;
+    public void setState(LoginState state) {
+        this.state = state;
     }
 
     /**
@@ -115,8 +104,8 @@ public class Login {
      *
      * @return Number representing the login state
      */
-    public int getState() {
-        return iState;
+    public LoginState getState() {
+        return state;
     }
 
     // return the current unfinished part of whatever string we're currently
@@ -124,10 +113,10 @@ public class Login {
     // e.g. if we are currently working on login, then pass back whatever we
     //      have stored in login so far
     public StringBuffer getCurrentStateString() {
-        if(iState == Login.LOGIN) {
-            return strLogin;
+        if(LoginState.LOGIN.equals(state)) {
+            return login;
         } else {
-            return strPassword;
+            return password;
         }
     }
 

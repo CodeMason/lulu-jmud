@@ -1,41 +1,21 @@
 package jmud;
 
-//import java.nio.channels.*;
-//import java.util.LinkedList;
-
 import jmud.item.Item;
 
 import java.util.*;
-
-/*
- * Room.java
- *
- * Created on ?
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
- *
- *
- * ToDo: consider allowing the player to pick room description length by # of sentences
- *         rather than "short" or "long".
- */
 
 /**
  * A container for <CODE>Players<CODE>, <CODE>Mobs</CODE> and <CODE>Items</CODE>.
  * Links to other <CODE>Room</CODE> objects to form a world.
  *
- * @author Chris Maguire
- * @version 0.1
+ * ToDo: consider allowing the player to pick room description length by # of sentences
+ *       rather than "short" or "long".
  */
 public class Room {
 
     private final int PLAYERS = 8;
     private final int MOBS = 10;
     private final int ITEMS = 20;
-    private final Object lock = new Object();
 
     private int id;
     private int x;
@@ -60,16 +40,16 @@ public class Room {
     //private ChannelWriter cw = new ChannelWriter();
 
     // 10 way linked list!!
-    public Room north = null;
-    public Room south = null;
-    public Room east = null;
-    public Room west = null;
-    public Room northeast = null;
-    public Room northwest = null;
-    public Room southeast = null;
-    public Room southwest = null;
-    public Room up = null;
-    public Room down = null;
+    public Room north;
+    public Room south;
+    public Room east;
+    public Room west;
+    public Room northeast;
+    public Room northwest;
+    public Room southeast;
+    public Room southwest;
+    public Room up;
+    public Room down;
 
     /**
      * Creates a default <CODE>Room</CODE> object
@@ -163,7 +143,7 @@ public class Room {
                     down = room;
                     break;
             }
-            // why are we catching these if we're not using them?
+        // ToDo: why are we catching these if we're not using them?
         } catch(IndexOutOfBoundsException e) {
 
         } catch(NullPointerException e) {
@@ -320,6 +300,7 @@ public class Room {
      */
     public boolean hasPlayer(Player p) {
         /*
+          GHETTO GHETTO
           Now this is risky because we're assuming that the hashcode of a player
           channel will always be the same as the hashcode for a player.
           That's silly. (But I'm leaving like this for now)
@@ -352,7 +333,8 @@ public class Room {
         return playerChannels;
     }
 
-    /* Checks the mob hashtable for a matching Mob
+    /**
+    * Checks the mob hashtable for a matching Mob
     *
     * @param m The mob to check the room for
     *
@@ -427,7 +409,7 @@ public class Room {
      *         name of the player who's requesting the list
      */
     public String getMobAndPlayerNames(Player player) {
-        StringBuffer names = new StringBuffer();
+        StringBuilder names = new StringBuilder();
         boolean bMultipleNames = false;
 
         // this will happen O(n) where n is number of mobs
@@ -474,7 +456,7 @@ public class Room {
      *         name of the player who's requesting the list
      */
     public String getItemNames(boolean isDebug) {
-        StringBuffer items = new StringBuffer();
+        StringBuilder items = new StringBuilder();
         boolean bMultipleItems = false;
 
         // get the list of items from the hash

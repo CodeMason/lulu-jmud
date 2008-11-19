@@ -2,25 +2,20 @@ package jmud.command;
 
 import java.util.ArrayList;
 
-/*
- * Command.java
- *
- * Created on March 14 2003 10:17 PM
- */
-
 /**
  * Command is the abstract definition of an executable action.
  * <p/>
  * Commands are passed to the MUD engine for processing
  *
- * @author Chris maguire
- * @version 0.1
+ * Created on March 14 2003 10:17 PM
  */
 public abstract class Command {
 
     protected final String CRLF = "\n\r";
 
     /*
+      (Note: after reading this again in Nov '09 I don't really have a clue what I was talking about :D) 
+
       This is what I was going to do:
       create the command with everything you could possibly need
       in a command, that way, exec can be sure that it has what it needs

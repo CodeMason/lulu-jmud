@@ -7,23 +7,14 @@ import jmud.PlayerChannel;
 import jmud.Room;
 
 import java.nio.channels.SocketChannel;
-//import java.net.Socket;
-
-/*
- * Chat.java
- *
- * Created on March 28 2003 12:26 PM
- */
 
 /**
  * Executable command Chat
  * <p/>
  * Provides the functionality for chatting to all players in a room.
  *
- * @author Chris maguire
- * @version 0.1
+ * Created on March 28 2003 12:26 PM
  */
-
 public class Chat extends Command {
 
     private PlayerChannel playerChannel;

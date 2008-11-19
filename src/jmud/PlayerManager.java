@@ -1,9 +1,7 @@
 package jmud;
 /*
- * PlayerManager.java
+ * ToDo: add some notes in here as to what problem this is going to solve
  *
- * Created on 18NOV08
- * 
  */
 
 public class PlayerManager {

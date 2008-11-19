@@ -16,14 +16,12 @@ import jmud.item.Item;
 import jmud.slot.Slot;
 
 /**
- * @author root
+ * @author Chris Maguire
  */
 public class Inventory extends Command {
     private PlayerChannel playerChannel;
     private Player player;
-    //private SocketChannel sc;
     private Room room;
-    //private String strTarget;
 
     /**
      * Creates a new instance of Inventory
@@ -35,16 +33,14 @@ public class Inventory extends Command {
     public Inventory(PlayerChannel pc, Room r, String target) {
         this.playerChannel = pc;
         this.player = pc.getPlayer();
-        //this.sc = pc.getSocketChannel();
         this.room = r;
-        //this.strTarget = target;
     }
 
     public boolean exec() {
         boolean firstItem = true;
         StringBuilder msg = new StringBuilder("Items you have: ");
 
-        // whip through each slot and add item descriptions 
+        // whip through each slot and add item descriptions
         for(Slot slot : player.getSlots()) {
 
             // DEBUG:

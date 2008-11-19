@@ -7,32 +7,13 @@ import jmud.Room;
 import jmud.item.Item;
 
 import java.util.List;
-//import java.net.Socket;
-
-/*
- * Look.java
- *
- * Created on March 28 2003 12:26 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
- */
 
 /**
- * Executable command Look
- *
- * @author Chris maguire
- * @version 0.1
- */
-
-/*
- * Class: Look
- * Purpose: Extends the Command class to provide
+ * Executable command Look extends the Command class to provide
  *          the functionality for a player to look
  *          at something
+ *
+ * Created on March 28 2003 12:26 PM
  */
 public class Look extends Command {
     private static final String ALSO_HERE_PROMPT = "Also here: ";

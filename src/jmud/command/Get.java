@@ -8,12 +8,6 @@ import jmud.item.Item;
 /**
  * Executable command Look
  *
- * @author Chris maguire
- * @version 0.1
- */
-
-/*
- * Class: Look
  * Purpose: Extends the Command class to provide
  *          the functionality for a player to look
  *          at something

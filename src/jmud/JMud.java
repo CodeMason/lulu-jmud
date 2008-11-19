@@ -1,22 +1,7 @@
 package jmud;
 
-/*
- * jmud.java
- *
- * Created on April 18, 2002, 11:51 PM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
- */
-
 /**
  * Starts all the threads with their Selectors and Lists.
- *
- * @author Chris Maguire
- * @version
  */
 
 //import java.io.*;
@@ -32,6 +17,7 @@ import java.util.LinkedList;
 public class JMud {
 
     private static final int HTTPD_PORT = 9000;
+    private static final int EXECUTION_LOOP_WAIT = 1500;
     public static boolean verbose = true;
 
     // thread to listen for new connections
@@ -134,7 +120,7 @@ public class JMud {
          list that the login thread has. When the login thread calls wakeup, we'll check the list.
 
          the command listener (commandListener) also takes the commands LinkedList so that it can put
-         recurring commands in the queue for the engine thread
+         commands in the queue for the engine thread
         */
         commandListener = new CommandListenerThread(readSelector, playerChannelList, commands);
 
@@ -143,7 +129,7 @@ public class JMud {
          The engine thread will process incoming commands at an interval specified in the second
          parameter of the EngineThread constructor.
         */
-        engine = new EngineThread(commands, 1500);
+        engine = new EngineThread(commands, EXECUTION_LOOP_WAIT);
     }
 
     // ToDo: set some priorities:
