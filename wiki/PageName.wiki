@@ -1,13 +1,6 @@
-#summary lulu-jmud Main Page
+#summary news
+#labels Featured
 
-= Introduction =
+= News =
 
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Nov 19, 2008 - Number of developers doubles (from 1 to 2)
