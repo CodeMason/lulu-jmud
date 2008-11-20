@@ -17,12 +17,10 @@ public class Down extends Direction {
     private static final String SOURCE_DIRECTION = "above";
 
     private Room room;
-    private PlayerChannel playerChannel;
 
     public Down(PlayerChannel pc, Room r, String target) {
         super(pc, r);
         this.room = r;
-        this.playerChannel = pc;
     }
 
     public Room getTargetRoom() {

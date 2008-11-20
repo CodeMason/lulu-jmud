@@ -272,7 +272,7 @@ class CommandListenerThread extends Thread {
             readBuffer.clear();
 
             // grab the reference to the key attachment
-            StringBuffer requestString = ((Player) key.attachment()).strCurrentCommand;
+            StringBuffer requestString = ((Player) key.attachment()).getCurrentCommand();
 
             // append the request to the attachment's string buffer
             requestString.append(strRequest);
@@ -319,24 +319,24 @@ class CommandListenerThread extends Thread {
      *  - adding it to the command queue of the game engine.
      *
      * @param request The command to parse
-     * @param channel The SocketChannel belonging to the player that sent the command
+     * @param socketChannel The SocketChannel belonging to the player that sent the command
      */
-    protected void parseCompletedCommand(String request, SocketChannel channel) throws IOException {
+    protected void parseCompletedCommand(String request, SocketChannel socketChannel) throws IOException {
 
         // get the player from the current SocketChannel's key
-        Player p = (Player) channel.keyFor(readSelector).attachment();
+        Player player = (Player) socketChannel.keyFor(readSelector).attachment();
 
         // get the room from the player
-        Room r = p.getRoom();
+        Room room = player.getRoom();
 
         // create a new player channel for the player
-        PlayerChannel pc = new PlayerChannel(p, channel);
+        PlayerChannel playerChannel = new PlayerChannel(player, socketChannel);
 
         Command cmd;
         Constructor constr;
 
         StringTokenizer tok = new StringTokenizer(request);
-        String strCommand;
+        String command;
         StringBuilder strbTarget = new StringBuilder("");
 
         /*
@@ -346,7 +346,7 @@ class CommandListenerThread extends Thread {
         */
         if(tok.countTokens() >= 1) { //if they've sent a valid command ...
             // the command has to be the first word in the input string
-            strCommand = tok.nextToken();
+            command = tok.nextToken();
 
             // take the rest of the words and make them the target
             // (don't ask my why we take them in reverse order)
@@ -358,26 +358,26 @@ class CommandListenerThread extends Thread {
             }
 
             // DEBUG:
-            //System.out.println("getting constructor for command: " + strCommand);
+            //System.out.println("getting constructor for command: " + command);
 
             /*
               since we loaded all the constructors in the commandAliases we can just pull
               out the constructor that matches this alias
             */
-            constr = this.commandAliases.get(strCommand);
+            constr = this.commandAliases.get(command);
 
             // if we found a constructor ...
             if(constr != null) {
                 try {
                     // create a new instance of the specified command class using the
                     // player, the players room and the target string (e.g. "Bob" from "look Bob")
-                    cmd = (Command) constr.newInstance(pc, r, strbTarget.toString());
+                    cmd = (Command) constr.newInstance(playerChannel, room, strbTarget.toString());
                     commands.add(cmd);
 
                     // catch all the different types of errors for debugging purposes:
                 } catch(InstantiationException ie) {
                     // DEBUG:
-                    System.out.println("Couldn't create instance of Class \"" + strCommand + "\"");
+                    System.out.println("Couldn't create instance of Class \"" + command + "\"");
                 } catch(IllegalAccessException iae) {
                     // DEBUG:
                     System.out.println("Illegal Access Exception\nCouldn't create instance of Class \"" + constr.getName() + "\"");
@@ -391,6 +391,13 @@ class CommandListenerThread extends Thread {
             } else {
                 // DEBUG:
                 System.out.println("Class constructor is null");
+
+                try{
+                    channelwriter.sendMessage("Command \"" + command + "\" not recognized.\n\r", socketChannel);
+                    channelwriter.sendMessage(player.getPrompt(), socketChannel);
+                } catch(Exception e){
+                    System.out.println("CommandListenerThread: parseCommand: failed channelwriter.sendMessage()");
+                }
             }
         } else {
             // DEBUG:

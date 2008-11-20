@@ -5,20 +5,10 @@ import jmud.slot.Slot;
 import java.util.LinkedList;
 import java.util.List;
 
-/*
- * Item.java
- *
- * Created on April 28, 2002, 8:53 AM
- *
- * History
- *
- * Programmer:     Change:                                           Date:
- * ----------------------------------------------------------------------------------
- * Chris M         Cleaned up comments                               Feb 13, 2007
- */
-
 /**
  * Represents a virtual item in the game, e.g. a weapon, a piece of money, food, etc.
+ *
+ * Created on April 28, 2002, 8:53 AM
  *
  * @author Chris Maguire
  * @version 0.1
@@ -99,7 +89,7 @@ public class Item {
      */
     public void setName(String name) {
         this.name = name;
-        // DEBUG: 
+        // DEBUG:
         //System.out.println("Name is " + name);
     }
 
@@ -127,6 +117,7 @@ public class Item {
         this.uses = uses;
     }
 
+    // ToDo I'm thinking this should return a boolean based on whether the "use" was successful (e.g. do you have any uses left?)
     public int use() {
         return use(1);
     }

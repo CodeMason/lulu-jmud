@@ -58,13 +58,9 @@ public abstract class Direction extends Command {
      */
     public boolean exec() {
 
-        //String names;
-        //String items;
-        // Scratch that: these were used when we were handling the 'Look'ing here
-
         Room targetRoom;
 
-        // Check if there is a room to the south of the player's current room
+        // Check if there is a room in the direction specified relative to the player's current room
         if((targetRoom = getTargetRoom()) != null) {
 
             synchronized(lock) {

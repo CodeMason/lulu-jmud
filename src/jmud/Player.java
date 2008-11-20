@@ -66,7 +66,7 @@ public class Player implements Serializable, Target {
     private Room room;
 
     // unfinished input
-    public StringBuffer strCurrentCommand;
+    private StringBuffer currentCommand;
 
     private Map<String, Slot> slots;
 
@@ -130,7 +130,7 @@ public class Player implements Serializable, Target {
      * Also creates a StringBuffer for holding an unfinnished command in progress
      */
     public Player() {
-        strCurrentCommand = new StringBuffer();
+        currentCommand = new StringBuffer();
     }
 
     /**
@@ -142,7 +142,7 @@ public class Player implements Serializable, Target {
      *             players in the game will see and refer to this player as.
      */
     public Player(String name) {
-        strCurrentCommand = new StringBuffer();
+        currentCommand = new StringBuffer();
         this.name = name;
     }
 
@@ -183,7 +183,7 @@ public class Player implements Serializable, Target {
                   int constitution,
                   int dexterity,
                   int inteligence) {
-        strCurrentCommand = new StringBuffer();
+        currentCommand = new StringBuffer();
         this.iID = iID;
         this.name = name;
         this.description = desc;
@@ -234,6 +234,14 @@ public class Player implements Serializable, Target {
      */
     public int hashCode() {
         return login.hashCode();
+    }
+
+    public StringBuffer getCurrentCommand(){
+        return currentCommand;
+    }
+
+    public void setCurrentCommand(StringBuffer currentCommand){
+        this.currentCommand = currentCommand;
     }
 
     /**

@@ -3,7 +3,12 @@ package jmud;
 import java.nio.channels.SocketChannel;
 
 /**
- * A SocketChannel and associated Player
+ * A SocketChannel and associated Player. This is used mainly as a convenience class to pass
+ * socketChannels between threads with their associated player.
+ *
+ * E.g.
+ *  - Login passes authenticated player and socketChannel to Command Listener
+ *  - Command Listener passes player and socketChannel to Command Engine
  *
  * Created on June 12, 2002, 9:20 PM
  *

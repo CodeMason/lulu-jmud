@@ -192,7 +192,7 @@ public class Attack extends Command {
         }
 
         /*****************************************************************************/
-        /* AT THIS POINT WE HAVE A MOB */
+        /* AT THIS POINT WE HAVE A MOB                                               */
 
         // generate a roll (as in rolling the dice) and decide if they hit the target
         iHitRoll = (int) (Math.random() * 20);
