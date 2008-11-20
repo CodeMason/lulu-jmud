@@ -356,17 +356,18 @@ public class Room {
      *         names whose beginnings match <code>partialName</code>
      */
     public List<Mob> getMobs(String partialName) {
-        List<Mob> mobs = new ArrayList<Mob>();
-        List<Mob> list;
+        List<Mob> mobs;
 
         partialName = partialName.toLowerCase();
 
         // First we'll check the acronym hash
         // to find out if the player used the acronym
-        list = mobsByAcronym.get(partialName);
-        if(list != null && !list.isEmpty()) {
+        mobs = mobsByAcronym.get(partialName);
+        if(mobs != null && !mobs.isEmpty()) {
             return mobs;
         }
+
+        mobs = new ArrayList<Mob>();
 
         // get all the keys in the Mob partialName hash
         // check the start of each String (i.e. not Mob hashcodes) key against partialName

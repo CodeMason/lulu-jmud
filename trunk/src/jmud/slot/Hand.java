@@ -10,7 +10,7 @@
 package jmud.slot;
 
 /**
- * @author root
+ * @author Chris Maguire
  */
 public class Hand extends SingleSlot {
     private static final boolean IS_GRABBER = true;
@@ -20,8 +20,8 @@ public class Hand extends SingleSlot {
      *
      * @param name the name of the hand (e.g. left hand)
      */
-    public Hand(String name) {
-        super(name);
+    public Hand(int Id, String name) {
+        super(Id, name);
     }
 
     public int maxBulk() {
