@@ -1,0 +1,15 @@
+#summary Managing players and client communication
+#labels Featured,Phase-Design
+
+= Introduction =
+
+Discussion around the role of the PlayerManager class
+
+
+= Details =
+
+I was wondering the ideas you have for the PlayerManager class from a practical standpoint.
+
+Would the player manager simply be a place to look up Players, or will it handle sending and receiving messages to/from client connections associated with Player objects?
+
+Where is the control steretype defined? The closest I came on Google was a class that controls something, but it sounds like there are some particular roles that are associated with controllers vs. elements. 
