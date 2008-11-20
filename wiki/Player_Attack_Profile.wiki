@@ -17,7 +17,7 @@
   # What attack to use when, and how often
     * Attack 5 times with my sword then kick once?
     * Event-driven attacks
-      * Regex pattern matching? (e.g. cast a spell whenever /*.dragon.*tail/ is detected)
+      * Regex pattern matching? (e.g. cast a spell whenever /`*`.dragon.`*`tail.`*`/ is detected)
     * percentages
     * success-based attacks? (e.g. attack 5 times with everything then use what worked best)
 
