@@ -1,0 +1,16 @@
+#summary How should a Player attack a target?
+#labels Featured,Phase-Design
+
+== Ideas ==
+
+  # Allow attack profiles for mob types (i.e. spiders) 
+  # Allow attack profiles for mob "classes"?
+    * We don't have mob classes yet
+  # Allow regex patterns for matching enemies? 
+    * The programming-player in me loves this idea
+  # How to specify attacks
+    * By limb? (e.g. Right hand)
+    * By Weapon? (e.g. Sword)
+    * Either or? (e.g. attack with my sword and/or my left foot)
+    * Qualifiers? (e.g. Attack with my right hand if it's armored?)
+  # Auto attacks? (e.g. if I run up against an easy enemy just attack automatically)
