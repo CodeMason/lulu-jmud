@@ -1,4 +1,5 @@
-(Reviewed April 23, 2007)
+(CM Reviewed April 23, 2007)
+(CM Reviewed November 20, 2008)
 
 Installing Lulu's JMUD
 
@@ -49,17 +50,41 @@ Step Four: Create the JMUD Database
 Go to www.sourceforge.net/projects/lulu-jmud
 Click on the "Files" link and download the latest database backup .zip file (DB-BAK)
 Unzip the database backup script file into any directory
+
+This has changed quite drastically since the last review:
+
+a) Older versions of MySQL (I don't know exactly how old)
 Open MySQL Administrator (Start -> Programs -> MySQL -> MySQL Administrator)
 Click on the "Restore" button
 Browse for the .sql database backup file that you just unzipped
 Click "Open Backup File"
+
+b) MySQL 5.0.67
+
+- Start -> Programs -> MySQL System Tray Monitor
+- RMB on MySQL System Tray Monitor (Looks like a sprocket with a blue bar on the right)
+- Click on "Actions" -> "Manage MySQL Instances"
+- Click on the "Service Control" item in the top left pane (may already be selected)
+- Click on the "Configure Service" tab in the right hand pane
+- Click on the "Install New Service" button at the bottom of the frame
+- Configure your new MySQL instance service (I used the my-small.ini config file)
+- Click on the "Apply Changes" button (go back to previous step if you get an error)
+- Click on the "Start/Stop Service" tab
+- Start the service
+- Open MySQL Administrator (Start -> Programs -> MySQL -> MySQL Administrator)
+- Log on to "localhost"
+  - user is "root"
+  - password is blank by default (I'm not even going to say it, you should know better)
+- Click on the "Restore" button
+- Browse for the .sql database backup file that you just unzipped
+- Click "Open Backup File"
 
 Step Five: Set the classpath
 
 Note: This is for Windows only. If you are using *nix you're on your own :).
 
 Open a command prompt: Start -> Run -> "cmd" [Enter]
-Run the following command: set classpath=%classpath%;<full path to MySQL Connector/J .jar file>; 
+Run the following command: set classpath=%classpath%;<full path to MySQL Connector/J .jar file>;
   e.g. For me the command is: C:\>set classpath=%classpath%;c:\mysql-connector-java-5.0.3\mysql-connector-java-5.0.3-bin.jar;
 
 Step Six: Start the server
@@ -70,7 +95,7 @@ Run the following command: java jmud
 
 Step Seven: Create a login
 
-You can create a new login for yourself in the database or just use one that I've already created. 
+You can create a new login for yourself in the database or just use one that I've already created.
 Logins can be found in the tblPlayers table
 Open the MySQL Query Browser (Start -> Programs -> MySQL -> MySQL Query Browser)
 Run this query: select vchPlayerLogin, vchPlayerPassword from tblPlayers
@@ -80,4 +105,4 @@ Step Seven: Connect to the Server
 Open *another* command prompt: Start -> Run -> "cmd" [Enter]
 Run this command: telnet localhost 9000
 
-If you cannot connect you may need to open port 23 on your firewall. 
+If you cannot connect you may need to open port 23 on your firewall.
