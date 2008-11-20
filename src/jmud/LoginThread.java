@@ -45,7 +45,7 @@ class LoginThread extends Thread {
     private Selector commandSelector;
     private ConnectionList<SocketChannel> acceptedConnections;
     //private ConnectionList<SocketChannel> authConnections;
-    private LinkedList<PlayerChannel> playerChannelList;
+    private LinkedList<PlayerChannel> playerChannels;
     //private LinkedList <Player>playerList;
     private Selector loginSelector;
     private ByteBuffer readBuffer;
@@ -66,7 +66,7 @@ class LoginThread extends Thread {
     public LoginThread(Selector loginSelector,
                        Selector commandSelector,
                        ConnectionList<SocketChannel> acceptedConnections,
-                       LinkedList<PlayerChannel> playerchannels) throws Exception {
+                       LinkedList<PlayerChannel> playerChannels) throws Exception {
 
         // call the thread constructor to name the thread
         super("Login");
@@ -74,7 +74,7 @@ class LoginThread extends Thread {
         this.loginSelector = loginSelector;
         this.commandSelector = commandSelector;
         this.acceptedConnections = acceptedConnections;
-        playerChannelList = playerchannels;
+        this.playerChannels = playerChannels;
         //playerList = new LinkedList<Player>();
         this.readBuffer = ByteBuffer.allocateDirect(READ_BUFFER_SIZE);
 
@@ -409,7 +409,7 @@ class LoginThread extends Thread {
                     channel.keyFor(loginSelector).cancel();
 
                     // create playerChannel and push onto playerChannel linked list
-                    playerChannelList.add(new PlayerChannel(player, channel));
+                    playerChannels.add(new PlayerChannel(player, channel));
 
                     commandSelector.wakeup();
                     return;
@@ -516,7 +516,7 @@ class LoginThread extends Thread {
         } catch(SQLException se) {
             System.out.println("LoginThread.checkLogin() --> " + se);
         } finally {
-            mSqlConn = null;
+            mSqlConn.close();
         }
 
         // The login object's username and password didn't match any players

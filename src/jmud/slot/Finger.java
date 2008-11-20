@@ -25,8 +25,8 @@ public class Finger extends MultiSlot {
     /**
      * Creates a new instance of Finger
      */
-    public Finger(String name) {
-        super(name);
+    public Finger(int Id, String name) {
+        super(Id, name);
     }
 
     public int maxBulk() {

@@ -28,8 +28,8 @@ public abstract class MultiSlot extends Slot {
      *
      * @param name name of the slot
      */
-    public MultiSlot(String name) {
-        super(name);
+    public MultiSlot(int Id, String name) {
+        super(Id, name);
         items = new LinkedList<Item>();
     }
 

@@ -18,8 +18,8 @@ public class Foot extends SingleSlot {
     /**
      * Creates a new instance of Foot
      */
-    public Foot(String name) {
-        super(name);
+    public Foot(int Id, String name) {
+        super(Id, name);
     }
 
     public int maxBulk() {

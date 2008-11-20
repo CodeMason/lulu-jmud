@@ -28,8 +28,8 @@ public abstract class SingleSlot extends Slot {
      *
      * @param name name of the new slot
      */
-    public SingleSlot(String name) {
-        super(name);
+    public SingleSlot(int Id, String name) {
+        super(Id, name);
     }
 
     public int itemCount() {

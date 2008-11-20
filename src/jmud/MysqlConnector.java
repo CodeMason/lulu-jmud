@@ -23,7 +23,7 @@ public class MysqlConnector {
 
     protected Connection conn;
     protected ResultSet rs;
-    protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=_____";
+    protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=";
     protected Statement stmt;
 
     private final int ATTRIBUTE_PARAM_INDEX = 1;
@@ -517,7 +517,7 @@ public class MysqlConnector {
     public Player getPlayer(String login, String password) throws SQLException {
         int playerID;
         Player player;
-        List<Object[]> slots = new LinkedList<Object[]>();
+        List<Slot> slots = new LinkedList<Slot>();
         List<String> aliases = new LinkedList<String>();
         List<Slot> itemSlots;
 
@@ -569,16 +569,15 @@ public class MysqlConnector {
         while(rs.next()) {
             try {
                 Class clazz = Class.forName(rs.getString(2));
-                Constructor<Slot> constructor = clazz.getConstructor(new Class[]{String.class});
-                Slot slot = constructor.newInstance(rs.getString(1));
-                //player.addSlot(slot);
+                Constructor<Slot> constructor = clazz.getConstructor(new Class[]{Integer.TYPE, String.class});
+
                 //noinspection ObjectAllocationInLoop
-                slots.add(new Object[]{slot, rs.getInt(3)});
+                slots.add(constructor.newInstance(rs.getInt(3), rs.getString(1)));
 
                 // DEBUG:
                 System.out.print(".");
             } catch(Exception e) {
-                System.out.println("Failed to load player slot \n");
+                System.out.println("Failed to load player slot \n" + e.getMessage());
             }
         }
 
@@ -586,12 +585,12 @@ public class MysqlConnector {
 
         System.out.println("\n");
 
-        for(Object[] o : slots) {
+        for(Slot slot : slots) {
             // DEBUG:
             //System.out.print("Getting player slots aliases and items: ");
 
             aliases.clear();
-            cstmtGetSlotAliases.setInt(1, (Integer) o[1]);
+            cstmtGetSlotAliases.setInt(1, slot.getId());
             rs = cstmtGetSlotAliases.executeQuery();
             while(rs.next()) {
                 try {
@@ -604,11 +603,11 @@ public class MysqlConnector {
                 }
             }
             rs.close();
-            ((Slot) o[0]).setAliases(aliases);
-            player.addSlot((Slot) o[0]);
+            slot.setAliases(aliases);
+            player.addSlot(slot);
 
             // set the slot ID param and get the items for that player and slot
-            cstmtGetPlayerSlotItems.setInt(2, ((Integer) o[1]));
+            cstmtGetPlayerSlotItems.setInt(2, slot.getId());
 
             //System.out.println("getting player slot items for player " + playerID + " and slot " + ((Integer)o[1]).toString());
 
@@ -616,9 +615,9 @@ public class MysqlConnector {
             while(rs.next()) {
                 // add the current slot to the list of slots that this item can go in
                 itemSlots = new LinkedList<Slot>();
-                itemSlots.add(((Slot) o[0]));
+                itemSlots.add(slot);
 
-                ((Slot) o[0]).addItem(new Item(rs.getInt(1), rs.getString(8), rs.getInt(4), rs.getInt(5), rs.getInt(3), rs.getInt(6), itemSlots));
+                slot.addItem(new Item(rs.getInt(1), rs.getString(8), rs.getInt(4), rs.getInt(5), rs.getInt(3), rs.getInt(6), itemSlots));
 
                 // DEBUG:
                 //System.out.println("Item name: " + ((Slot)o[0]).getItems().get(0).getName());
