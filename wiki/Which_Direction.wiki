@@ -1,0 +1,19 @@
+#summary Where to go from here
+#labels Featured,Phase-Design
+
+== Where to go from here? ==
+
+Now that JMUD is a functioning MUD (barely) we have a lot of options for what to develop next: 
+
+  # Colored output
+  # ORM database layer
+  # Finish up the inventory code
+  # Flesh out the attack code
+    # Using weapons
+    # Multiple attacks (e.g. Foot and hand)
+    # Attack profiles
+  # More mapping functionality
+  # In game world editing
+  # NPCs
+  # Shops
+  # Enemy AI
