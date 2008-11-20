@@ -14,3 +14,11 @@
     * Either or? (e.g. attack with my sword and/or my left foot)
     * Qualifiers? (e.g. Attack with my right hand if it's armored?)
   # Auto attacks? (e.g. if I run up against an easy enemy just attack automatically)
+  # What attack to use when, and how often
+    * Attack 5 times with my sword then kick once?
+    * Event-driven attacks
+      * Regex pattern matching? (e.g. cast a spell whenever /*.dragon.*tail/ is detected)
+    * percentages
+    * success-based attacks? (e.g. attack 5 times with everything then use what worked best)
+
+  Almost seems like there needs to be a separate Player Attack Engine, kind of like V.A.T.S in Fallout 3.
