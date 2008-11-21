@@ -1,11 +1,29 @@
 #summary How should a Player attack a target?
 #labels Featured,Phase-Design
 
-== What is an Attack Profile? ==
+== The Problem ==
 
-By an "attack profile" I'm envisioning a strategy for a particular combat situation that determines what actions to take and when: the actions could be offensive, defensive, or potentially anything else; the "when" will be the triggers such as "when attacked by enemy X" or possibly "when enemy Y does attack Z".
+Different enemies will be affected differently by different attacks. I don't want to manually type in what type and ratio of attacks to use against particular enemies, e.g. "kick, kick, kick, punch, stab, kick, kick, kick, &c."
+
+== Solutions ==
+
+  # Macros
+    * specify what to do, but not when, but no "while" clause
+  # Triggers
+    * specify what to do, and when, but not no "while" clause
+  # "Attack Profile": A combination of macros, triggers and "while" clauses
+    * specify what to do, when, and for how long
+    * an extended trigger or a trigger API
+  # Scripting 
+    * Scripting with event-handling
+
+== Attack Profile ==
+
+By an "attack profile" I'm envisioning a trigger API that a user "programs" against to create a strategy for a particular combat situation: it determines what actions to take and when; the actions could be offensive, defensive, or potentially anything else. The "when" will be the triggers such as "when attacked by enemy X" or possibly "when enemy Y performs attack Z". 
 
 Players would set up and maintain their profiles for different enemies and situations and the strategies will be employed automatically when the user attacks. (Or the player could potentially set it up to attack automatically). 
+
+If we went any broader than this we'll probably just be implementing scripting. It would be wise to see if this will be needed in other areas.
 
 == Ideas ==
 
