@@ -11,7 +11,7 @@ Now that JMUD is a functioning MUD (barely) we have a lot of options for what to
   # Flesh out the attack code
     # Using weapons
     # Multiple attacks (e.g. Foot and hand)
-    # Attack profiles
+    # Player_Attack_Profile
   # More mapping functionality
   # In game world editing
   # NPCs
