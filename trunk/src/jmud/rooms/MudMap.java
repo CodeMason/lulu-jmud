@@ -1,6 +1,9 @@
-package jmud;
+package jmud.rooms;
 
 import java.sql.SQLException;
+
+import jmud.dbio.MysqlConnector;
+import jmud.mobs.MobType;
 
 /**
  * Handles interaction with the MUD world in the form of a graph of rooms

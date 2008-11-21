@@ -1,4 +1,4 @@
-package jmud;
+package jmud.netIO;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -44,13 +44,13 @@ public class ChannelWriter {
         socketChannel.write(buffer);
     }
 
-    protected void sendError(String strCmd, SocketChannel socketChannel) throws Exception {
+    public void sendError(String strCmd, SocketChannel socketChannel) throws Exception {
         System.out.println("Tick: run(): sending command error");
 
         sendMessage(COMMAND_PARSE_ERROR_MESSAGE + strCmd + " \n\r", socketChannel);
     }
 
-    protected void sendError(SocketChannel socketChannel) throws Exception {
+    public void sendError(SocketChannel socketChannel) throws Exception {
         System.out.println("CommandListenerThread: general error");
 
         sendMessage(ERROR_MESSAGE, socketChannel);

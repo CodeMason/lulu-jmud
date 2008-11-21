@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 
 /**
  * A role playing personna to be controlled and used to interact with the game;
@@ -10,6 +10,7 @@ package jmud;
  */
 
 import jmud.item.Item;
+import jmud.rooms.Room;
 import jmud.slot.Slot;
 
 import java.io.Serializable;

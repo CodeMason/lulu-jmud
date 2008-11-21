@@ -2,9 +2,9 @@ package jmud.command;
 
 //import java.util.Iterator;
 
-import jmud.PlayerChannel;
-import jmud.Room;
 //import java.net.Socket;
+import jmud.netIO.PlayerChannel;
+import jmud.rooms.Room;
 
 /*
  * Northeast.java

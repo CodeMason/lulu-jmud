@@ -1,9 +1,9 @@
 package jmud.command;
 
-import jmud.PlayerChannel;
-import jmud.Room;
 //import java.net.Socket;
 //import java.util.Iterator;
+import jmud.netIO.PlayerChannel;
+import jmud.rooms.Room;
 
 /*
  * South.java

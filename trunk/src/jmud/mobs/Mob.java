@@ -1,4 +1,6 @@
-package jmud;
+package jmud.mobs;
+
+import jmud.core.Target;
 
 /**
  * Represents a mobile entity in the mud

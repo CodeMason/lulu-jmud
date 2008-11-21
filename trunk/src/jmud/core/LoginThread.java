@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,6 +13,11 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import jmud.core.Login.LoginState;
+import jmud.dbio.MysqlConnector;
+import jmud.netIO.ConnectionList;
+import jmud.netIO.PlayerChannel;
 
 /*
  * LoginThread.java
@@ -39,7 +44,7 @@ import java.util.StringTokenizer;
  * @author Chris maguire
  * @version 0.1
  */
-class LoginThread extends Thread {
+public class LoginThread extends Thread {
     private static final int READ_BUFFER_SIZE = 20;
 
     private Selector commandSelector;

@@ -1,4 +1,4 @@
-package jmud;
+package jmud.netIO;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -7,6 +7,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
+
 
 /**
  * AcceptThread waits for incoming connections.  When a connection is made,
@@ -24,7 +25,7 @@ import java.util.Set;
  * @version 0.1
 
  */
-class AcceptThread extends Thread {
+public class AcceptThread extends Thread {
     private ServerSocketChannel ssc;
     private Selector connectSelector;
     private ConnectionList<SocketChannel> acceptedConnections;

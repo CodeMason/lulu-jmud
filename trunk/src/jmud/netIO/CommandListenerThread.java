@@ -1,6 +1,10 @@
-package jmud;
+package jmud.netIO;
 
 import jmud.command.Command;
+import jmud.core.Player;
+import jmud.dbio.MysqlConnector;
+import jmud.rooms.MudMap;
+import jmud.rooms.Room;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -14,7 +18,7 @@ import java.nio.charset.CharsetDecoder;
 import java.sql.SQLException;
 import java.util.*;
 
-class CommandListenerThread extends Thread {
+public class CommandListenerThread extends Thread {
     private static final int READ_BUFFER_SIZE = 20;
     private static final int MAP_STARTING_ROOM = 2;
 

@@ -1,6 +1,8 @@
-package jmud;
+package jmud.netIO;
 
 import java.nio.channels.SocketChannel;
+
+import jmud.core.Player;
 
 /**
  * A SocketChannel and associated Player. This is used mainly as a convenience class to pass

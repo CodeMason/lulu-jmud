@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 
 import jmud.command.Command;
 
@@ -13,7 +13,7 @@ import java.util.*;
  * ToDO: Have the EngineThread manage it's own LinkedList so that we don't have
  *       to pass it around separately.
  */
-class EngineThread extends Thread {
+public class EngineThread extends Thread {
 
     private Timer timer;
     private Tick tick;

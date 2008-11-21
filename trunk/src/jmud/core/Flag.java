@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 
 import java.lang.annotation.*;
 

@@ -1,4 +1,4 @@
-package jmud;
+package jmud.mobs;
 
 /**
  * A type of Mob (Mobile Object) that specifies the type, acronym and description of the mob.

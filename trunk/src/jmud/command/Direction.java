@@ -9,10 +9,10 @@
 
 package jmud.command;
 
-import jmud.MysqlConnector;
-import jmud.Player;
-import jmud.PlayerChannel;
-import jmud.Room;
+import jmud.core.Player;
+import jmud.dbio.MysqlConnector;
+import jmud.netIO.PlayerChannel;
+import jmud.rooms.Room;
 
 /**
  * Handles all the direction agnostic gear for moving around

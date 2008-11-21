@@ -1,6 +1,10 @@
-package jmud;
+package jmud.dbio;
 
+import jmud.core.Player;
 import jmud.item.Item;
+import jmud.mobs.Mob;
+import jmud.mobs.MobType;
+import jmud.rooms.Room;
 import jmud.slot.Slot;
 
 import java.lang.reflect.Constructor;

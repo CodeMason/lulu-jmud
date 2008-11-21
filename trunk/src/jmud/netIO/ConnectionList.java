@@ -1,4 +1,4 @@
-package jmud;
+package jmud.netIO;
 
 import java.nio.channels.Selector;
 import java.util.Iterator;
@@ -15,7 +15,7 @@ import java.util.LinkedList;
  *
  * @author Chris maguire
  */
-class ConnectionList<T> {
+public class ConnectionList<T> {
     private LinkedList<T> connections = new LinkedList<T>();
     private Selector selectorToNotify;
 
