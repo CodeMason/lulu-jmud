@@ -8,9 +8,9 @@ Different enemies will be affected differently by different attacks. I don't wan
 == Solutions ==
 
   # Macros
-    * specify what to do, but not when, but no "while" clause
+    * specify what to do, but not when or "while"
   # Triggers
-    * specify what to do, and when, but not no "while" clause
+    * specify what to do, and when, but not "while"
   # "Attack Profile": A combination of macros, triggers and "while" clauses
     * specify what to do, when, and for how long
     * an extended trigger or a trigger API
