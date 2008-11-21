@@ -1,7 +1,7 @@
 package jmud.command;
 
-import jmud.MysqlConnector;
-import jmud.Room;
+import jmud.dbio.MysqlConnector;
+import jmud.rooms.Room;
 
 import java.sql.SQLException;
 import java.util.Hashtable;

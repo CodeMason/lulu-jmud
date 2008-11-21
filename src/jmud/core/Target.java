@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 
 /**
  * Target is the abstract definition of something that can be attacked.

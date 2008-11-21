@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 
 /**
  * Represents the state of a login process

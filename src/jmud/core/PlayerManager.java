@@ -1,4 +1,4 @@
-package jmud;
+package jmud.core;
 /*
  * Currently PlayerChannel contains all the requisite
  * info for a players in-game state AND all info required

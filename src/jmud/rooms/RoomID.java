@@ -1,6 +1,8 @@
-package jmud;
+package jmud.rooms;
 
 import jmud.command.Command;
+import jmud.core.Player;
+import jmud.netIO.PlayerChannel;
 
 import java.nio.channels.SocketChannel;
 

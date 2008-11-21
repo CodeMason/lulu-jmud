@@ -1,7 +1,7 @@
 package jmud.command;
 
-import jmud.PlayerChannel;
-import jmud.Room;
+import jmud.netIO.PlayerChannel;
+import jmud.rooms.Room;
 
 
 /**

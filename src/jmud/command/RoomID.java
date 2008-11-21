@@ -4,9 +4,9 @@
  */
 package jmud.command;
 
-import jmud.Player;
-import jmud.PlayerChannel;
-import jmud.Room;
+import jmud.core.Player;
+import jmud.netIO.PlayerChannel;
+import jmud.rooms.Room;
 
 import java.nio.channels.SocketChannel;
 
