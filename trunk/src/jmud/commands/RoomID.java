@@ -2,7 +2,7 @@
  * Copyright 2007 Entero Corporation. All Rights Reserved.
  * www.entero.com
  */
-package jmud.commandDefs;
+package jmud.commands;
 
 import jmud.character.Character;
 import jmud.core.Settings;

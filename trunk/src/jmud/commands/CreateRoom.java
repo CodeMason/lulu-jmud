@@ -1,4 +1,4 @@
-package jmud.commandDefs;
+package jmud.commands;
 
 /**
  * CreateRoom - facilitates creating rooms in the map at run time
