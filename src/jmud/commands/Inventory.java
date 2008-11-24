@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package jmud.commandDefs;
+package jmud.commands;
 
 import jmud.character.Character;
 import jmud.core.Settings;

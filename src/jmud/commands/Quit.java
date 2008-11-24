@@ -1,4 +1,4 @@
-package jmud.commandDefs;
+package jmud.commands;
 
 import jmud.character.Character;
 import jmud.netIO.deprecated.PlayerChannel;
