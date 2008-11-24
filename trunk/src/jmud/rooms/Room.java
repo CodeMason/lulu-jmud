@@ -1,6 +1,6 @@
 package jmud.rooms;
 
-import jmud.core.Character;
+import jmud.character.Character;
 import jmud.item.Item;
 import jmud.mobs.Mob;
 import jmud.netIO.deprecated.PlayerChannel;

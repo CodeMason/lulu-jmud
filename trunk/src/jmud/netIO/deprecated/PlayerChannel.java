@@ -2,7 +2,7 @@ package jmud.netIO.deprecated;
 
 import java.nio.channels.SocketChannel;
 
-import jmud.core.Character;
+import jmud.character.Character;
 
 /**
  * A SocketChannel and associated Player. This is used mainly as a convenience class to pass
