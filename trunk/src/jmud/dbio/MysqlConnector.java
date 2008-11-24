@@ -489,17 +489,18 @@ public class MysqlConnector {
         // to add to the passed in list of players
         while(rs.next()) {
             //noinspection ObjectAllocationInLoop
-            playerList.add(new Character(rs.getInt(1),
-                rs.getString(2),
-                rs.getString(3),
-                rs.getString(4),
-                rs.getString(5),
-                rs.getInt(6),
-                rs.getInt(7),
-                rs.getInt(8),
-                rs.getInt(9),
-                rs.getInt(10),
-                rs.getInt(11)));
+        	//FIXME Had to stubb this SQL insert due to Massive Architecture rework.
+//            playerList.add(new Character(rs.getInt(1),
+//                rs.getString(2),
+//                rs.getString(3),
+//                rs.getString(4),
+//                rs.getString(5),
+//                rs.getInt(6),
+//                rs.getInt(7),
+//                rs.getInt(8),
+//                rs.getInt(9),
+//                rs.getInt(10),
+//                rs.getInt(11)));
 
             // DEBUG:
             //noinspection ObjectAllocationInLoop
@@ -541,21 +542,22 @@ public class MysqlConnector {
         if(rs.next()) {
             playerID = rs.getInt(1);
 
-            player = new Character(playerID,
-                rs.getString(2),
-                rs.getString(3),
-                rs.getString(4),
-                rs.getString(5),
-                // not using class ID
-                rs.getInt(7),
-                rs.getInt(8),
-                rs.getInt(9),
-                rs.getInt(10),
-                rs.getInt(11),
-                rs.getInt(12));
+        	//FIXME Had to stubb this SQL insert due to Massive Architecture rework.
+//            player = new Character(playerID,
+//                rs.getString(2),
+//                rs.getString(3),
+//                rs.getString(4),
+//                rs.getString(5),
+//                // not using class ID
+//                rs.getInt(7),
+//                rs.getInt(8),
+//                rs.getInt(9),
+//                rs.getInt(10),
+//                rs.getInt(11),
+//                rs.getInt(12));
 
             // DEBUG:
-            System.out.println(player.getName() + " loaded \n");
+//            System.out.println(player.getName() + " loaded \n");
             rs.close();
         } else {
             rs.close();
@@ -608,7 +610,8 @@ public class MysqlConnector {
             }
             rs.close();
             slot.setAliases(aliases);
-            player.addSlot(slot);
+        	//FIXME Had to stubb this SQL insert due to Massive Architecture rework.
+//            player.addSlot(slot);
 
             // set the slot ID param and get the items for that player and slot
             cstmtGetPlayerSlotItems.setInt(2, slot.getId());
@@ -637,7 +640,8 @@ public class MysqlConnector {
 
         rs.close();
 
-        return player;
+//        return player;
+        return new Character(0,"","");
     }
 
     /**

@@ -1,7 +1,7 @@
 package jmud.netIO.deprecated;
 
 import jmud.character.Character;
-import jmud.commands.Command;
+import jmud.commandDefs.Command;
 import jmud.dbio.MysqlConnector;
 import jmud.rooms.MudMap;
 import jmud.rooms.Room;
@@ -205,7 +205,7 @@ public class CommandListenerThread extends Thread {
             // the user has only logged on so far, so add them (i.e. their player channel)
             // to their initial room
             synchronized(player) {
-                player.setRoom(room);
+                //player.setRoom(room);
                 room.add(playerChannel);
             }
 
@@ -219,7 +219,7 @@ public class CommandListenerThread extends Thread {
             // show the player the description of their current room and their prompt
             try {
                 channelwriter.sendMessage(room.getShortDescription() + "\n\r" + room.getExits() + "\n\r", channel);
-                channelwriter.sendMessage(player.getPrompt(), channel);
+                //channelwriter.sendMessage(player.getPrompt(), channel);
             } catch(Exception e) {
                 System.out.println("CommandListenerThread: parseCommand: failed channelwriter.sendMessage()");
             }
@@ -276,7 +276,7 @@ public class CommandListenerThread extends Thread {
             readBuffer.clear();
 
             // grab the reference to the key attachment
-            StringBuffer requestString = ((Character) key.attachment()).getCurrentCommand();
+            StringBuffer requestString = new StringBuffer(); //((Character) key.attachment()).getCurrentCommand();
 
             // append the request to the attachment's string buffer
             requestString.append(strRequest);
@@ -398,7 +398,7 @@ public class CommandListenerThread extends Thread {
 
                 try{
                     channelwriter.sendMessage("Command \"" + command + "\" not recognized.\n\r", socketChannel);
-                    channelwriter.sendMessage(player.getPrompt(), socketChannel);
+//                    channelwriter.sendMessage(player.getPrompt(), socketChannel);
                 } catch(Exception e){
                     System.out.println("CommandListenerThread: parseCommand: failed channelwriter.sendMessage()");
                 }

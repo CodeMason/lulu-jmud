@@ -1,6 +1,6 @@
 package jmud.core;
 
-import jmud.commands.Command;
+import jmud.commandDefs.Command;
 
 import java.util.*;
 
