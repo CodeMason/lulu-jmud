@@ -14,7 +14,7 @@ package jmud.character;
  * Created on April 21, 2002, 4:24 PM
  */
 
-import jmud.character.statmods.StatMod;
+
 import jmud.character.stats.Stat;
 import jmud.rooms.Room;
 import jmud.slot.Slot;
@@ -36,10 +36,7 @@ public class Character {
 
 	// stats
 	private HashMap<String, Stat> stats = new HashMap<String, Stat>();
-
-	// statMods
-	private HashMap<String, StatMod> statMods = new HashMap<String, StatMod>();
-
+	
 	// location
 	private Room room;
 
@@ -73,10 +70,6 @@ public class Character {
 
 	public HashMap<String, Stat> getStats() {
 		return stats;
-	}
-
-	public HashMap<String, StatMod> getStatMods() {
-		return statMods;
 	}
 
 	public Room getRoom() {
