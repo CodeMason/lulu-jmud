@@ -4,17 +4,15 @@ package jmud;
  * Starts all the threads with their Selectors and Lists.
  */
 
-//import java.io.*;
-//import java.net.*;
-//import java.nio.*;
+
 
 import jmud.command.Command;
 import jmud.core.EngineThread;
 import jmud.core.LoginThread;
-import jmud.netIO.AcceptThread;
-import jmud.netIO.CommandListenerThread;
-import jmud.netIO.ConnectionList;
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.AcceptThread;
+import jmud.netIO.deprecated.CommandListenerThread;
+import jmud.netIO.deprecated.ConnectionList;
+import jmud.netIO.deprecated.PlayerChannel;
 
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;

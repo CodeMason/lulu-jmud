@@ -3,7 +3,7 @@ package jmud.command;
 //import java.util.Iterator;
 
 import jmud.core.Player;
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
 import java.nio.channels.SocketChannel;

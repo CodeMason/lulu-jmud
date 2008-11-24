@@ -3,7 +3,7 @@ package jmud.rooms;
 import jmud.core.Player;
 import jmud.item.Item;
 import jmud.mobs.Mob;
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.PlayerChannel;
 
 import java.util.*;
 

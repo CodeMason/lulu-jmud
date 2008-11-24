@@ -11,7 +11,7 @@ package jmud.command;
 
 import jmud.core.Player;
 import jmud.item.Item;
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 import jmud.slot.Slot;
 

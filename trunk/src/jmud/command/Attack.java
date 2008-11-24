@@ -3,8 +3,8 @@ package jmud.command;
 import jmud.*;
 import jmud.core.Target;
 import jmud.mobs.Mob;
-import jmud.netIO.ChannelWriter;
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.ChannelWriter;
+import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
 import java.nio.channels.SocketChannel;

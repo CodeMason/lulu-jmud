@@ -14,10 +14,9 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import jmud.core.Login.LoginState;
 import jmud.dbio.MysqlConnector;
-import jmud.netIO.ConnectionList;
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.ConnectionList;
+import jmud.netIO.deprecated.PlayerChannel;
 
 /*
  * LoginThread.java
