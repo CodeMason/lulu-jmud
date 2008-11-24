@@ -1,4 +1,4 @@
-package jmud.netIO;
+package jmud.netIO.deprecated;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

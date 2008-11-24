@@ -1,4 +1,4 @@
-package jmud.netIO;
+package jmud.netIO.deprecated;
 
 import java.nio.channels.Selector;
 import java.util.Iterator;

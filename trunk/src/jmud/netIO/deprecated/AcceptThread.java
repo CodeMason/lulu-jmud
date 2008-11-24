@@ -1,4 +1,4 @@
-package jmud.netIO;
+package jmud.netIO.deprecated;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
