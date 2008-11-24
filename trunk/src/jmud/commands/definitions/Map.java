@@ -4,7 +4,7 @@ import jmud.dbio.MysqlConnector;
 import jmud.rooms.Room;
 
 import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -65,7 +65,7 @@ public class Map {
      * Load all of the player's rooms from the database
      */
     public void loadRooms(int iPlayerID) {
-        Hashtable hashRooms;
+        HashMap rooms;
 
         // open a connection to the database
         MysqlConnector mSqlConn = new MysqlConnector();
@@ -80,28 +80,25 @@ public class Map {
         // get all the rooms from the database for this player
         try {
             // create an array big enough to hold all the rooms
-            rooms = new Room[mSqlConn.getPlayerRoomCount(iPlayerID)];
+            this.rooms = new Room[mSqlConn.getPlayerRoomCount(iPlayerID)];
 
             // fill the room array and store what rooms are where in the hash table
-            hashRooms = mSqlConn.getPlayerRooms(iPlayerID, rooms);
+            rooms = mSqlConn.getPlayerRooms(iPlayerID, this.rooms);
 
             // get all connections and attach to rooms
-            mSqlConn.getPlayerRoomConnections(iPlayerID, rooms, hashRooms);
+            mSqlConn.getPlayerRoomConnections(iPlayerID, this.rooms, rooms);
             mSqlConn.close();
         } catch(SQLException se) {
             System.out.println("loadRooms() --> " + se);
         }
 
-        // close the connection (?)
-        mSqlConn = null;
-
         // DEBUG:
         System.out.print("Setting Exits: ");
 
         // go through and specifically set the exits string for each room
-        for(int i = 0; i < rooms.length; i++) {
-            if(rooms[i] != null) {
-                rooms[i].setExits();
+        for(Room room : this.rooms){
+            if(room != null){
+                room.setExits();
             }
 
             // DEBUG:
@@ -140,7 +137,7 @@ public class Map {
         //(so that we don't add it again)
         //This gets done later, no sense douplicating the effort
         //(we have to do it in the loop down below anyways, so we'll not do it here)
-        //listAddedRoomIDs.add(new Integer(((Room)listRooms.getFirst()).getID()));
+        //listAddedRoomIDs.add(new Integer(((Room)listRooms.getFirst()).getId()));
 
         // add all the rooms that we grabbed from the database to the
         // "rooms to be drawn" list and the

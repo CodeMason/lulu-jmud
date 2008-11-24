@@ -152,7 +152,7 @@ public class Item {
         this.condition = condition;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 }

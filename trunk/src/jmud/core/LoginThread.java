@@ -1,5 +1,10 @@
 package jmud.core;
 
+import jmud.character.Character;
+import jmud.dbio.MysqlConnector;
+import jmud.netIO.deprecated.ConnectionList;
+import jmud.netIO.deprecated.PlayerChannel;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -13,11 +18,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
-
-import jmud.character.Character;
-import jmud.dbio.MysqlConnector;
-import jmud.netIO.deprecated.ConnectionList;
-import jmud.netIO.deprecated.PlayerChannel;
 
 /*
  * LoginThread.java
@@ -516,7 +516,7 @@ public class LoginThread extends Thread {
         Character player = null;
 
         try {
-            player = mSqlConn.getPlayer(login.getLogin().toString(), login.getPassword().toString());
+            player = mSqlConn.getCharacter(login.getLogin().toString(), login.getPassword().toString());
             mSqlConn.close();
         } catch(SQLException se) {
             System.out.println("LoginThread.checkLogin() --> " + se);

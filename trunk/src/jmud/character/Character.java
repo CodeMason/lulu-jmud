@@ -1,15 +1,15 @@
 package jmud.character;
 
 /**
- * 
+ *
  * 24NOV08:  PlayerAccount should only represent the data that pertains to
  * Account only, aka, username, email and password plus any settings they
  * might have, aka Telnet settings.
- * 
+ *
  * A playerAccount will point to many Characters.
- * 
- * 
- * 
+ *
+ *
+ *
  *
  * Created on April 21, 2002, 4:24 PM
  */
@@ -18,6 +18,7 @@ package jmud.character;
 import jmud.character.stats.Stat;
 import jmud.rooms.Room;
 import jmud.slot.Slot;
+
 import java.util.HashMap;
 
 public class Character {
@@ -36,7 +37,7 @@ public class Character {
 
 	// stats
 	private HashMap<String, Stat> stats = new HashMap<String, Stat>();
-	
+
 	// location
 	private Room room;
 

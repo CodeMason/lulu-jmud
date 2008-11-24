@@ -1,14 +1,6 @@
 package jmud.commands.definitions;
 
 import jmud.core.Target;
-import jmud.mobs.Mob;
-import jmud.netIO.deprecated.ChannelWriter;
-import jmud.netIO.deprecated.PlayerChannel;
-import jmud.rooms.Room;
-
-import java.nio.channels.SocketChannel;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Executable command attack: handles a player attacking something
@@ -24,12 +16,12 @@ import java.util.List;
  */
 public class AttackCommandDef extends AbstractCommandDef {
 
-	private Character c = null;
-	private Target t = null;
-	
+	private Character c;
+	private Target t;
+
      public AttackCommandDef(Character c, Target t) {
     	 super("attack");
-    	 
+
         this.aliases.add("att");
         this.aliases.add("atta");
         this.aliases.add("attac");
@@ -66,17 +58,17 @@ public class AttackCommandDef extends AbstractCommandDef {
         boolean bHit;
 
     	//TODO  I don't know how, exactly, we will make the attack rules abstract...
-    	
-   	
-    	
-    	//Check to see if Target and Character are in Same Room:
-    	
-    	
-    	
-    	//Check to see if Target isa Character (aka PK)
-    	
 
-  
+
+
+    	//Check to see if Target and Character are in Same Room:
+
+
+
+    	//Check to see if Target isa Character (aka PK)
+
+
+
 
         /*****************************************************************************/
         /* AT THIS POINT WE HAVE A MOB                                               */
@@ -90,11 +82,13 @@ public class AttackCommandDef extends AbstractCommandDef {
 
             // broadcast a "MISSED!" message
             try {
+                /*
                 room.sendMessageToAll(""
                     + playerChannel.getPlayer().getName()
                     + " swings at "
                     + target.getName()
                     + " and misses!\n\r");
+                */
                 /* ToDo: We need a catalogue of miss verbs (for variety)
                     However, we may want to consider macros, this could screw up a macro, which might be good
                 */
@@ -114,13 +108,13 @@ public class AttackCommandDef extends AbstractCommandDef {
             // broadcast a "HIT!" message
             try {
                 // ToDo Again, we need to replace "smashes" with something player, weapon and--potentially--mob specific
-                room.sendMessageToAll(""
+               /* room.sendMessageToAll(""
                     + playerChannel.getPlayer().getName()
                     + " smashes "
                     + target.getName()
                     + " for "
                     + iDamage
-                    + " damage!\n\r");
+                    + " damage!\n\r");*/
             } catch(Exception e) {
                 System.out.println("Attack.exec(): ChannelWriter.sendMessage(\"Hit\") failed \n\r"
                     + e.getMessage());
@@ -128,7 +122,7 @@ public class AttackCommandDef extends AbstractCommandDef {
         }
 
         // do damage and check for killed IF they scored a hit
-        if(bHit && target.hurt(iDamage)) {
+        if(bHit && t.hurt(iDamage)) {
             //mark the target as dead
             //Scratch that: the target should "kill" itself (i.e. target.hurt() should set the isAlive flag)
 
@@ -137,11 +131,12 @@ public class AttackCommandDef extends AbstractCommandDef {
             try {
                 // ToDo Again, we need to replace the boring "killed" with a variety of verbs, maybe depending on the
                 // amount of excess damage, speed of the kill, number of mobs of this type already killed
-                room.sendMessageToAll(""
+                // ToDo Move this to its new home (don't know where that is yet)
+                /*room.sendMessageToAll(""
                     + playerChannel.getPlayer().getName()
                     + " killed "
                     + target.getName()
-                    + "!\n\r");
+                    + "!\n\r");*/
             } catch(Exception e) {
                 System.out.println("Attack.exec(): ChannelWriter.sendMessage(\"Killed\") failed \n\r"
                     + e.getMessage());

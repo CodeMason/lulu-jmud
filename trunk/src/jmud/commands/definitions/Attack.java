@@ -1,6 +1,5 @@
 package jmud.commands.definitions;
 
-import jmud.*;
 import jmud.core.Target;
 import jmud.mobs.Mob;
 import jmud.netIO.deprecated.ChannelWriter;
@@ -235,8 +234,7 @@ public class Attack extends Command {
 
             // broadcast a "MISSED!" message
             try {
-                room.sendMessageToAll(""
-                    + playerChannel.getPlayer().getName()
+                room.sendMessageToAll(playerChannel.getPlayer().getName()
                     + " swings at "
                     + target.getName()
                     + " and misses!\n\r");
@@ -259,8 +257,7 @@ public class Attack extends Command {
             // broadcast a "HIT!" message
             try {
                 // ToDo Again, we need to replace "smashes" with something player, weapon and--potentially--mob specific
-                room.sendMessageToAll(""
-                    + playerChannel.getPlayer().getName()
+                room.sendMessageToAll(playerChannel.getPlayer().getName()
                     + " smashes "
                     + target.getName()
                     + " for "
@@ -282,8 +279,7 @@ public class Attack extends Command {
             try {
                 // ToDo Again, we need to replace the boring "killed" with a variety of verbs, maybe depending on the
                 // amount of excess damage, speed of the kill, number of mobs of this type already killed
-                room.sendMessageToAll(""
-                    + playerChannel.getPlayer().getName()
+                room.sendMessageToAll(playerChannel.getPlayer().getName()
                     + " killed "
                     + target.getName()
                     + "!\n\r");

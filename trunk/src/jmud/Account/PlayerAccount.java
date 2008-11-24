@@ -1,18 +1,18 @@
 package jmud.Account;
 
+import jmud.character.Character;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import jmud.character.Character;
-
 /**
- * 
+ *
  * 24NOV08:  PlayerAccount should only represent the data that pertains to
  * Account only, aka, username, email and password plus any settings they
  * might have, aka Telnet settings.
- * 
+ *
  * A playerAccount will point to many Characters.
- * 
+ *
  * Created on 24NOV08
  */
 
@@ -26,11 +26,11 @@ public class PlayerAccount {
     private String uname = "";
     private String password = "";
     private String emailAddress = "";
-    
+
     private Set<Character> characters = new HashSet<Character>();
 
-    
-  
+
+
 	public PlayerAccount(String emailAddress, String password, int playerAccountID, String uname) {
 		super();
 		this.emailAddress = emailAddress;
@@ -58,7 +58,7 @@ public class PlayerAccount {
 	public Set<Character> getCharacters() {
 		return characters;
 	}
-    
 
-    
+
+
 }

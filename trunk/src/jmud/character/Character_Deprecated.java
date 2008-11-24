@@ -1,21 +1,20 @@
 package jmud.character;
 
 /**
- * 
+ *
  * 24NOV08:  PlayerAccount should only represent the data that pertains to
  * Account only, aka, username, email and password plus any settings they
  * might have, aka Telnet settings.
- * 
+ *
  * A playerAccount will point to many Characters.
- * 
- * 
- * 
+ *
+ *
+ *
  *
  * Created on April 21, 2002, 4:24 PM
  */
 
 import jmud.core.Flag;
-import jmud.core.Login;
 import jmud.core.Target;
 import jmud.item.Item;
 import jmud.rooms.Room;

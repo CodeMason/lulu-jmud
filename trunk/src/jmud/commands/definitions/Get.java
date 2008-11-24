@@ -1,7 +1,6 @@
 package jmud.commands.definitions;
 
 import jmud.character.Character;
-import jmud.core.Settings;
 import jmud.item.Item;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;

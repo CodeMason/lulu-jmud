@@ -17,29 +17,29 @@ public class JobWorker implements Runnable {
 	private Thread myThread;
 
 	public JobWorker(int workerID) {
-		super();
-		WorkerID = workerID;
+        WorkerID = workerID;
 	}
 
 	@Override
 	public void run() {
 		System.out.println("JobWorker ID:" + this.WorkerID + " is running.");
 		while (this.runCmd) {
-			
+
 			// Access to Queue is synchronized internal to JobManager
-			AbstractJob job = JobManager.getInstance().popJobFromQueue();				
+			AbstractJob job = JobManager.getInstance().popJobFromQueue();
 
 			if (job != null) {
 				//Call the do Job function.
 				boolean retVal = job.doJob();
-				
+
 				if (retVal) {
-					//System.out.println("JobWorker ID:" + this.WorkerID + " reports that JobID: " + job.getJobID() + " has returned TRUE.");					
-					continue;
+					//System.out.println("JobWorker ID:" + this.WorkerID + " reports that JobID: " + job.getJobID() + " has returned TRUE.");
+                    //noinspection UnnecessaryContinue
+                    continue;
 				} else {
-					System.err.println("JobWorker ID:" + this.WorkerID + " reports that JobID: " + job.getJobID() + " has returned FALSE.");					
+					System.err.println("JobWorker ID:" + this.WorkerID + " reports that JobID: " + job.getJobID() + " has returned FALSE.");
 				}
-				
+
 			} else {
 				try {
 					//FIXME cannot remember how java handles self Monitoring state.... This wait statement may throw an error.

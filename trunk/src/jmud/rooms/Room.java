@@ -145,12 +145,11 @@ public class Room {
                 case'D':
                     down = room;
                     break;
+                default:
+                    System.out.println("Attempted room add with invalid direction");
             }
-        // ToDo: why are we catching these if we're not using them?
-        } catch(IndexOutOfBoundsException e) {
-
-        } catch(NullPointerException e) {
-
+        } catch(Exception e) {
+            //
         }
     }
 
@@ -176,38 +175,38 @@ public class Room {
      * Create the exit string by manually checking for exits in each direction
      */
     public void setExits() {
-        StringBuffer strbExits = new StringBuffer();
+        StringBuilder exits = new StringBuilder();
         if(north != null) {
-            strbExits.append("n ");
+            exits.append("n ");
         }
         if(south != null) {
-            strbExits.append("s ");
+            exits.append("s ");
         }
         if(east != null) {
-            strbExits.append("e ");
+            exits.append("e ");
         }
         if(west != null) {
-            strbExits.append("w ");
+            exits.append("w ");
         }
         if(northeast != null) {
-            strbExits.append("ne ");
+            exits.append("ne ");
         }
         if(northwest != null) {
-            strbExits.append("nw ");
+            exits.append("nw ");
         }
         if(southeast != null) {
-            strbExits.append("se ");
+            exits.append("se ");
         }
         if(southwest != null) {
-            strbExits.append("sw ");
+            exits.append("sw ");
         }
         if(up != null) {
-            strbExits.append("u ");
+            exits.append("u ");
         }
         if(down != null) {
-            strbExits.append("d");
+            exits.append("d");
         }
-        strExits = strbExits.toString();
+        strExits = exits.toString();
     }
 
     /**
@@ -470,7 +469,7 @@ public class Room {
             }
 
             items.append(item.getName())
-                .append(isDebug ? " [" + item.getID() + "]" : "");
+                .append(isDebug ? " [" + item.getId() + "]" : "");
             bMultipleItems = true;
         }
 
@@ -595,7 +594,7 @@ public class Room {
         try {
             return playerChannelsByName.get(name);
         } catch(Exception e) {
-            System.out.println("Room (" + x + "," + y + "," + z + "): getPlayer(String name): Failed.");
+            System.out.println("Room (" + x + "," + y + "," + z + "): getCharacter(String name): Failed.");
             return null;
         }
     }
@@ -613,7 +612,7 @@ public class Room {
         try {
             return playerChannels.get(name).getPlayer();
         } catch(Exception e) {
-            System.out.println("Room (" + x + "," + y + "," + z + "): getPlayer(String name): Failed.");
+            System.out.println("Room (" + x + "," + y + "," + z + "): getCharacter(String name): Failed.");
             return null;
         }
     }
@@ -741,7 +740,7 @@ public class Room {
 
             /*
             sendMessage(strMessage
-                        + playerChannel.getPlayer().getPrompt(),
+                        + playerChannel.getCharacter().getPrompt(),
                         playerChannel.getSocketChannel());
             */
         }
@@ -766,7 +765,7 @@ public class Room {
             // if the current PlayerChannel isn't the PlayerChannel we're excluding then
             // send them the message
             if(!playerChannel.equals(playerChannelExcluded)) {
-                //sendMessage(strMessage + playerChannel.getPlayer().getPrompt(), playerChannel.getSocketChannel());
+                //sendMessage(strMessage + playerChannel.getCharacter().getPrompt(), playerChannel.getSocketChannel());
                 playerChannel.sendMessage(strMessage + playerChannel.getPlayer().getPrompt());
             }
         }

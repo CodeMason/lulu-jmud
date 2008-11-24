@@ -10,7 +10,6 @@ import jmud.slot.Slot;
 import java.lang.reflect.Constructor;
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,8 +34,6 @@ public class MysqlConnector {
     private final int ATTRIBUTE_COLUMN_INDEX = 1;
     private final int MODIFIER_COLUMN_INDEX = 2;
     private final int PLAYERID_PARAM_INDEX = 1;
-    private final int LOGIN_PARAM_INDEX = 1;
-    private final int PASSWORD_PARAM_INDEX = 2;
 
     int iStrengthAttributeID;
     int iDexterityAttributeID;
@@ -83,12 +80,14 @@ public class MysqlConnector {
             try {
                 rs.close();
             } catch(SQLException SQLE) {
+                //
             }
         }
         if(conn != null) {
             try {
                 conn.close();
             } catch(SQLException SQLE) {
+                //
             }
         }
     }
@@ -282,9 +281,9 @@ public class MysqlConnector {
      * @return A Hash Table of the indexes of the visited rooms in the array keyed on the rooms' IDs.
      */
     @SuppressWarnings({"ObjectAllocationInLoop"})
-    public Hashtable getPlayerRooms(int iPlayerID, Room[] rooms) throws SQLException {
+    public HashMap getPlayerRooms(int iPlayerID, Room[] rooms) throws SQLException {
         int iRoomIndex = 0;
-        Hashtable hashRooms = new Hashtable();
+        HashMap<Integer, Integer> hashRooms = new HashMap<Integer, Integer>();
 
         // DEBUG:
         System.out.print("loading rooms: ");
@@ -422,7 +421,7 @@ public class MysqlConnector {
      * @param rooms     Rooms that the player has visited
      * @param hashRooms table of room indexes mapped to their IDs
      */
-    public void getPlayerRoomConnections(int iPlayerID, Room[] rooms, Hashtable hashRooms) throws SQLException {
+    public void getPlayerRoomConnections(int iPlayerID, Room[] rooms, HashMap hashRooms) throws SQLException {
         Room roomOrig;
         Room roomDest;
 
@@ -504,7 +503,7 @@ public class MysqlConnector {
 
             // DEBUG:
             //noinspection ObjectAllocationInLoop
-            System.out.println(new StringBuilder().append(((Character) playerList.getLast()).getName()).append(" loaded \n").toString());
+            System.out.println(new StringBuilder().append(playerList.getLast().getName()).append(" loaded \n").toString());
         }
 
         rs.close();
@@ -519,9 +518,8 @@ public class MysqlConnector {
      * @throws SQLException on sproc prepares, sproc executes, recordset close, sproc param assignments
      */
     @SuppressWarnings({"ObjectAllocationInLoop"})
-    public Character getPlayer(String login, String password) throws SQLException {
+    public Character getCharacter(String login, String password) throws SQLException {
         int playerID;
-        Character player;
         List<Slot> slots = new LinkedList<Slot>();
         List<String> aliases = new LinkedList<String>();
         List<Slot> itemSlots;
@@ -575,6 +573,7 @@ public class MysqlConnector {
         while(rs.next()) {
             try {
                 Class clazz = Class.forName(rs.getString(2));
+                //noinspection unchecked
                 Constructor<Slot> constructor = clazz.getConstructor(new Class[]{Integer.TYPE, String.class});
 
                 //noinspection ObjectAllocationInLoop
