@@ -1,7 +1,7 @@
 package jmud.netIO.deprecated;
 
 import jmud.character.Character;
-import jmud.commands.Command;
+import jmud.commands.definitions.Command;
 import jmud.dbio.MysqlConnector;
 import jmud.rooms.MudMap;
 import jmud.rooms.Room;

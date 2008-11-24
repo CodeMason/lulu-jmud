@@ -2,6 +2,8 @@ package jmud.commands;
 
 import java.util.HashMap;
 
+import jmud.commands.definitions.Command;
+
 public class CommandRegistrar {
 	/* 
 	 * ********************************************

@@ -1,4 +1,4 @@
-package jmud.commands;
+package jmud.commands.definitions;
 
 //import java.util.Iterator;
 
