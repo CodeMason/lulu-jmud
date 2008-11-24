@@ -1,7 +1,7 @@
 package jmud.netIO.deprecated;
 
 import jmud.command.Command;
-import jmud.core.Player;
+import jmud.core.Character;
 import jmud.dbio.MysqlConnector;
 import jmud.rooms.MudMap;
 import jmud.rooms.Room;
@@ -188,7 +188,7 @@ public class CommandListenerThread extends Thread {
      */
     protected void registerNewChannels() throws Exception {
         SocketChannel channel;
-        Player player;
+        Character player;
         Room room;
         PlayerChannel playerChannel;
 
@@ -276,7 +276,7 @@ public class CommandListenerThread extends Thread {
             readBuffer.clear();
 
             // grab the reference to the key attachment
-            StringBuffer requestString = ((Player) key.attachment()).getCurrentCommand();
+            StringBuffer requestString = ((Character) key.attachment()).getCurrentCommand();
 
             // append the request to the attachment's string buffer
             requestString.append(strRequest);
@@ -328,7 +328,7 @@ public class CommandListenerThread extends Thread {
     protected void parseCompletedCommand(String request, SocketChannel socketChannel) throws IOException {
 
         // get the player from the current SocketChannel's key
-        Player player = (Player) socketChannel.keyFor(readSelector).attachment();
+        Character player = (Character) socketChannel.keyFor(readSelector).attachment();
 
         // get the room from the player
         Room room = player.getRoom();

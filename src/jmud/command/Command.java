@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public abstract class Command {
 
-    protected final String CRLF = "\n\r";
+
 
     /*
       (Note: after reading this again in Nov '09 I don't really have a clue what I was talking about :D) 

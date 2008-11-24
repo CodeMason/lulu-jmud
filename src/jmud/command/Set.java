@@ -1,7 +1,8 @@
 package jmud.command;
 
 import jmud.core.Flag;
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
@@ -20,7 +21,7 @@ import java.lang.reflect.Field;
 public class Set extends Command {
 
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private String target;
 
     /**
@@ -52,7 +53,7 @@ public class Set extends Command {
             // DEBUG: target.length() == 0
             //System.out.println("Set target length was 0");
 
-            for(Field f : Player.getFlags()) {
+            for(Field f : Character.getFlags()) {
 
                 // DEBUG: do we have any fields?
                 //System.out.println("Set: found field - " + f.getName());
@@ -62,7 +63,7 @@ public class Set extends Command {
                     strbMessage.append(f.getAnnotation(Flag.class).name())
                         .append(":\t")
                         .append(f.getBoolean(player) ? "on" : "off")
-                        .append(CRLF);
+                        .append(Settings.CRLF);
 
                     // DEBUG: check that we're actually appending stuff
                     //System.out.println("Set results: " + strbMessage.toString());
@@ -91,7 +92,7 @@ public class Set extends Command {
 //            }
 
             // get the field by the alias that the player supplied
-            field = Player.getFlagsByAlias().get(args[0]);
+            field = Character.getFlagsByAlias().get(args[0]);
 
             // if they've only supplied the flag name then simply print the name and value
             if(args.length == 1) {
@@ -101,7 +102,7 @@ public class Set extends Command {
                     strbMessage.append(field.getAnnotation(Flag.class).name())
                         .append(":\t")
                         .append(field.getBoolean(player) ? "on" : "off")
-                        .append(CRLF);
+                        .append(Settings.CRLF);
                 } catch(Exception e) {
                     strbMessage.append("[error retrieving ")
                         .append(args[0])
@@ -117,7 +118,7 @@ public class Set extends Command {
                     strbMessage.append(field.getAnnotation(Flag.class).name())
                         .append(" is now:\t")
                         .append(field.getBoolean(player) ? "on" : "off")
-                        .append(CRLF);
+                        .append(Settings.CRLF);
                 } catch(IllegalAccessException e) {
                     strbMessage.append("[error retrieving ")
                         .append(args[0])

@@ -4,7 +4,8 @@
  */
 package jmud.command;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
@@ -12,7 +13,7 @@ import java.nio.channels.SocketChannel;
 
 public class RoomID extends Command {
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private SocketChannel sc;
     private Room room;
 
@@ -37,14 +38,14 @@ public class RoomID extends Command {
         // Tell the player what else is in the room they just entered
         try {
             playerChannel.sendMessage(new StringBuilder().append(room.getID())
-                .append(CRLF)
+                .append(Settings.CRLF)
                 .append(player.getPrompt()).toString());
 
             // send the message that the player left to the room they just left
-            room.up.sendMessageToAll(CRLF
+            room.up.sendMessageToAll(Settings.CRLF
                 + player.getName()
                 + " went down"
-                + CRLF);
+                + Settings.CRLF);
         } catch(Exception e) {
             System.out.println("sending room ID message failed:\n\r"
                 + e.getMessage());

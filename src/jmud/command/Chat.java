@@ -2,7 +2,8 @@ package jmud.command;
 
 //import java.util.Iterator;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
@@ -18,7 +19,7 @@ import java.nio.channels.SocketChannel;
 public class Chat extends Command {
 
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private SocketChannel sc;
     private Room room;
     private String msg;
@@ -56,12 +57,12 @@ public class Chat extends Command {
     public boolean exec() {
         try {
             // the player prompt will be handled by sendMessageToAllButOne
-            room.sendMessageToAllButOne(CRLF
+            room.sendMessageToAllButOne(Settings.CRLF
                 + player.getName()
                 + ": "
                 + msg
-                + CRLF, playerChannel);
-            playerChannel.sendMessage(CRLF
+                + Settings.CRLF, playerChannel);
+            playerChannel.sendMessage(Settings.CRLF
                 + player.getPrompt());
         } catch(Exception e) {
             System.out.println(e);

@@ -1,6 +1,7 @@
 package jmud.command;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.item.Item;
 import jmud.mobs.Mob;
 import jmud.netIO.deprecated.PlayerChannel;
@@ -20,7 +21,7 @@ public class Look extends Command {
     private static final String YOU_SEE_PROMPT = "You see: ";
 
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private Room room;
     private String strTarget;
 
@@ -61,9 +62,9 @@ public class Look extends Command {
         if(strTarget == null || strTarget.length() == 0) {
             message.append(room.getShortDescription())
                 .append(player.isDebug() ? " [" + room.getID() + "]" : "")
-                .append(CRLF)
-                .append(mobAndPlayerNames.length() != 0 ? ALSO_HERE_PROMPT + mobAndPlayerNames + CRLF : "")
-                .append(itemNames.length() != 0 ? YOU_SEE_PROMPT + itemNames + CRLF : "");
+                .append(Settings.CRLF)
+                .append(mobAndPlayerNames.length() != 0 ? ALSO_HERE_PROMPT + mobAndPlayerNames + Settings.CRLF : "")
+                .append(itemNames.length() != 0 ? YOU_SEE_PROMPT + itemNames + Settings.CRLF : "");
 
             sendMessage(message);
             return true;
@@ -154,7 +155,7 @@ public class Look extends Command {
         // tack on the exits and the prompt even though the engine is supposed to handle the
         // prompt.
         strbMessage.append(room.getExits())
-            .append(CRLF)
+            .append(Settings.CRLF)
             .append(player.getPrompt());
 
         // now send back what we found to the player

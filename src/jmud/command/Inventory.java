@@ -9,7 +9,8 @@
 
 package jmud.command;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.item.Item;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
@@ -20,7 +21,7 @@ import jmud.slot.Slot;
  */
 public class Inventory extends Command {
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private Room room;
 
     /**
@@ -61,7 +62,7 @@ public class Inventory extends Command {
             }
         }
         // tack on the newline
-        msg.append(CRLF).append(room.getExits()).append(CRLF).append(player.getPrompt());
+        msg.append(Settings.CRLF).append(room.getExits()).append(Settings.CRLF).append(player.getPrompt());
 
         // now send back what we found to the player
         try {

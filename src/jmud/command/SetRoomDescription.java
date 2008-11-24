@@ -1,6 +1,7 @@
 package jmud.command;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
@@ -27,7 +28,7 @@ import java.nio.channels.SocketChannel;
  */
 public class SetRoomDescription extends Command {
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private SocketChannel sc;
     private Room room;
     // strTarget should be the new description for a room
@@ -57,9 +58,9 @@ public class SetRoomDescription extends Command {
         // user some feedback to that effect.
         try {
             playerChannel.sendMessage("This command does not work yet, sorry. "
-                + CRLF
+                + Settings.CRLF
                 + room.getExits()
-                + CRLF
+                + Settings.CRLF
                 + player.getPrompt());
         } catch(Exception e) {
             System.out.println("Couldn't print \"command no workee\" message to " + player.getName());

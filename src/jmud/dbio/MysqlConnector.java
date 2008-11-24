@@ -1,6 +1,6 @@
 package jmud.dbio;
 
-import jmud.core.Player;
+import jmud.core.Character;
 import jmud.item.Item;
 import jmud.mobs.Mob;
 import jmud.mobs.MobType;
@@ -480,7 +480,7 @@ public class MysqlConnector {
      *                   objects to.
      * @throws SQLException on sproc prepare, sproc execute or recordset close
      */
-    public void getPlayers(LinkedList<Player> playerList) throws SQLException {
+    public void getPlayers(LinkedList<Character> playerList) throws SQLException {
 
         // create and execute the a stored procedure through a callable sql statement
         rs = conn.prepareCall("{call spGetPlayers}").executeQuery();
@@ -489,7 +489,7 @@ public class MysqlConnector {
         // to add to the passed in list of players
         while(rs.next()) {
             //noinspection ObjectAllocationInLoop
-            playerList.add(new Player(rs.getInt(1),
+            playerList.add(new Character(rs.getInt(1),
                 rs.getString(2),
                 rs.getString(3),
                 rs.getString(4),
@@ -503,7 +503,7 @@ public class MysqlConnector {
 
             // DEBUG:
             //noinspection ObjectAllocationInLoop
-            System.out.println(new StringBuilder().append(((Player) playerList.getLast()).getName()).append(" loaded \n").toString());
+            System.out.println(new StringBuilder().append(((Character) playerList.getLast()).getName()).append(" loaded \n").toString());
         }
 
         rs.close();
@@ -518,9 +518,9 @@ public class MysqlConnector {
      * @throws SQLException on sproc prepares, sproc executes, recordset close, sproc param assignments
      */
     @SuppressWarnings({"ObjectAllocationInLoop"})
-    public Player getPlayer(String login, String password) throws SQLException {
+    public Character getPlayer(String login, String password) throws SQLException {
         int playerID;
-        Player player;
+        Character player;
         List<Slot> slots = new LinkedList<Slot>();
         List<String> aliases = new LinkedList<String>();
         List<Slot> itemSlots;
@@ -541,7 +541,7 @@ public class MysqlConnector {
         if(rs.next()) {
             playerID = rs.getInt(1);
 
-            player = new Player(playerID,
+            player = new Character(playerID,
                 rs.getString(2),
                 rs.getString(3),
                 rs.getString(4),
