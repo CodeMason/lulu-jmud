@@ -9,8 +9,11 @@ import java.util.LinkedList;
  */
 
 public class JobManager {
-	/* SINGLETON IMPLEMENTATION */
-
+	/* 
+	 * ********************************************
+	 * Singleton Implementation
+	 * ********************************************
+	 */	
 	/**
 	 * Protected constructor is sufficient to suppress unauthorized calls to the
 	 * constructor
@@ -31,8 +34,16 @@ public class JobManager {
 		return JobManagerHolder.INSTANCE;
 	}
 
-	/* END SINGLETON IMPLEMENTATION */
+	/* 
+	 * ********************************************
+	 * Concrete Class Implementation
+	 * ********************************************
+	 */	
 
+	public void init () {
+		//TODO add in some JobWorker initializing stuff here.
+	}
+	
 	private LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
 
 	public void pushJobToQueue(AbstractJob aj) {
