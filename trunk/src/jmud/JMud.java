@@ -6,7 +6,7 @@ package jmud;
 
 
 
-import jmud.commands.Command;
+import jmud.commands.definitions.Command;
 import jmud.core.EngineThread;
 import jmud.core.LoginThread;
 import jmud.netIO.deprecated.AcceptThread;
