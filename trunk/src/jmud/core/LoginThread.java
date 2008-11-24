@@ -362,7 +362,7 @@ public class LoginThread extends Thread {
      * @throws IOException if there io problems
      */
     protected void handleCompletedLoginState(String loginString, SocketChannel channel) throws IOException {
-        Player player;
+        Character player;
 
         // get the login object from the "ready" login selectors "ready" key associated with this Socket Channel
         Login login = (Login) channel.keyFor(loginSelector).attachment();
@@ -508,11 +508,11 @@ public class LoginThread extends Thread {
      * @param login Login object containing username and password to use to match against all users
      * @return A player that matches the username and password, if any
      */
-    private Player checkLogin(Login login) {
+    private Character checkLogin(Login login) {
         // DEBUG:
         //System.out.println("Checking login (" + login.getLogin() + ", " + login.getPassword() + ")");
 
-        Player player = null;
+        Character player = null;
 
         try {
             player = mSqlConn.getPlayer(login.getLogin().toString(), login.getPassword().toString());

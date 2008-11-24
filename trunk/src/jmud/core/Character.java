@@ -1,6 +1,15 @@
 package jmud.core;
 
 /**
+ * 
+ * 24NOV08:  PlayerAccount should only represent the data that pertains to
+ * Account only, aka, username, email and password plus any settings they
+ * might have, aka Telnet settings.
+ * 
+ * A playerAccount will point to many Characters.
+ * 
+ * 
+ * 
  * A role playing personna to be controlled and used to interact with the game;
  * this class has a lot of the game code for controlling player state in response
  * to events like taking damage, poison, etc. We'll probably want to move this
@@ -17,7 +26,10 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class Player implements Serializable, Target {
+
+
+
+public class Character implements Serializable, Target {
 	private static final long serialVersionUID = 6040847714517522106L;
 
 	static final int MAP_START_ROOM = 1;
@@ -88,7 +100,7 @@ public class Player implements Serializable, Target {
         //}
 
         try {
-            for(Field field : Player.class.getDeclaredFields()) {
+            for(Field field : Character.class.getDeclaredFields()) {
 
                 // DEBUG: are we getting any fields?
                 //System.out.println(field.getName());
@@ -130,7 +142,7 @@ public class Player implements Serializable, Target {
      * <p/>
      * Also creates a StringBuffer for holding an unfinnished command in progress
      */
-    public Player() {
+    public Character() {
         currentCommand = new StringBuffer();
     }
 
@@ -142,7 +154,7 @@ public class Player implements Serializable, Target {
      * @param name The name (not login) to assign to this player. This is what other
      *             players in the game will see and refer to this player as.
      */
-    public Player(String name) {
+    public Character(String name) {
         currentCommand = new StringBuffer();
         this.name = name;
     }
@@ -173,7 +185,7 @@ public class Player implements Serializable, Target {
      * @param iID           database ID of the player
      * @param desc          description of the player
      */
-    public Player(int iID,
+    public Character(int iID,
                   String name,
                   String desc,
                   String login,
@@ -224,7 +236,7 @@ public class Player implements Serializable, Target {
      *         o does not match the login of this instance.
      */
     public boolean equals(Object o) {
-        return o.getClass() == this.getClass() && ((Player) o).login.equals(this.login);
+        return o.getClass() == this.getClass() && ((Character) o).login.equals(this.login);
     }
 
     /**

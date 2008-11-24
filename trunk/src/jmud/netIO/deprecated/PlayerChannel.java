@@ -2,7 +2,7 @@ package jmud.netIO.deprecated;
 
 import java.nio.channels.SocketChannel;
 
-import jmud.core.Player;
+import jmud.core.Character;
 
 /**
  * A SocketChannel and associated Player. This is used mainly as a convenience class to pass
@@ -17,7 +17,7 @@ import jmud.core.Player;
  */
 public class PlayerChannel {
 
-    private Player player;
+    private Character player;
     private SocketChannel socketchannel;
 
     // used for writing to a player's SocketChannel
@@ -30,7 +30,7 @@ public class PlayerChannel {
      * @param player        The player
      * @param socketchannel The socketchannel
      */
-    public PlayerChannel(Player player, SocketChannel socketchannel) {
+    public PlayerChannel(Character player, SocketChannel socketchannel) {
         this.player = player;
         this.socketchannel = socketchannel;
     }
@@ -69,7 +69,7 @@ public class PlayerChannel {
      *
      * @return The PlayerChannel's Player object
      */
-    public Player getPlayer() {
+    public Character getPlayer() {
         return player;
     }
 

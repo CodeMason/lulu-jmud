@@ -1,7 +1,8 @@
 package jmud.rooms;
 
 import jmud.command.Command;
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 
 import java.nio.channels.SocketChannel;
@@ -13,7 +14,7 @@ import java.nio.channels.SocketChannel;
  */
 public class RoomID extends Command {
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private SocketChannel sc;
     private Room room;
 
@@ -43,7 +44,7 @@ public class RoomID extends Command {
         try {
             // tell the player what room they're in
             playerChannel.sendMessage(room.getID()
-                + CRLF
+                + Settings.CRLF
                 + player.getPrompt());
         } catch(Exception e) {
             System.out.println("Send room ID message failed:\n\r"

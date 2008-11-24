@@ -1,6 +1,7 @@
 package jmud.command;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.item.Item;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
@@ -15,7 +16,7 @@ import jmud.rooms.Room;
 public class Get extends Command {
 
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private Room room;
     private String strTarget;
 
@@ -48,22 +49,22 @@ public class Get extends Command {
         // check if there is an item or not
         if(strTarget == null || strTarget.length() == 0) {
             strbMessage.append("You must specify an item to get")
-                .append(CRLF);
+                .append(Settings.CRLF);
             // check if the player has a free hand
         } else if(!player.hasFreeGrabber()) {
             strbMessage.append("You need a free hand to grab that.")
-                .append(CRLF);
+                .append(Settings.CRLF);
             // make sure the item is in the room
         } else if(room.getItem(strTarget) == null || (item = room.remove(room.getItem(strTarget))) == null) {
             strbMessage.append("You don't see a ")
                 .append(strTarget)
-                .append(CRLF);
+                .append(Settings.CRLF);
             // nothing failed, we got the item
         } else {
             player.grab(item);
             strbMessage.append("You get the ")
                 .append(item.getName())
-                .append(CRLF);
+                .append(Settings.CRLF);
         }
 
         // tack on the player's prompt even though the engine is supposed to handle the

@@ -9,7 +9,8 @@
 
 package jmud.command;
 
-import jmud.core.Player;
+import jmud.core.Character;
+import jmud.core.Settings;
 import jmud.dbio.MysqlConnector;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
@@ -25,7 +26,7 @@ public abstract class Direction extends Command {
     private static final String YOU_SEE_PROMPT = "You see: ";
     private final Object lock = new Object();
     private PlayerChannel playerChannel;
-    private Player player;
+    private Character player;
     private Room room;
 
     public abstract Room getTargetRoom();
@@ -109,13 +110,13 @@ public abstract class Direction extends Command {
                 // send the message that the player entered to everyone *else* in the room
                 targetRoom.sendMessageToAllButOne(player.getName()
                     + " entered from the " + getSourceDirection()
-                    + CRLF, playerChannel);
+                    + Settings.CRLF, playerChannel);
 
                 // send the message that the player left to everyone in the room they just left
-                room.sendMessageToAll(CRLF
+                room.sendMessageToAll(Settings.CRLF
                     + player.getName()
                     + " went " + getTargetDirection()
-                    + CRLF);
+                    + Settings.CRLF);
             } catch(Exception e) {
                 System.out.println("Send room desc, mob names, exits and prompt, OR player went [direction] message failed:\n\r"
                     + e.getMessage());
@@ -124,9 +125,9 @@ public abstract class Direction extends Command {
             // there was no room to the south of the player's current room
         } else {
             try {
-                playerChannel.sendMessage("Can't go " + getTargetDirection() + CRLF);
+                playerChannel.sendMessage("Can't go " + getTargetDirection() + Settings.CRLF);
             } catch(Exception e) {
-                System.out.println("Send \"Can't go [direction]\\n\\r\" failed:" + CRLF
+                System.out.println("Send \"Can't go [direction]\\n\\r\" failed:" + Settings.CRLF
                     + e.getMessage());
             }
         }

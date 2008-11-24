@@ -1,6 +1,6 @@
 package jmud.rooms;
 
-import jmud.core.Player;
+import jmud.core.Character;
 import jmud.item.Item;
 import jmud.mobs.Mob;
 import jmud.netIO.deprecated.PlayerChannel;
@@ -301,7 +301,7 @@ public class Room {
      * @param p player to look for in this room
      * @return true if the player is found, false if the player is not found
      */
-    public boolean hasPlayer(Player p) {
+    public boolean hasPlayer(Character p) {
         /*
           GHETTO GHETTO
           Now this is risky because we're assuming that the hashcode of a player
@@ -412,7 +412,7 @@ public class Room {
      * @return String containing a comma-separated list of all monsters and players in this room except the
      *         name of the player who's requesting the list
      */
-    public String getMobAndPlayerNames(Player player) {
+    public String getMobAndPlayerNames(Character player) {
         StringBuilder names = new StringBuilder();
         boolean bMultipleNames = false;
 
@@ -609,7 +609,7 @@ public class Room {
      * @return The first matching <code>Player</code> if any, else null
      * @see #getPlayers(String)
      */
-    public Player getPlayer(String name) {
+    public Character getPlayer(String name) {
         try {
             return playerChannels.get(name).getPlayer();
         } catch(Exception e) {
@@ -662,7 +662,7 @@ public class Room {
      * @see #remove(Item)
      */
     public void remove(PlayerChannel pc) {
-        Player p = pc.getPlayer();
+        Character p = pc.getPlayer();
         try {
             // hashtable elements must be removed with the key objects, not with things that
             // hash out to the same value as the key object (I'm pretty sure anyway)
