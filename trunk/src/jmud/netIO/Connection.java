@@ -1,4 +1,7 @@
 package jmud.netIO;
+
+import java.nio.channels.SocketChannel;
+
 /**
  * AcceptThread spawns a ConnectionAttempt object for each attempted connection.
  * ConnectionAttempt object will spawn ConnectionAttemptJob objects which will attempt
@@ -13,6 +16,16 @@ package jmud.netIO;
  * @version 0.1
 
  */
-public class ConnectionAttempt {
+public class Connection {
+	private SocketChannel sc = null;
 
+	public Connection(SocketChannel sc) {
+		super();
+		this.sc = sc;
+	}
+
+	public SocketChannel getSc() {
+		return sc;
+	}
+	
 }
