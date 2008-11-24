@@ -1,10 +1,14 @@
 package jmud.character.stats;
 
+import java.util.ArrayList;
+
 public class Stat {
 	private String name = "";
 	private int max = -1;
 	private int min = -1;
 	private int current = -1;
+	private ArrayList<StatMod> mods = new ArrayList<StatMod>();
+	
 	
 	public Stat( String name, int max, int min, int current) {
 		super();
@@ -32,6 +36,10 @@ public class Stat {
 
 	public int getCurrent() {
 		return current;
+	}
+
+	public ArrayList<StatMod> getMods() {
+		return mods;
 	}
 
 	public void setCurrent(int current) {
