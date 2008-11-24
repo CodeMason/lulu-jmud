@@ -5,10 +5,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-/*
- * JobManager.java
- *
- * Created on 18NOV08 by David Loman
+/**
+ * Singleton patterned class
+ * Manages all AbstractJobs in a queue.  Controls all JobWorkers.
+ * 
+ * @author David Loman
+ * @version 0.1
  */
 
 public class JobManager {
@@ -47,6 +49,13 @@ public class JobManager {
 
 	private LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
 
+	
+	public void init (int numOfWorkers) {
+		for (int i = 0; i < numOfWorkers; ++i) {
+			this.createNewWorker();
+		}
+	}
+	
 	/* 
 	 * ********************************************
 	 * Queue Access
@@ -80,13 +89,6 @@ public class JobManager {
 	 * JobWorker Control
 	 * ********************************************
 	 */	
-	
-	public void init (int numOfWorkers) {
-		for (int i = 0; i < numOfWorkers; ++i) {
-			this.createNewWorker();
-		}
-	}
-	
 	public int createNewWorker() {
 		int num = 0;
 		

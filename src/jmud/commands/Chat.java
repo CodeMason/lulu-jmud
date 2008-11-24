@@ -1,8 +1,8 @@
-package jmud.command;
+package jmud.commands;
 
 //import java.util.Iterator;
 
-import jmud.core.Character;
+import jmud.character.Character;
 import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;

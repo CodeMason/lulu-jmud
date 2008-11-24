@@ -1,4 +1,4 @@
-package jmud.command;
+package jmud.commands;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public abstract class Command {
 
+	private String baseCmd  = "";
 
 
     /*
@@ -52,5 +53,14 @@ public abstract class Command {
     public boolean hasAlias(String alias) {
     	return this.aliases.contains(alias);
     }
+    
+    
+    
+	public String getBaseCmd() {
+		return baseCmd;
+	}
+    
+    
+    
 }
 

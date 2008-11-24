@@ -2,9 +2,9 @@
  * Copyright 2007 Entero Corporation. All Rights Reserved.
  * www.entero.com
  */
-package jmud.command;
+package jmud.commands;
 
-import jmud.core.Character;
+import jmud.character.Character;
 import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;

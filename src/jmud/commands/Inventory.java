@@ -7,9 +7,9 @@
  * and open the template in the editor.
  */
 
-package jmud.command;
+package jmud.commands;
 
-import jmud.core.Character;
+import jmud.character.Character;
 import jmud.core.Settings;
 import jmud.item.Item;
 import jmud.netIO.deprecated.PlayerChannel;

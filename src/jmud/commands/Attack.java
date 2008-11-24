@@ -1,4 +1,4 @@
-package jmud.command;
+package jmud.commands;
 
 import jmud.*;
 import jmud.core.Target;

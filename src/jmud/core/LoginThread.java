@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import jmud.character.Character;
 import jmud.dbio.MysqlConnector;
 import jmud.netIO.deprecated.ConnectionList;
 import jmud.netIO.deprecated.PlayerChannel;

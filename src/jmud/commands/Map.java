@@ -1,4 +1,4 @@
-package jmud.command;
+package jmud.commands;
 
 import jmud.dbio.MysqlConnector;
 import jmud.rooms.Room;
