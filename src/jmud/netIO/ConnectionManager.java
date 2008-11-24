@@ -1,9 +1,22 @@
 package jmud.netIO;
 
+/**
+ * ConnectionManager is a Runnable class that manages all Connections.
+ * ConnectionManager contains a single NIO selector and all routines for
+ * Accepting new connections and handling IO for existing connections.
+ * 
+ * Opting for a single thread solution for many reasons, all of which can
+ * be summed up here:
+ * http://rox-xmlrpc.sourceforge.net/niotut/index.html
+ * 
+ *
+ * @author David Loman
+ * @version 0.1
+ */
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.CancelledKeyException;
 import java.nio.channels.SelectionKey;
@@ -19,7 +32,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.job.CheckConnBufferForValidCmd_Job;
+
 public class ConnectionManager implements Runnable {
+	/* 
+	 * ********************************************
+	 * Singleton Implementation
+	 * ********************************************
+	 */	
+	/**
+	 * Protected constructor is sufficient to suppress unauthorized calls to the
+	 * constructor
+	 */
+	protected ConnectionManager() {
+	}
+
+	/**
+	 * ConnectionManagerHolder is loaded on the first execution of
+	 * ConnectionManager.getInstance() or the first access to
+	 * ConnectionManagerHolder.INSTANCE, not before.
+	 */
+	private static class ConnectionManagerHolder {
+		private final static ConnectionManager INSTANCE = new ConnectionManager();
+	}
+
+	public static ConnectionManager getInstance() {
+		return ConnectionManagerHolder.INSTANCE;
+	}
+
+
+
+	/* 
+	 * ********************************************
+	 * Concrete Class Implementation
+	 * ********************************************
+	 */		
+	
+	
 	private Thread myThread;
 	private boolean runStatus = true;
 	private boolean runCmd = true;
@@ -34,23 +83,24 @@ public class ConnectionManager implements Runnable {
 	// The selector we'll be monitoring
 	private Selector selector;
 
-	// The buffer into which we'll read data when it's available
-	private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
-
-	// A list of PendingChange instances
-	private List<ConChangeRequest> pendingChanges = new LinkedList<ConChangeRequest>();
+	// A list of pending events 
+	private List<ConnEvent> pendingEvents = new LinkedList<ConnEvent>();
 
 	// Maps a SocketChannel to a list of ByteBuffer instances
 	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
 	// Maps a SocketChannel to a Connection
-	private Map<SocketChannel, Connection> conns = new HashMap<SocketChannel, Connection>();
-	private int portalCnt = 0;
+	private Map<SocketChannel, Connection> connMap = new HashMap<SocketChannel, Connection>();
+	private int connCnt = 0;
 
-	/*
-	 * CONSTRUCTORS
-	 */
-	public ConnectionManager(InetAddress hostAddress, int port) throws IOException {
+	
+	/* 
+	 * ********************************************
+	 * Initializer
+	 * ********************************************
+	 */	
+	
+	public void init(InetAddress hostAddress, int port) throws IOException {
 		this.hostAddress = hostAddress;
 		this.port = port;
 
@@ -71,35 +121,38 @@ public class ConnectionManager implements Runnable {
 
 	}
 
-	/*
-	 * Runnable Overrides
+	
+	/* 
+	 * ********************************************
+	 * Runnable.run() Routine
+	 * ********************************************
 	 */
 	@Override
 	public void run() {
 		this.runStatus = true;
-		System.out.println("ConnectionManager: Running.");
 		SelectionKey key = null;
 
+		System.out.println("ConnectionManager: Running.");
 		while (this.runCmd) {
 			try {
 
-				// Process any pending changes
-				synchronized (this.pendingChanges) {
+				// Process any pending events
+				synchronized (this.pendingEvents) {
 
-					Iterator<ConChangeRequest> changes = this.pendingChanges.iterator();
+					Iterator<ConnEvent> events = this.pendingEvents.iterator();
 
-					while (changes.hasNext()) {
-						ConChangeRequest change = (ConChangeRequest) changes.next();
-						switch (change.type) {
-						case ConChangeRequest.CHANGEOPS:
-							// get a ref to the SelectionKey in the
+					while (events.hasNext()) {
+						ConnEvent event = (ConnEvent) events.next();
+						switch (event.type) {
+						case ConnEvent.CHANGEOPS:
+							// get a reference to the SelectionKey in the
 							// SocketChannel in the ChangeRequest
-							key = change.socket.keyFor(this.selector);
+							key = event.socket.keyFor(this.selector);
 
 							if (key == null) {
-								System.out.println(change.toString());
-								if (!change.socket.isConnected()) {
-									this.disconnect(change.socket);
+								System.out.println(event.toString());
+								if (!event.socket.isConnected()) {
+									this.disconnect(event.socket);
 								}
 								continue;
 							}
@@ -109,14 +162,14 @@ public class ConnectionManager implements Runnable {
 								continue;
 							}
 
-							key.interestOps(change.ops);
+							key.interestOps(event.ops);
 							break;
-						case ConChangeRequest.REGISTER:
-							change.socket.register(this.selector, change.ops);
+						case ConnEvent.REGISTER:
+							event.socket.register(this.selector, event.ops);
 							break;
 						}
 					}
-					this.pendingChanges.clear();
+					this.pendingEvents.clear();
 				}
 
 				// Wait for an event one of the registered channels
@@ -133,16 +186,21 @@ public class ConnectionManager implements Runnable {
 					selectedKeys.remove();
 
 					if (!key.isValid()) {
+						// if its a bad key, then attempt to drop the connection
+						// TODO Do we want to actually do this here? TESTPOINT
 						this.disconnect(key);
 					}
 
 					// Check what event is available and deal with it
 					if (key.isAcceptable()) {
-						this.accept(key);
+						this.acceptNewConnection(key);
+						
 					} else if (key.isReadable()) {
-						this.read(key);
+						this.readIncoming(key);
+						
 					} else if (key.isWritable()) {
-						this.write(key);
+						this.writeOutgoing(key);
+						
 					} else {
 						System.err.println("Unhandled keystate: " + key.toString());
 					}
@@ -158,13 +216,13 @@ public class ConnectionManager implements Runnable {
 				System.err.println(key.toString());
 			}
 		}
-
 		// End the main run loop.
+		System.out.println("ConnectionManager: Shutting down...");
 
 		// SHutdown stuff:
 		this.runStatus = false;
 
-		Set<SocketChannel> ssc = this.conns.keySet();
+		Set<SocketChannel> ssc = this.connMap.keySet();
 
 		for (SocketChannel s : ssc) {
 			try {
@@ -177,49 +235,61 @@ public class ConnectionManager implements Runnable {
 		System.out.println("ConnectionManager: Shutdown.");
 	}
 
-	private void read(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
+	
+	
+	/* 
+	 * ********************************************
+	 * I/O Routines
+	 * ********************************************
+	 */
+	private void readIncoming(SelectionKey key) throws IOException {
 
-		// Clear out our read buffer so it's ready for new data
-		this.readBuffer.clear();
+		// Obtain handle on the passed SocketChannel from 'key'
+		SocketChannel sockChan = (SocketChannel) key.channel();
 
-		// Attempt to read off the channel
-		int numRead;
-		try {
-			numRead = socketChannel.read(this.readBuffer);
-		} catch (IOException e) {
-			// The remote forcibly closed the connection, cancel
-			// the selection key and close the channel.
-			key.cancel();
-			socketChannel.close();
+		// Look up to see if we have a mapping to a connection:
+		Connection c = this.connMap.get(sockChan);
+
+		if (c == null) {
+			// Deal with null Connection by creating new connection
+			this.CreateNewConnection(sockChan);
+		}
+
+		/*
+		 * Attempt to read data from the SocketChannel to the Connection's
+		 * ByteBuffer. If the socket channel activates it's key but doesn't send
+		 * any data it means that the connection was dropped.
+		 */
+		if (sockChan.read(c.getReadBuffer()) < 0) {
+			System.out.println("CommandListenerThread: Lost connection");
+
+			// close the dropped connection
+			this.disconnect(sockChan);
 			return;
 		}
 
-		if (numRead == -1) {
-			// Remote entity shut the socket down cleanly. Do the
-			// same from our end and cancel the channel.
-			this.disconnect(key);
-			return;
-		}
+		// Now submit a job to see if this connection has a valid command stored
+		// yet.
+		CheckConnBufferForValidCmd_Job job = new CheckConnBufferForValidCmd_Job(c);
 
-		Connection p = this.conns.get(key.channel());
-		if (p == null) {
-			System.err.println("Null Connection on Lookup.");
-			return;
-		}
-
-		byte[] readdata = this.readBuffer.array();
-
-		// TODO FINISH LINKING THE DATA OUTPUT FROM ConMan
+		// Submit next Job
+		job.submitSelf();
 
 		return;
 	}
 
+	/**
+	 * This method is called externally, passing in the SocketChannel to be written to 
+	 * and the data to be written.  This method sets up a ConnEvent to be processed by
+	 * the selector prior to sending the data.
+	 * 
+	 * @param sockChan
+	 * @param data
+	 */
 	public void send(SocketChannel sockChan, byte[] data) {
-		synchronized (this.pendingChanges) {
+		synchronized (this.pendingEvents) {
 			// Indicate we want the interest ops set changed
-			this.pendingChanges.add(new ConChangeRequest(sockChan, ConChangeRequest.CHANGEOPS,
-					SelectionKey.OP_WRITE));
+			this.pendingEvents.add(new ConnEvent(sockChan, ConnEvent.CHANGEOPS, SelectionKey.OP_WRITE));
 
 			// And queue the data we want written
 			synchronized (this.pendingData) {
@@ -234,12 +304,22 @@ public class ConnectionManager implements Runnable {
 			}
 		}
 
-		// Finally, wake up our selecting thread so it can make the required
-		// changes
+		/*
+		 * Finally, wake up our selecting thread
+		 * so it can make the required changes
+		 */
 		this.selector.wakeup();
 	}
 
-	private void write(SelectionKey key) throws IOException {
+	/**
+	 * This method is called by the run() method after the selector is unblocked.  This method performs
+	 * the actual data write to the SocketChannel.  Also, the associated Key is set back to OP_READ so
+	 * we don't waste CPU cycles while it waits for more data to write when there isnt any coming!
+	 * 
+	 * @param key
+	 * @throws IOException
+	 */
+	private void writeOutgoing(SelectionKey key) throws IOException {
 		SocketChannel socketChannel = (SocketChannel) key.channel();
 
 		synchronized (this.pendingData) {
@@ -265,7 +345,14 @@ public class ConnectionManager implements Runnable {
 		}
 	}
 
-	private void accept(SelectionKey key) throws IOException {
+	
+	
+	/* 
+	 * ********************************************
+	 * New Connection Routines
+	 * ********************************************
+	 */
+	private void acceptNewConnection(SelectionKey key) throws IOException {
 
 		// For an accept to be pending the channel must be a server socket
 		// channel.
@@ -273,107 +360,111 @@ public class ConnectionManager implements Runnable {
 
 		// Accept the connection and make it non-blocking
 		SocketChannel sockChan = servSockChan.accept();
-		Socket sock = sockChan.socket();
 		sockChan.configureBlocking(false);
-		sock.toString();
 
 		// Register the new SocketChannel with our Selector, indicating
 		// we'd like to be notified when there's data waiting to be read
 		sockChan.register(this.selector, SelectionKey.OP_READ);
 
-		// Make and register a portal
-		@SuppressWarnings("unused")
-		Connection p = this.CreateNewConnection(sockChan);
-	}
-
-	public boolean disconnectFrom(String host) throws IOException {
-		System.out.println("ConnectionManager: Inside DisconnectFrom(Connection)");
-
-		synchronized (this.conns) {
-			for (SocketChannel sc : this.conns.keySet()) {
-				Connection p = this.conns.get(sc);
-				// if (p.getRemoteHostName().equals(host)) {
-				// return this.disconnectFrom(p);
-				// }
-			}
-		}
-
-		return false;
-	}
-
-	public boolean disconnectFrom(Connection p) throws IOException {
-
-		// this.conns.remove(p.getSockChan());
-		// this.getLocalMS().UnRegisterConnection(p);
-		//
-		// StdMsg smout =
-		// this.getLocalMS().generateNewMsg(StdMsgTypes.mtGoodBye,
-		// "Connection2ConnectionComms");
-		// p.SendToRemHost(smout);
-		// p.getSockChan().close();
-
-		return false;
-	}
-
-	public boolean disconnectFrom(InetAddress ip, int Port) throws IOException {
-
-		// for (Connection p : this.conns.values()) {
-		// if (ip.equals(p.getSockChan().socket().getInetAddress())
-		// && Port == p.getSockChan().socket().getPort()) {
-		// return this.disconnectFrom(p);
-		//				
-		// }
-		// }
-
-		return false;
-	}
-
-	private boolean disconnect(SelectionKey key) throws IOException {
-		System.out.println("ConnectionManager: Inside Disconnect(SelectionKey)");
-
-		this.disconnect((SocketChannel) key.channel());
-
-		key.channel().close();
-		key.cancel();
-		return key.isValid();
-	}
-
-	private boolean disconnect(SocketChannel sockChan) throws IOException {
-		System.out.println("ConnectionManager: Inside Disconnect(SocketChannel)");
-		System.err.println("Disconnect(SocketChannel)");
-
-		Connection p = this.conns.remove(sockChan);
-		// this.getLocalMS().UnRegisterConnection(p);
-
-		return sockChan.isConnected();
-
+		// Make and register a new Connection Object
+		Connection c = this.CreateNewConnection(sockChan);
+		this.connMap.put(sockChan, c);
 	}
 
 	private Connection CreateNewConnection(SocketChannel sockChan) {
-		// Make and register a portal
+		// Make and register a Connection
 		String s = "Connection:" + Integer.toString(this.getNewConnectionNumber());
 
-		System.out.println("ConnectionManager: New portal.  Name: " + s);
+		System.out.println("ConnectionManager: New Connection.  Name: " + s);
 
 		Connection c = new Connection(sockChan);
-		this.conns.put(sockChan, c);
+		this.connMap.put(sockChan, c);
 		return c;
 	}
 
 	private int getNewConnectionNumber() {
-		// JUST incase we have a TON of connections....
-		if (this.portalCnt == Integer.MAX_VALUE) {
-			this.portalCnt = 0;
+		//TODO the Max Connections isn't handled correctly.  Need to block new connections.
+		
+		// JUST in case we have a TON of connections....
+		if (this.connCnt == Integer.MAX_VALUE) {
+			this.connCnt = 0;
 		}
-		return this.portalCnt++;
+		return this.connCnt++;
 	}
 
+	
+	/* 
+	 * ********************************************
+	 * Disconnect Routines
+	 * ********************************************
+	 */
+	
+	/**
+	 * Disconnect by Connection object.
+	 * 
+	 * @param c
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean disconnectFrom(Connection c) throws IOException {
+		System.out.println("ConnectionManager.disconnect(Connection): c=" + c.toString());
+		SocketChannel sockChan = c.getSc();
+		return this.disconnect(sockChan);
+	}
+
+	/**
+	 * Disconnect by Key object
+	 * 
+	 * @param key
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean disconnect(SelectionKey key) throws IOException {
+		System.out.println("ConnectionManager.disconnect(SelectionKey): key=" + key.toString());
+		this.disconnect((SocketChannel) key.channel());
+
+		key.cancel();
+		return key.isValid();
+	}
+
+	/**
+	 * Disconnect by SocketChannel
+	 * 
+	 * @param sockChan
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean disconnect(SocketChannel sockChan) throws IOException {
+		System.err.println("ConnectionManager.disconnect(SocketChannel): sockChan=" + sockChan.toString());
+
+		@SuppressWarnings("unused")
+		Connection c = this.connMap.remove(sockChan);
+		// TODO What to do with the orphaned Connection? Probably perform Player
+		// object look up and persist the data....
+
+		sockChan.close();
+		return sockChan.isConnected();
+	}
+
+
+	
+	
+	
+	/* 
+	 * ********************************************
+	 * Runnable Implementation Routines
+	 * ********************************************
+	 */
 	public Thread getThread() {
 		return this.myThread;
 	}
 
 	public boolean getRunStatus() {
 		return this.runStatus;
+	}
+
+	public boolean getRunCmd() {
+		return this.runCmd;
 	}
 
 	public void start() {
@@ -390,8 +481,5 @@ public class ConnectionManager implements Runnable {
 		this.selector.wakeup();
 	}
 
-	public boolean getRunCmd() {
-		return this.runCmd;
-	}
 
 }

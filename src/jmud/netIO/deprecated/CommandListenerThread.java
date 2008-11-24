@@ -1,4 +1,4 @@
-package jmud.netIO;
+package jmud.netIO.deprecated;
 
 import jmud.command.Command;
 import jmud.core.Player;

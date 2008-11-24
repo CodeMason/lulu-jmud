@@ -1,5 +1,6 @@
 package jmud.netIO;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 /**
@@ -18,6 +19,12 @@ import java.nio.channels.SocketChannel;
  */
 public class Connection {
 	private SocketChannel sc = null;
+	
+	// The buffer into which we'll read incoming data when it's available
+	private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
+
+	// The buffer into which we'll write outgoing data when it's available
+	private ByteBuffer writeBuffer = ByteBuffer.allocate(8192);
 
 	public Connection(SocketChannel sc) {
 		super();
@@ -26,6 +33,14 @@ public class Connection {
 
 	public SocketChannel getSc() {
 		return sc;
+	}
+
+	public ByteBuffer getReadBuffer() {
+		return readBuffer;
+	}
+
+	public ByteBuffer getWriteBuffer() {
+		return writeBuffer;
 	}
 	
 }
