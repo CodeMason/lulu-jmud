@@ -4,42 +4,32 @@ package jmud.netIO;
  * ConnectionManager is a Runnable class that manages all Connections.
  * ConnectionManager contains a single NIO selector and all routines for
  * Accepting new connections and handling IO for existing connections.
- * 
+ *
  * Opting for a single thread solution for many reasons, all of which can
  * be summed up here:
  * http://rox-xmlrpc.sourceforge.net/niotut/index.html
- * 
+ *
  *
  * @author David Loman
  * @version 0.1
  */
 
+import jmud.job.definitions.CheckConnBufferForValidCmd_Job;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.CancelledKeyException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.channels.spi.SelectorProvider;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import jmud.job.definitions.CheckConnBufferForValidCmd_Job;
+import java.util.*;
 
 public class ConnectionManager implements Runnable {
-	/* 
+	/*
 	 * ********************************************
 	 * Singleton Implementation
 	 * ********************************************
-	 */	
+	 */
 	/**
 	 * Protected constructor is sufficient to suppress unauthorized calls to the
 	 * constructor
@@ -53,7 +43,7 @@ public class ConnectionManager implements Runnable {
 	 * ConnectionManagerHolder.INSTANCE, not before.
 	 */
 	private static class ConnectionManagerHolder {
-		private final static ConnectionManager INSTANCE = new ConnectionManager();
+		private static final ConnectionManager INSTANCE = new ConnectionManager();
 	}
 
 	public static ConnectionManager getInstance() {
@@ -62,67 +52,56 @@ public class ConnectionManager implements Runnable {
 
 
 
-	/* 
+	/*
 	 * ********************************************
 	 * Concrete Class Implementation
 	 * ********************************************
-	 */		
-	
-	
+	 */
+
+
 	private Thread myThread;
 	private boolean runStatus = true;
 	private boolean runCmd = true;
 
-	// The host:port combination to listen on
-	private InetAddress hostAddress;
-	private int port;
-
-	// The channel on which we'll accept connections
-	private ServerSocketChannel serverChannel;
-
-	// The selector we'll be monitoring
+    // The selector we'll be monitoring
 	private Selector selector;
 
-	// A list of pending events 
-	private List<ConnEvent> pendingEvents = new LinkedList<ConnEvent>();
+	// A list of pending events
+	private final List<ConnEvent> pendingEvents = new LinkedList<ConnEvent>();
 
 	// Maps a SocketChannel to a list of ByteBuffer instances
-	private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
+	private final Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
 
 	// Maps a SocketChannel to a Connection
 	private Map<SocketChannel, Connection> connMap = new HashMap<SocketChannel, Connection>();
-	private int connCnt = 0;
+	private int connCnt;
 
-	
-	/* 
+
+	/*
 	 * ********************************************
 	 * Initializer
 	 * ********************************************
-	 */	
-	
-	public void init(InetAddress hostAddress, int port) throws IOException {
-		this.hostAddress = hostAddress;
-		this.port = port;
+	 */
 
-		// Init the Selector:
+	public void init(InetAddress hostAddress, int port) throws IOException {
+        // Init the Selector:
 		this.selector = SelectorProvider.provider().openSelector();
 
 		// Create a new non-blocking server socket channel
-		this.serverChannel = ServerSocketChannel.open();
-		this.serverChannel.configureBlocking(false);
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
+		serverChannel.configureBlocking(false);
 
 		// Bind the server socket to the specified address and port
-		InetSocketAddress isa = new InetSocketAddress(this.hostAddress, this.port);
-		this.serverChannel.socket().bind(isa);
+		InetSocketAddress isa = new InetSocketAddress(hostAddress, port);
+		serverChannel.socket().bind(isa);
 
 		// Register the server socket channel, indicating an interest in
 		// accepting new connections
-		this.serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
-
+		serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
 	}
 
-	
-	/* 
+
+	/*
 	 * ********************************************
 	 * Runnable.run() Routine
 	 * ********************************************
@@ -139,36 +118,34 @@ public class ConnectionManager implements Runnable {
 				// Process any pending events
 				synchronized (this.pendingEvents) {
 
-					Iterator<ConnEvent> events = this.pendingEvents.iterator();
+                    for(ConnEvent pendingEvent : this.pendingEvents){
+                        //noinspection SwitchStatementWithoutDefaultBranch
+                        switch(pendingEvent.type){
+                            case ConnEvent.CHANGEOPS:
+                                // get a reference to the SelectionKey in the
+                                // SocketChannel in the ChangeRequest
+                                key = pendingEvent.socket.keyFor(this.selector);
 
-					while (events.hasNext()) {
-						ConnEvent event = (ConnEvent) events.next();
-						switch (event.type) {
-						case ConnEvent.CHANGEOPS:
-							// get a reference to the SelectionKey in the
-							// SocketChannel in the ChangeRequest
-							key = event.socket.keyFor(this.selector);
+                                if(key == null){
+                                    System.out.println(pendingEvent.toString());
+                                    if(!pendingEvent.socket.isConnected()){
+                                        this.disconnect(pendingEvent.socket);
+                                    }
+                                    continue;
+                                }
 
-							if (key == null) {
-								System.out.println(event.toString());
-								if (!event.socket.isConnected()) {
-									this.disconnect(event.socket);
-								}
-								continue;
-							}
+                                if(!key.isValid()){
+                                    System.err.println("BAD KEY");
+                                    continue;
+                                }
 
-							if (!key.isValid()) {
-								System.err.println("BAD KEY");
-								continue;
-							}
-
-							key.interestOps(event.ops);
-							break;
-						case ConnEvent.REGISTER:
-							event.socket.register(this.selector, event.ops);
-							break;
-						}
-					}
+                                key.interestOps(pendingEvent.ops);
+                                break;
+                            case ConnEvent.REGISTER:
+                                pendingEvent.socket.register(this.selector, pendingEvent.ops);
+                                break;
+                        }
+                    }
 					this.pendingEvents.clear();
 				}
 
@@ -194,13 +171,13 @@ public class ConnectionManager implements Runnable {
 					// Check what event is available and deal with it
 					if (key.isAcceptable()) {
 						this.acceptNewConnection(key);
-						
+
 					} else if (key.isReadable()) {
 						this.readIncoming(key);
-						
+
 					} else if (key.isWritable()) {
 						this.writeOutgoing(key);
-						
+
 					} else {
 						System.err.println("Unhandled keystate: " + key.toString());
 					}
@@ -235,9 +212,9 @@ public class ConnectionManager implements Runnable {
 		System.out.println("ConnectionManager: Shutdown.");
 	}
 
-	
-	
-	/* 
+
+
+	/*
 	 * ********************************************
 	 * I/O Routines
 	 * ********************************************
@@ -252,7 +229,7 @@ public class ConnectionManager implements Runnable {
 
 		if (c == null) {
 			// Deal with null Connection by creating new connection
-			this.CreateNewConnection(sockChan);
+			c = this.CreateNewConnection(sockChan);
 		}
 
 		/*
@@ -274,17 +251,15 @@ public class ConnectionManager implements Runnable {
 
 		// Submit next Job
 		job.submitSelf();
-
-		return;
-	}
+    }
 
 	/**
-	 * This method is called externally, passing in the SocketChannel to be written to 
+	 * This method is called externally, passing in the SocketChannel to be written to
 	 * and the data to be written.  This method sets up a ConnEvent to be processed by
 	 * the selector prior to sending the data.
-	 * 
-	 * @param sockChan
-	 * @param data
+	 *
+	 * @param sockChan the SocketChannel to be written to
+	 * @param data the data to send
 	 */
 	public void send(SocketChannel sockChan, byte[] data) {
 		synchronized (this.pendingEvents) {
@@ -315,8 +290,8 @@ public class ConnectionManager implements Runnable {
 	 * This method is called by the run() method after the selector is unblocked.  This method performs
 	 * the actual data write to the SocketChannel.  Also, the associated Key is set back to OP_READ so
 	 * we don't waste CPU cycles while it waits for more data to write when there isnt any coming!
-	 * 
-	 * @param key
+	 *
+	 * @param key the key whose SocketChannel we're writing to
 	 * @throws IOException
 	 */
 	private void writeOutgoing(SelectionKey key) throws IOException {
@@ -327,7 +302,7 @@ public class ConnectionManager implements Runnable {
 
 			// Write until there's not more data ...
 			while (!queue.isEmpty()) {
-				ByteBuffer buf = (ByteBuffer) queue.get(0);
+				ByteBuffer buf = queue.get(0);
 				socketChannel.write(buf);
 				if (buf.remaining() > 0) {
 					// ... or the socket's buffer fills up
@@ -345,9 +320,9 @@ public class ConnectionManager implements Runnable {
 		}
 	}
 
-	
-	
-	/* 
+
+
+	/*
 	 * ********************************************
 	 * New Connection Routines
 	 * ********************************************
@@ -384,7 +359,7 @@ public class ConnectionManager implements Runnable {
 
 	private int getNewConnectionNumber() {
 		//TODO the Max Connections isn't handled correctly.  Need to block new connections.
-		
+
 		// JUST in case we have a TON of connections....
 		if (this.connCnt == Integer.MAX_VALUE) {
 			this.connCnt = 0;
@@ -392,18 +367,18 @@ public class ConnectionManager implements Runnable {
 		return this.connCnt++;
 	}
 
-	
-	/* 
+
+	/*
 	 * ********************************************
 	 * Disconnect Routines
 	 * ********************************************
 	 */
-	
+
 	/**
 	 * Disconnect by Connection object.
-	 * 
-	 * @param c
-	 * @return
+	 *
+	 * @param c The connection to disconnect
+	 * @return true if the disconnection succeeded
 	 * @throws IOException
 	 */
 	public boolean disconnectFrom(Connection c) throws IOException {
@@ -414,9 +389,9 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by Key object
-	 * 
-	 * @param key
-	 * @return
+	 *
+	 * @param key the key to disconnect
+	 * @return true if the disconnect succeeded
 	 * @throws IOException
 	 */
 	private boolean disconnect(SelectionKey key) throws IOException {
@@ -429,28 +404,30 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by SocketChannel
-	 * 
-	 * @param sockChan
-	 * @return
+	 *
+	 * @param sockChan the SocketChannel to disconnect
+	 * @return true if the disconnect succeeded
 	 * @throws IOException
 	 */
 	private boolean disconnect(SocketChannel sockChan) throws IOException {
 		System.err.println("ConnectionManager.disconnect(SocketChannel): sockChan=" + sockChan.toString());
 
-		@SuppressWarnings("unused")
-		Connection c = this.connMap.remove(sockChan);
+        //noinspection UnusedDeclaration
+        Connection c = this.connMap.remove(sockChan);
 		// TODO What to do with the orphaned Connection? Probably perform Player
 		// object look up and persist the data....
+        // CM: I concur; we might put in some penalties too, so this should be abstracted out
+        //     and made extendable with rules
 
-		sockChan.close();
+        sockChan.close();
 		return sockChan.isConnected();
 	}
 
 
-	
-	
-	
-	/* 
+
+
+
+	/*
 	 * ********************************************
 	 * Runnable Implementation Routines
 	 * ********************************************

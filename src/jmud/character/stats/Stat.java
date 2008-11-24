@@ -8,11 +8,10 @@ public class Stat {
 	private int min = -1;
 	private int current = -1;
 	private ArrayList<StatMod> mods = new ArrayList<StatMod>();
-	
-	
+
+
 	public Stat( String name, int max, int min, int current) {
-		super();
-		this.current = current;
+        this.current = current;
 		this.max = max;
 		this.min = min;
 		this.name = name;
@@ -50,6 +49,6 @@ public class Stat {
 		return name;
 	}
 
-	
-	
+
+
 }

@@ -11,10 +11,8 @@ package jmud.commands.definitions;
 
 import jmud.character.Character;
 import jmud.core.Settings;
-import jmud.item.Item;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
-import jmud.slot.Slot;
 
 /**
  * @author Chris Maguire
@@ -43,7 +41,7 @@ public class Inventory extends Command {
 
         // whip through each slot and add item descriptions
 
-      //FIXME Had to stub this due to Massive Architecture rework.        
+      //FIXME Had to stub this due to Massive Architecture rework.
 //        for(Slot slot : player.getSlots()) {
 //
 //            // DEBUG:

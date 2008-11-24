@@ -4,22 +4,21 @@ package jmud.job.definitions;
 import jmud.netIO.Connection;
 
 /**
- * 
+ *
  * Checks a connection's ByteBuffer to see if a valid command has been stored
  * yet. If there has, then this Job will submit a DetermineWhichCommand_Job
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
 
 public class BuildCmdFromString_Job extends AbstractJob {
 
-	private Connection c = null;
+	private Connection c;
 	private String cmd = "";
 
 	public BuildCmdFromString_Job(Connection c, String cmd) {
-		super();
-		this.c = c;
+        this.c = c;
 		this.cmd = cmd;
 	}
 

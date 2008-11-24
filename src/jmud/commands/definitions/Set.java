@@ -1,12 +1,8 @@
 package jmud.commands.definitions;
 
 import jmud.character.Character;
-import jmud.core.Flag;
-import jmud.core.Settings;
 import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
-
-import java.lang.reflect.Field;
 
 /**
  * Executable command Set
@@ -42,8 +38,8 @@ public class Set extends Command {
      */
     public boolean exec() {
 
-    	//FIXME Had to stub this due to Massive Architecture rework.    	
-    	
+    	//FIXME Had to stub this due to Massive Architecture rework.
+
 //        StringBuilder strbMessage = new StringBuilder();
 //        Field field = null;
 //

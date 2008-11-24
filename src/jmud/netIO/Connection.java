@@ -9,7 +9,7 @@ import java.nio.channels.SocketChannel;
  * to authenticate against the DB and return a boolean.
  * ConnectionAttempt objects will track the number of times an account has attempted to
  * log in and will handle the text sending to the client.
- * 
+ *
  * Once the ConnectionAttempt object has attained a successful Authentication from the DB via
  * ConnectionAttempJob objects, a Player object is spawned and added to the PlayerManager.
  *
@@ -18,8 +18,8 @@ import java.nio.channels.SocketChannel;
 
  */
 public class Connection {
-	private SocketChannel sc = null;
-	
+	private SocketChannel sc;
+
 	// The buffer into which we'll read incoming data when it's available
 	private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
 
@@ -27,7 +27,6 @@ public class Connection {
 	private ByteBuffer writeBuffer = ByteBuffer.allocate(8192);
 
 	public Connection(SocketChannel sc) {
-		super();
 		this.sc = sc;
 	}
 
@@ -42,5 +41,5 @@ public class Connection {
 	public ByteBuffer getWriteBuffer() {
 		return writeBuffer;
 	}
-	
+
 }

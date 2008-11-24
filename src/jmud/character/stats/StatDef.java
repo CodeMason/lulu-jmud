@@ -5,10 +5,9 @@ public class StatDef {
 	private int max = -1;
 	private int min = -1;
 	private int current = -1;
-	
+
 	public StatDef( String name, int max, int min, int current) {
-		super();
-		this.current = current;
+        this.current = current;
 		this.max = max;
 		this.min = min;
 		this.name = name;
@@ -42,6 +41,6 @@ public class StatDef {
 		return name;
 	}
 
-	
-	
+
+
 }
