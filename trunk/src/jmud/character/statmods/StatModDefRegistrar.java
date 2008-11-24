@@ -5,6 +5,34 @@ import java.util.HashMap;
 public class StatModDefRegistrar {
 	/* 
 	 * ********************************************
+	 * Singleton Implementation
+	 * ********************************************
+	 */	
+	
+	
+	/**
+	 * Protected constructor is sufficient to suppress unauthorized calls to the
+	 * constructor
+	 */
+	protected StatModDefRegistrar() {
+	}
+
+	/**
+	 * StatModDefRegistrarHolder is loaded on the first execution of
+	 * StatModDefRegistrar.getInstance() or the first access to
+	 * StatModDefRegistrarHolder.INSTANCE, not before.
+	 */
+	private static class StatModDefRegistrarHolder {
+		private final static StatModDefRegistrar INSTANCE = new StatModDefRegistrar();
+	}
+
+	public static StatModDefRegistrar getInstance() {
+		return StatModDefRegistrarHolder.INSTANCE;
+	}
+	
+	
+	/* 
+	 * ********************************************
 	 * Static Class Implementation
 	 * ********************************************
 	 */	
