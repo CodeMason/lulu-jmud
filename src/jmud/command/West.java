@@ -1,6 +1,6 @@
 package jmud.command;
 
-import jmud.netIO.PlayerChannel;
+import jmud.netIO.deprecated.PlayerChannel;
 import jmud.rooms.Room;
 
 //import java.net.Socket;
