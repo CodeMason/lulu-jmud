@@ -1,6 +1,9 @@
 package jmud.job;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /*
  * JobManager.java
@@ -40,16 +43,21 @@ public class JobManager {
 	 * ********************************************
 	 */	
 
-	public void init () {
-		//TODO add in some JobWorker initializing stuff here.
-	}
-	
+	private Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();
+
 	private LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
 
+	/* 
+	 * ********************************************
+	 * Queue Access
+	 * ********************************************
+	 */	
 	public void pushJobToQueue(AbstractJob aj) {
 		synchronized (this.jobQ) {
 			this.jobQ.addLast(aj);
 		}
+		//wake up a worker
+		
 	}
 
 	public AbstractJob popJobFromQueue() {
@@ -65,4 +73,96 @@ public class JobManager {
 			return this.jobQ.size();
 		}
 	}
+	
+	
+	/* 
+	 * ********************************************
+	 * JobWorker Control
+	 * ********************************************
+	 */	
+	
+	public void init (int numOfWorkers) {
+		for (int i = 0; i < numOfWorkers; ++i) {
+			this.createNewWorker();
+		}
+	}
+	
+	public int createNewWorker() {
+		int num = 0;
+		
+		//find the first unused number
+		while(this.workers.containsKey(num)) {
+			num++;
+		}
+		
+		//make new worker
+		JobWorker jw = new JobWorker(num);
+		this.workers.put(num, jw);
+		jw.start();
+		
+		return num;
+	}
+	
+	public void wakeWorkers() {
+		for(JobWorker jw : this.workers.values()) {
+			jw.notifyAll();
+		}
+	}
+	
+	public void stopWorker(int WorkerID) {
+		JobWorker jw = this.workers.get(WorkerID);
+		
+		if (jw != null) {
+			jw.stop();
+		}
+	}
+	
+	public void stopAllWorkers() {
+		Set<Integer> keys = this.workers.keySet();
+		
+		for (Integer i : keys) {
+			this.stopWorker(i);
+		}
+		
+	}
+	
+	public JobWorkerStatus getJobWorkerStatus(int WorkerID) {
+		JobWorker jw = this.workers.get(WorkerID);
+		
+		if (jw != null) {
+			return jw.getStatus();
+		}
+		return null;
+	}
+	
+	public Map<Integer, JobWorkerStatus> getAllJobWorkerStatus() {
+		Set<Integer> keys = this.workers.keySet();
+
+		Map<Integer, JobWorkerStatus> out = new HashMap<Integer, JobWorkerStatus>();
+		
+		for (Integer i : keys) {
+			JobWorkerStatus jsw = this.getJobWorkerStatus(i);
+			out.put(i, jsw);
+		}
+		
+		return out;
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
