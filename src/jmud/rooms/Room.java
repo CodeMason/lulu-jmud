@@ -470,7 +470,7 @@ public class Room {
             }
 
             items.append(item.getName())
-                .append(isDebug ? " [" + item.getId() + "]" : "");
+                .append(isDebug ? " [" + item.getID() + "]" : "");
             bMultipleItems = true;
         }
 
