@@ -32,7 +32,7 @@ public class Character {
 	// info
 	private String name;
 	private String description;
-
+	private String prompt;
 
 	// stats
 	private HashMap<String, Stat> stats = new HashMap<String, Stat>();
@@ -85,6 +85,10 @@ public class Character {
 
 	public HashMap<String, Slot> getSlots() {
 		return slots;
+	}
+
+	public String getPrompt() {
+		return prompt;
 	}
 
 }
