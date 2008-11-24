@@ -1,4 +1,6 @@
-package jmud.job;
+package jmud.job.definitions;
+
+import jmud.job.JobManager;
 
 /**
  * Provides mandatory base implementation for all 'Job's'

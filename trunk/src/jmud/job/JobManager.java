@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.job.definitions.AbstractJob;
+
+
 /**
  * Singleton patterned class
  * Manages all AbstractJobs in a queue.  Controls all JobWorkers.
