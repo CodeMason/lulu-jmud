@@ -1,5 +1,8 @@
 package jmud.job;
 
+import jmud.job.definitions.AbstractJob;
+
+
 /*
  * JobWorker.java
  *

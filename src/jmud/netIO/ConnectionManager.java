@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jmud.job.CheckConnBufferForValidCmd_Job;
+import jmud.job.definitions.CheckConnBufferForValidCmd_Job;
 
 public class ConnectionManager implements Runnable {
 	/* 

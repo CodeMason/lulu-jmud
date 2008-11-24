@@ -1,4 +1,4 @@
-package jmud.job;
+package jmud.job.definitions;
 
 /**
  * 
