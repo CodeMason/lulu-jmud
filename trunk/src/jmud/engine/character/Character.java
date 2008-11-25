@@ -14,21 +14,13 @@ package jmud.engine.character;
  * Created on April 21, 2002, 4:24 PM
  */
 
-
+import jmud.engine.item.ItemContainer;
 import jmud.engine.rooms.Room;
-import jmud.engine.slot.Slot;
-import jmud.engine.stats.AbstractStatDef;
 import jmud.engine.stats.Stat;
 
 import java.util.HashMap;
 
 public class Character {
-	// statsDefs
-	public static HashMap<String, AbstractStatDef> statsDefs = new HashMap<String, AbstractStatDef>();
-
-	
-	
-	
 	private int charID;
 
 	// settings
@@ -44,10 +36,12 @@ public class Character {
 	// stats
 	private HashMap<String, Stat> stats = new HashMap<String, Stat>();
 
+	//'Slots'
+	private HashMap<String, ItemContainer> slots = new HashMap<String, ItemContainer>();
+
 	// location
 	private Room room;
 
-	private HashMap<String, Slot> slots = new HashMap<String, Slot>();
 
 	public Character(int iID, String name, String desc) {
 		this.charID = iID;
@@ -83,7 +77,7 @@ public class Character {
 		return room;
 	}
 
-	public HashMap<String, Slot> getSlots() {
+	public HashMap<String, ItemContainer> getSlots() {
 		return slots;
 	}
 

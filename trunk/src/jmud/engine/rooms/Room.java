@@ -469,7 +469,7 @@ public class Room {
             }
 
             items.append(item.getName())
-                .append(isDebug ? " [" + item.getUid() + "]" : "");
+                .append(isDebug ? " [" + item.getName() + "]" : "");
             bMultipleItems = true;
         }
 
