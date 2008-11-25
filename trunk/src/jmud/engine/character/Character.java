@@ -17,12 +17,18 @@ package jmud.engine.character;
 
 import jmud.engine.rooms.Room;
 import jmud.engine.slot.Slot;
+import jmud.engine.stats.AbstractStatDef;
 import jmud.engine.stats.Stat;
 
 import java.util.HashMap;
 
 public class Character {
+	// statsDefs
+	public static HashMap<String, AbstractStatDef> statsDefs = new HashMap<String, AbstractStatDef>();
 
+	
+	
+	
 	private int charID;
 
 	// settings
