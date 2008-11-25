@@ -1,14 +1,19 @@
 package jmud.engine.character.stats;
 
+/**
+ * Repository for all AbstractStatDef objects (and any subclass objects).
+ * Allow for ease of addition, look up and removal.
+ *
+ * @author David Loman
+ * @version 0.1
+ */
 import java.util.HashMap;
 
 public class StatDefRegistrar {
 	/*
-	 * ********************************************
+	 * 
 	 * Singleton Implementation
-	 * ********************************************
 	 */
-
 
 	/**
 	 * Protected constructor is sufficient to suppress unauthorized calls to the
@@ -31,55 +36,35 @@ public class StatDefRegistrar {
 	}
 
 	/*
-	 * ********************************************
+	 * 
 	 * Static Class Implementation
-	 * ********************************************
 	 */
 
-	private final HashMap<String, StatDef> statDefMap = new HashMap<String, StatDef>();
+	private final HashMap<String, AbstractStatDef> statDefMap = new HashMap<String, AbstractStatDef>();
 
-
-	public void init () {
-
+	public void init() {
 	}
 
-	public void addStatDef(String name, StatDef cmd) {
+	public void addStatDef(AbstractStatDef asd) {
 		synchronized (this.statDefMap) {
-			this.statDefMap.put(name, cmd);
+			this.statDefMap.put(asd.getName(), asd);
 		}
 	}
 
-	public StatDef getStatDef(String name) {
-		StatDef c = null;
+	public AbstractStatDef getStatDef(String name) {
+		AbstractStatDef asdc = null;
 		synchronized (this.statDefMap) {
-			c = this.statDefMap.get(name);
+			asdc = this.statDefMap.get(name);
 		}
-		return c;
+		return asdc;
 	}
 
-	public StatDef remStatDef(String name) {
-		StatDef c = null;
+	public AbstractStatDef remStatDef(String name) {
+		AbstractStatDef asd = null;
 		synchronized (this.statDefMap) {
-			c = this.statDefMap.remove(name);
+			asd = this.statDefMap.remove(name);
 		}
-		return c;
+		return asd;
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
