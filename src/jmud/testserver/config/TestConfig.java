@@ -1,5 +1,10 @@
 package jmud.testserver.config;
 
+/**
+ * 25NOV08: TestConfig is used to configure items that are specific to the TestMud
+ * 
+ * Created on 25NOV08
+ */
 
 import jmud.engine.stats.SimpleStatDef;
 import jmud.testserver.stats.definitions.HitPoint_StatDef;
