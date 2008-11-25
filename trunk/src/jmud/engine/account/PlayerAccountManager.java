@@ -1,4 +1,4 @@
-package jmud.engine.acccount;
+package jmud.engine.account;
 
 import java.util.HashMap;
 import java.util.HashSet;
