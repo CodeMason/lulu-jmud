@@ -1,4 +1,4 @@
-package jmud.engine.commands.definitions;
+package jmud.testserver.commands.definitions;
 
 import java.util.ArrayList;
 

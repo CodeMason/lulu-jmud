@@ -1,4 +1,4 @@
-package jmud.engine.commands.definitions;
+package jmud.testserver.commands.definitions;
 
 import jmud.engine.core.Target;
 import jmud.engine.mobs.Mob;

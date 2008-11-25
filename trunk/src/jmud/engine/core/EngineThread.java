@@ -1,6 +1,6 @@
 package jmud.engine.core;
 
-import jmud.engine.commands.definitions.Command;
+import jmud.testserver.commands.definitions.Command;
 
 import java.util.*;
 
