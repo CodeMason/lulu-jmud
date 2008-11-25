@@ -1,17 +1,15 @@
-package jmud.testserver.character.stats.definitions;
-
-import jmud.engine.character.stats.AbstractStatDef;
-import jmud.engine.character.stats.Stat;
+package jmud.engine.stats;
 
 /**
- * An implementation of an AbstractStatDef for use with the HitPoints
+ * A simple implementation of an AbstractStatDef for use with the core JMUD
+ * engine.
  * 
  * @author David Loman
  * @version 0.1
  */
-public class HitPoint_StatDef extends AbstractStatDef {
+public class SimpleStatDef extends AbstractStatDef {
 
-	public HitPoint_StatDef(String name) {
+	public SimpleStatDef(String name) {
 		super(name);
 	}
 
@@ -19,11 +17,9 @@ public class HitPoint_StatDef extends AbstractStatDef {
 	 * Value Modifiers
 	 */
 
-
 	@Override
 	public int modCurrent(Stat s, int value) {
 		s.setCurrent(s.getCurrent() + value);
-		
 		return s.getCurrent();
 	}
 
@@ -39,16 +35,4 @@ public class HitPoint_StatDef extends AbstractStatDef {
 		return s.getMin();
 	}
 
-	
-	private void invokeSystemShock() {
-		
-	}
-	
 }
-
-
-
-
-
-
-

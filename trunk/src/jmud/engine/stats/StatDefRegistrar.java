@@ -1,4 +1,4 @@
-package jmud.engine.character.stats;
+package jmud.engine.stats;
 
 /**
  * Repository for all AbstractStatDef objects (and any subclass objects).

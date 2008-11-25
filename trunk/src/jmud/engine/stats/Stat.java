@@ -1,4 +1,4 @@
-package jmud.engine.character.stats;
+package jmud.engine.stats;
 
 /**
  * Stat is the object that represents a Character's statistic.  Behavior of this Stat is defined

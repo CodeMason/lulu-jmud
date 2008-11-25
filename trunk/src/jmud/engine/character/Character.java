@@ -15,9 +15,9 @@ package jmud.engine.character;
  */
 
 
-import jmud.engine.character.stats.Stat;
 import jmud.engine.rooms.Room;
 import jmud.engine.slot.Slot;
+import jmud.engine.stats.Stat;
 
 import java.util.HashMap;
 
@@ -26,7 +26,7 @@ public class Character {
 	private int charID;
 
 	// settings
-	public boolean debug;
+	public boolean debug = false;
 	public boolean autoLook = true; // should the player automatically look when
 									// entering a new room?
 
@@ -79,6 +79,10 @@ public class Character {
 
 	public HashMap<String, Slot> getSlots() {
 		return slots;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 
 	public String getPrompt() {
