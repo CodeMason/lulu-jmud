@@ -51,7 +51,7 @@ public class Look extends Command {
         List<AbstractItemDef> items;
         StringBuilder message = new StringBuilder();
         String mobAndPlayerNames = room.getMobAndPlayerNames(player);
-        String itemNames = room.getItemNames(player.isDebug());
+        String itemNames = room.getItemNames(true); //player.isDebug());
         int matches = 0;
         boolean needComma = false;
 
@@ -61,7 +61,6 @@ public class Look extends Command {
         // check if there is a target (to look at) or not
         if(strTarget == null || strTarget.length() == 0) {
             message.append(room.getShortDescription())
-                .append(player.isDebug() ? " [" + room.getID() + "]" : "")
                 .append(Settings.CRLF)
                 .append(mobAndPlayerNames.length() != 0 ? ALSO_HERE_PROMPT + mobAndPlayerNames + Settings.CRLF : "")
                 .append(itemNames.length() != 0 ? YOU_SEE_PROMPT + itemNames + Settings.CRLF : "");
