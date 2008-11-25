@@ -76,7 +76,7 @@ public class AttackCommandDef extends AbstractCommandDef {
 
         // generate a roll (as in rolling the dice) and decide if they hit the target
         iHitRoll = (int) (Math.random() * 20); //TODO Abstract out the Dice rolling into a utility class.
-        bHit = (iHitRoll >= (iThac0 + t.getAC()));
+        bHit = (iHitRoll >= (iThac0 )); //+ t.getAC()));
 
         // did the player miss the target?
         if(!bHit) {
@@ -123,7 +123,7 @@ public class AttackCommandDef extends AbstractCommandDef {
         }
 
         // do damage and check for killed IF they scored a hit
-        if(bHit && t.hurt(iDamage)) {
+        if(bHit ) { //&& t.hurt(iDamage)) {
             //mark the target as dead
             //Scratch that: the target should "kill" itself (i.e. target.hurt() should set the isAlive flag)
 

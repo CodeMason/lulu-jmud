@@ -227,7 +227,7 @@ public class Attack extends Command {
         // The "hit" flag (as in "you hit the target") is true if the hit roll
         // is greater than the players THAC0 ("To Hit Armor Class 0) plus the
         // targets armor class
-        bHit = iHitRoll >= (iThac0 + target.getAC());
+        bHit = iHitRoll >= (iThac0 ); //+ target.getAC());
 
         // did the player miss the target?
         if(!bHit) {
@@ -270,7 +270,7 @@ public class Attack extends Command {
         }
 
         // do damage and check for killed IF they scored a hit
-        if(bHit && target.hurt(iDamage)) {
+        if(bHit ) { //&& target.hurt(iDamage)) {
             //mark the target as dead
             //Scratch that: the target should "kill" itself (i.e. target.hurt() should set the isAlive flag)
 
