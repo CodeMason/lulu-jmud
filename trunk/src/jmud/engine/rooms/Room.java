@@ -1,7 +1,7 @@
 package jmud.engine.rooms;
 
 import jmud.engine.character.Character;
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 import jmud.engine.mobs.Mob;
 import jmud.engine.netIO.deprecated.PlayerChannel;
 
@@ -34,8 +34,8 @@ public class Room {
     private Hashtable<String, List<Mob>> mobsByAcronym = new Hashtable<String, List<Mob>>(MOBS);
     private Hashtable<String, List<Mob>> mobsByName = new Hashtable<String, List<Mob>>(MOBS);
     // key the items on Object so that we can use the item itself, or the item's name, for the key
-    private Hashtable<Item, Item> items = new Hashtable<Item, Item>(ITEMS);
-    private Hashtable<String, List<Item>> itemsByName = new Hashtable<String, List<Item>>(ITEMS);
+    private Hashtable<AbstractItemDef, AbstractItemDef> items = new Hashtable<AbstractItemDef, AbstractItemDef>(ITEMS);
+    private Hashtable<String, List<AbstractItemDef>> itemsByName = new Hashtable<String, List<AbstractItemDef>>(ITEMS);
 
     // used for writing to a players SocketChannel
     // (which is wierd because why wouldn't the PlayerChannel be used to send a message
@@ -381,9 +381,9 @@ public class Room {
         return mobs;
     }
 
-    public List<Item> getItems(String partialName) {
-        List<Item> items = new ArrayList<Item>();
-        List<Item> list;
+    public List<AbstractItemDef> getItems(String partialName) {
+        List<AbstractItemDef> items = new ArrayList<AbstractItemDef>();
+        List<AbstractItemDef> list;
 
         partialName = partialName.toLowerCase();
 
@@ -463,13 +463,13 @@ public class Room {
         boolean bMultipleItems = false;
 
         // get the list of items from the hash
-        for(Item item : this.items.values()) {
+        for(AbstractItemDef item : this.items.values()) {
             if(bMultipleItems) {
                 items.append(", ");
             }
 
             items.append(item.getName())
-                .append(isDebug ? " [" + item.getId() + "]" : "");
+                .append(isDebug ? " [" + item.getUid() + "]" : "");
             bMultipleItems = true;
         }
 
@@ -486,7 +486,7 @@ public class Room {
      *
      * @param pc PlayerChannel to add to the room
      * @see #add(Mob)
-     * @see #add(Item)
+     * @see #add(AbstractItemDef)
      */
     public void add(PlayerChannel pc) {
         /* we need to add the PlayerChannel based on the players hashcode
@@ -509,7 +509,7 @@ public class Room {
      * by its name, acronym and hashcode. (Why?)
      *
      * @param m The <code>Mob</code> to add to this <code>Room</code>
-     * @see #add(Item)
+     * @see #add(AbstractItemDef)
      * @see #add(PlayerChannel)
      */
     public void add(Mob m) {
@@ -559,8 +559,8 @@ public class Room {
      * @see #add(Mob)
      * @see #add(PlayerChannel)
      */
-    public void add(Item i) {
-        List<Item> items;
+    public void add(AbstractItemDef i) {
+        List<AbstractItemDef> items;
         String name = i.getName();
 
         // index the item by its hashcode
@@ -575,7 +575,7 @@ public class Room {
         if(items != null) {
             items.add(i);
         } else {
-            items = new ArrayList<Item>();
+            items = new ArrayList<AbstractItemDef>();
             items.add(i);
             itemsByName.put(name, items);
         }
@@ -643,7 +643,7 @@ public class Room {
      * @param name The name to match against all <code>Item</code>s in the <code>Room</code>
      * @return The first matching <code>Mob</code> if any, else null
      */
-    public Item getItem(String name) {
+    public AbstractItemDef getItem(String name) {
         for(String str : itemsByName.keySet()) {
             if(str.toLowerCase().startsWith(name.toLowerCase()) && !itemsByName.get(str).isEmpty()) {
                 return itemsByName.get(str).get(0);
@@ -658,7 +658,7 @@ public class Room {
      *
      * @param pc The <code>PlayerChannel</code> that contains the player to remove
      * @see #remove(Mob)
-     * @see #remove(Item)
+     * @see #remove(AbstractItemDef)
      */
     public void remove(PlayerChannel pc) {
         Character p = pc.getPlayer();
@@ -677,7 +677,7 @@ public class Room {
      *
      * @param m The <code>Mob</code> that is to be removed
      * @see #remove(PlayerChannel)
-     * @see #remove(Item)
+     * @see #remove(AbstractItemDef)
      */
     public void remove(Mob m) {
         try {
@@ -697,9 +697,9 @@ public class Room {
      * @see Room#remove(PlayerChannel)
      * @see #remove(Mob)
      */
-    public synchronized Item remove(Item i) {
-        List<Item> items;
-        Item item = this.items.remove(i);
+    public synchronized AbstractItemDef remove(AbstractItemDef i) {
+        List<AbstractItemDef> items;
+        AbstractItemDef item = this.items.remove(i);
 
         items = itemsByName.get(i.getName());
         if(items != null && !items.isEmpty()) {

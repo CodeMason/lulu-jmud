@@ -9,7 +9,7 @@
 
 package jmud.engine.slot;
 
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -71,18 +71,18 @@ public abstract class Slot {
 
     public abstract int maxItems();
 
-    public abstract boolean hasItem(Item item);
+    public abstract boolean hasItem(AbstractItemDef item);
 
     //public abstract List<Slot> getSlots();
     // why would slots need to "house" other slots?
     // For instance, a hand will semantically "house" fingers, but does it need to logically?
     // Left hand doesn't need to have 'left index finger', the user will just assume it.
 
-    public abstract boolean addItem(Item item);
+    public abstract boolean addItem(AbstractItemDef item);
 
-    public abstract Item removeItem(String name);
+    public abstract AbstractItemDef removeItem(String name);
 
-    public abstract List<Item> getItems();
+    public abstract List<AbstractItemDef> getItems();
 
     public abstract boolean isGrabber();
 

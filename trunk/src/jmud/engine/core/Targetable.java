@@ -1,7 +1,7 @@
 package jmud.engine.core;
 
 /**
- * Target is the abstract definition of something that can be attacked.
+ * Targetable is the abstract definition of something that can be attacked.
  *
  * Created on March 14 2003 10:17 PM
  *
@@ -11,7 +11,7 @@ package jmud.engine.core;
  * Thing is, if I have a separate attack command for Mobs then I don't need an attacker interface.
  *
  */
-public interface Target {
+public interface Targetable {
 
     // get the armor class of the target
     public abstract int getAC();

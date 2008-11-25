@@ -15,8 +15,8 @@ package jmud.engine.character;
  */
 
 import jmud.engine.core.Flag;
-import jmud.engine.core.Target;
-import jmud.engine.item.Item;
+import jmud.engine.core.Targetable;
+import jmud.engine.item.AbstractItemDef;
 import jmud.engine.rooms.Room;
 import jmud.engine.slot.Slot;
 
@@ -27,7 +27,7 @@ import java.util.*;
 
 
 
-public class Character_Deprecated implements Serializable, Target {
+public class Character_Deprecated implements Serializable, Targetable {
 	private static final long serialVersionUID = 6040847714517522106L;
 
 	static final int MAP_START_ROOM = 1;
@@ -502,7 +502,7 @@ public class Character_Deprecated implements Serializable, Target {
      * @param item the item to grab
      * @return true if the player was able to grab the item, false otherwise
      */
-    public boolean grab(Item item) {
+    public boolean grab(AbstractItemDef item) {
         // if we can find a slot that is a grabber and isn't full then we're good to go
         for(Slot slot : slots.values()) {
             if(slot.isGrabber() && !slot.isFull()) {

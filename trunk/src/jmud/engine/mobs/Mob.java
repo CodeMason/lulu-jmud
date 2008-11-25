@@ -1,13 +1,13 @@
 package jmud.engine.mobs;
 
-import jmud.engine.core.Target;
+import jmud.engine.core.Targetable;
 
 /**
  * Represents a mobile entity in the mud
  *
  * Created on April 28, 2002, 8:56 AM
  */
-public class Mob implements Target {
+public class Mob implements Targetable {
 
     private int iID;
     private MobType mobType;

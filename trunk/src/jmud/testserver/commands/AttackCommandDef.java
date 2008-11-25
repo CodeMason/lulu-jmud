@@ -1,7 +1,7 @@
 package jmud.testserver.commands;
 
 import jmud.engine.commands.AbstractCommandDef;
-import jmud.engine.core.Target;
+import jmud.engine.core.Targetable;
 
 /**
  * Executable command attack: handles a player attacking something
@@ -18,9 +18,9 @@ import jmud.engine.core.Target;
 public class AttackCommandDef extends AbstractCommandDef {
 
 	private Character c;
-	private Target t;
+	private Targetable t;
 
-     public AttackCommandDef(Character c, Target t) {
+     public AttackCommandDef(Character c, Targetable t) {
     	 super("attack");
 
         this.aliases.add("att");

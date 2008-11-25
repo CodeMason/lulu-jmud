@@ -9,7 +9,7 @@
 
 package jmud.testserver.slots;
 
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class Finger extends MultiSlot {
     public static final int MAX_BULK = 10;
     public static final int MAX_ITEMS = 2;
-    private List<Item> items;
+    private List<AbstractItemDef> items;
     private String name;
 
     /**
