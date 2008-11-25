@@ -6,9 +6,7 @@ package jmud.testserver.config;
  * Created on 25NOV08
  */
 
-import jmud.engine.character.Character;
-import jmud.engine.item.Item;
-import jmud.engine.item.ItemContainer;
+import jmud.engine.core.Namespace;
 import jmud.engine.stats.SimpleStatDef;
 import jmud.testserver.stats.definitions.HitPoint_StatDef;
 
@@ -21,89 +19,71 @@ public class TestConfig {
 		 * Definitions later
 		 */
 
+		
 		// Basic Attributes
 		SimpleStatDef myStat = null;
-		myStat = new SimpleStatDef("Strength");
+		myStat = new SimpleStatDef("Strength", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Dexterity");
+		myStat = new SimpleStatDef("Dexterity", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Wisdom");
+		myStat = new SimpleStatDef("Wisdom", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Intelligence");
+		myStat = new SimpleStatDef("Intelligence", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Constitution");
+		myStat = new SimpleStatDef("Constitution", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Charisma");
+		myStat = new SimpleStatDef("Charisma", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
 		// Note the use of a custom StatDef!
-		HitPoint_StatDef hpStat = new HitPoint_StatDef("HitPoints");
+		HitPoint_StatDef hpStat = new HitPoint_StatDef("HitPoints", Namespace.Character);
+		hpStat.add(Namespace.Item);
 		hpStat.selfRegister();
-		Character.statsDefs.put(hpStat.getName(), hpStat);
-		Item.statsDefs.put(hpStat.getName(), hpStat);
 		
-		myStat = new SimpleStatDef("ManaPoints");
+		myStat = new SimpleStatDef("ManaPoints", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("StaminaPoints");
+		myStat = new SimpleStatDef("StaminaPoints", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
 		//
-		myStat = new SimpleStatDef("ExperiencePoints");
+		myStat = new SimpleStatDef("ExperiencePoints", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("ReputationPoints");
+		myStat = new SimpleStatDef("ReputationPoints", Namespace.Character);
 		myStat.selfRegister();
-		Character.statsDefs.put(myStat.getName(), myStat);
 
 		
 		
 	//
-		myStat = new SimpleStatDef("Weight");
+		myStat = new SimpleStatDef("Weight", Namespace.Item);
 		myStat.selfRegister();
-		Item.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Max_BULK");
+		myStat = new SimpleStatDef("Max_BULK", Namespace.ItemContainer);
 		myStat.selfRegister();
-		ItemContainer.statsDefs.put(myStat.getName(), myStat);
 		
-		myStat = new SimpleStatDef("Current_BULK");
+		myStat = new SimpleStatDef("Current_BULK", Namespace.Item);
 		myStat.selfRegister();
-		Item.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Min_BULK");
+		myStat = new SimpleStatDef("Min_BULK", Namespace.ItemContainer);
 		myStat.selfRegister();
-		ItemContainer.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("Wearable");
+		myStat = new SimpleStatDef("Wearable", Namespace.ItemContainer);
 		myStat.selfRegister();
-		Item.statsDefs.put(myStat.getName(), myStat);
+		
+		myStat = new SimpleStatDef("Removeable", Namespace.Item);
+		myStat.selfRegister();
 
-		myStat = new SimpleStatDef("Removeable");
+		myStat = new SimpleStatDef("IsMagic", Namespace.Item);
 		myStat.selfRegister();
-		Item.statsDefs.put(myStat.getName(), myStat);
 
-		myStat = new SimpleStatDef("IsMagic");
+		myStat = new SimpleStatDef("Condition", Namespace.Item);
 		myStat.selfRegister();
-		Item.statsDefs.put(myStat.getName(), myStat);
-
-		myStat = new SimpleStatDef("Condition");
-		myStat.selfRegister();
-		Item.statsDefs.put(myStat.getName(), myStat);
 
 		
 

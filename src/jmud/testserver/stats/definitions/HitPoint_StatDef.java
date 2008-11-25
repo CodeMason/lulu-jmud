@@ -1,5 +1,6 @@
 package jmud.testserver.stats.definitions;
 
+import jmud.engine.core.Namespace;
 import jmud.engine.stats.AbstractStatDef;
 import jmud.engine.stats.Stat;
 
@@ -11,27 +12,26 @@ import jmud.engine.stats.Stat;
  */
 public class HitPoint_StatDef extends AbstractStatDef {
 
-	public HitPoint_StatDef(String name) {
-		super(name);
+	public HitPoint_StatDef(String name, Namespace ns) {
+		super(name, ns);
 	}
 
 	/*
 	 * Value Modifiers
 	 */
 
-
 	@Override
 	public int modCurrent(Stat s, int value) {
 		s.setCurrent(s.getCurrent() + value);
-		
-		//Check to see if we are decrementing
+
+		// Check to see if we are decrementing
 		if (value < 0) {
-			//Now see if the value exceeds 25% of Max Hitpoints
+			// Now see if the value exceeds 25% of Max Hitpoints
 			if (value > (0.25 * s.getMax())) {
 				this.invokeSystemShock();
 			}
 		}
-		
+
 		return s.getCurrent();
 	}
 
@@ -47,16 +47,8 @@ public class HitPoint_StatDef extends AbstractStatDef {
 		return s.getMin();
 	}
 
-	
 	private void invokeSystemShock() {
-		//find a way to apply a SystemShock condition to the target.
+		// find a way to apply a SystemShock condition to the target.
 	}
-	
+
 }
-
-
-
-
-
-
-

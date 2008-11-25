@@ -1,5 +1,7 @@
 package jmud.engine.stats;
 
+import jmud.engine.core.Namespace;
+
 /**
  * A simple implementation of an AbstractStatDef for use with the core JMUD
  * engine.
@@ -9,8 +11,8 @@ package jmud.engine.stats;
  */
 public class SimpleStatDef extends AbstractStatDef {
 
-	public SimpleStatDef(String name) {
-		super(name);
+	public SimpleStatDef(String name, Namespace ns) {
+		super(name, ns);
 	}
 
 	/*

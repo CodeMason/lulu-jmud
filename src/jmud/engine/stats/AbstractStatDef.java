@@ -1,5 +1,8 @@
 package jmud.engine.stats;
 
+import java.util.ArrayList;
+import jmud.engine.core.Namespace;
+
 /**
  * Provides mandatory base implementation for all 'StatDef's'
  * 
@@ -8,13 +11,27 @@ package jmud.engine.stats;
  */
 public abstract class AbstractStatDef {
 	private String name = "";
+	private ArrayList<Namespace> namespaces = new ArrayList<Namespace>();
 
-	public AbstractStatDef(String name) {
+	public AbstractStatDef(String name, Namespace ns) {
+		super();
 		this.name = name;
+		this.namespaces.add(ns);
 	}
 
 	public String getName() {
 		return name;
+	}
+	public ArrayList<Namespace> getNamespaces() {
+		return namespaces;
+	}
+	
+	public boolean add(Namespace ns) {
+		return namespaces.add(ns);
+	}
+
+	public boolean remove(Object o) {
+		return namespaces.remove(o);
 	}
 
 	public void selfRegister() {
