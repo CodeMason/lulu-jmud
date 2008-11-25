@@ -1,6 +1,7 @@
 package jmud.engine.mobs;
 
 import jmud.engine.core.Targetable;
+import jmud.engine.stats.StatMap;
 
 /**
  * Represents a mobile entity in the mud
@@ -135,5 +136,10 @@ public class Mob implements Targetable {
     public int getStr() {
         return iStrength;
     }
+
+	@Override
+	public StatMap getStatMap() {
+		return null;
+	}
 
 }

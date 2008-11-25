@@ -19,6 +19,7 @@ import jmud.engine.core.Targetable;
 import jmud.engine.item.AbstractItemDef;
 import jmud.engine.rooms.Room;
 import jmud.engine.slot.Slot;
+import jmud.engine.stats.StatMap;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -527,4 +528,9 @@ public class Character_Deprecated implements Serializable, Targetable {
         }
         return false;
     }
+
+	@Override
+	public StatMap getStatMap() {
+		return null;
+	}
 }
