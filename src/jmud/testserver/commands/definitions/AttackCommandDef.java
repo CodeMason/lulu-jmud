@@ -1,5 +1,6 @@
-package jmud.engine.commands.definitions;
+package jmud.testserver.commands.definitions;
 
+import jmud.engine.commands.AbstractCommandDef;
 import jmud.engine.core.Target;
 
 /**

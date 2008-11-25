@@ -1,4 +1,4 @@
-package jmud.engine.commands.definitions;
+package jmud.engine.commands;
 
 import java.util.ArrayList;
 

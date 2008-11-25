@@ -6,13 +6,13 @@ package jmud.engine;
 
 
 
-import jmud.engine.commands.definitions.Command;
 import jmud.engine.core.EngineThread;
 import jmud.engine.core.LoginThread;
 import jmud.engine.netIO.deprecated.AcceptThread;
 import jmud.engine.netIO.deprecated.CommandListenerThread;
 import jmud.engine.netIO.deprecated.ConnectionList;
 import jmud.engine.netIO.deprecated.PlayerChannel;
+import jmud.testserver.commands.definitions.Command;
 
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
