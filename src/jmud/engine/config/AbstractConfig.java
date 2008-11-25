@@ -20,9 +20,9 @@ public abstract class AbstractConfig {
 	protected String name = "";
 	public abstract boolean doConfig();
 
-	public AbstractConfig(String name) {
+	public AbstractConfig() {
 		super();
-		this.name = name;
+		this.name = this.getClass().getSimpleName();
 	}
 
 	public String getName() {
