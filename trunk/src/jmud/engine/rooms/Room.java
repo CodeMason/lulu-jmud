@@ -435,7 +435,6 @@ public class Room {
             }
 
             names.append(((Mob) o).getName())
-                .append(player.isDebug() ? " [" + ((Mob) o).getID() + "]" : "")
                 .append(((Mob) o).isAlive() ? "" : "Dead");
 
             bMultipleNames = true;
