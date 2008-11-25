@@ -44,7 +44,7 @@ public class ItemManager {
 	 * ********************************************
 	 */
 
-	private final HashMap<Integer, Item> ItemMap = new HashMap<Integer, Item>();
+	private final HashMap<Integer, AbstractItem> ItemMap = new HashMap<Integer, AbstractItem>();
 
 
 	public void init () {
@@ -56,21 +56,21 @@ public class ItemManager {
 	 * Queue Access
 	 * ********************************************
 	 */
-	public void addItem(Item item) {
+	public void addItem(AbstractItem item) {
 		synchronized (this.ItemMap) {
 			this.ItemMap.put(item.getId(), item);
 		}
 	}
 
-	public Item getItem(int ID) {
-		Item r;
+	public AbstractItem getItem(int ID) {
+		AbstractItem r;
 		synchronized (this.ItemMap) {
 			r = this.ItemMap.get(ID);
 		}
 		return r;
 	}
 
-	public void remItem(Item m) {
+	public void remItem(AbstractItem m) {
 		synchronized (this.ItemMap) {
 			this.ItemMap.remove(m.getId());
 		}
