@@ -12,7 +12,7 @@ import jmud.engine.netIO.deprecated.AcceptThread;
 import jmud.engine.netIO.deprecated.CommandListenerThread;
 import jmud.engine.netIO.deprecated.ConnectionList;
 import jmud.engine.netIO.deprecated.PlayerChannel;
-import jmud.testserver.commands.definitions.Command;
+import jmud.testserver.commands.Command;
 
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;

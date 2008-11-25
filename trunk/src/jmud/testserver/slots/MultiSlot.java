@@ -7,9 +7,10 @@
  * and open the template in the editor.
  */
 
-package jmud.engine.slot;
+package jmud.testserver.slots;
 
 import jmud.engine.item.Item;
+import jmud.engine.slot.Slot;
 
 import java.util.LinkedList;
 import java.util.List;

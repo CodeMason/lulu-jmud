@@ -4,7 +4,7 @@ import jmud.engine.character.Character;
 import jmud.engine.dbio.MysqlConnector;
 import jmud.engine.rooms.MudMap;
 import jmud.engine.rooms.Room;
-import jmud.testserver.commands.definitions.Command;
+import jmud.testserver.commands.Command;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;

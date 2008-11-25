@@ -1,4 +1,4 @@
-package jmud.testserver.commands.definitions;
+package jmud.testserver.commands;
 
 //import java.util.Iterator;
 
