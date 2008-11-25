@@ -1,13 +1,14 @@
 package jmud.engine.item;
 
-import java.util.HashMap;
-import jmud.engine.stats.Stat;
+import jmud.engine.core.Targetable;
+import jmud.engine.dbio.Persistable;
+import jmud.engine.stats.StatMap;
 
-public class Item {
+public class Item implements Targetable, Persistable {
 	private int uid;
 	private String name;
 
-	private HashMap<String, Stat> stats = new HashMap<String, Stat>();
+	private StatMap stats = new StatMap();
 
 	private AbstractItemDef behavior = null;
 
@@ -33,7 +34,8 @@ public class Item {
 		this.behavior = behavior;
 	}
 
-	public HashMap<String, Stat> getStats() {
+	public StatMap getStatMap() {
 		return stats;
 	}
+
 }

@@ -10,17 +10,15 @@
 package jmud.testserver.itemcontainerdefs;
 
 /**
- * @author Chris Maguire
+ * @author root
  */
-public class Hand extends SingleSlot {
-    private static final boolean IS_GRABBER = true;
+public class Foot_ICDef extends AbstractItemContainerDef {
+    private static final int MAX_BULK = 20;
 
     /**
-     * Creates a new instance of Hand
-     *
-     * @param name the name of the hand (e.g. left hand)
+     * Creates a new instance of Foot
      */
-    public Hand(int Id, String name) {
+    public Foot_ICDef(int Id, String name) {
         super(Id, name);
     }
 
@@ -28,7 +26,4 @@ public class Hand extends SingleSlot {
         return MAX_BULK;
     }
 
-    public boolean isGrabber() {
-        return IS_GRABBER;
-    }
 }

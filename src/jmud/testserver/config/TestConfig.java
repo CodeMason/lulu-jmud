@@ -14,10 +14,23 @@ import jmud.testserver.stats.definitions.HitPoint_StatDef;
 public class TestConfig {
 
 	public static void doSpecificConfig() {
+		TestConfig.configStatDefs();
+		TestConfig.configItemDefs();
+		TestConfig.configItemContainerDefs();
+	}
+
+
+	private static void configStatDefs () {
 
 		/*
+		 * *****************************************************************
+		 * StatsDefs
+		 * *****************************************************************
+		 * 
 		 * Right now, use the basic StatDef template BUT we can define custom
 		 * Definitions later
+		 * 
+		 * *****************************************************************
 		 */
 
 		// Basic Attributes
@@ -78,18 +91,12 @@ public class TestConfig {
 		bStat.selfRegister();
 
 		/*
-		 * 
+		 * Stats for the Items/ItemContainers
 		 */
 		myStat = new SimpleStatDef("Weight", Namespace.Item);
 		myStat.selfRegister();
 
-		myStat = new SimpleStatDef("Max_BULK", Namespace.ItemContainer);
-		myStat.selfRegister();
-
-		myStat = new SimpleStatDef("Current_BULK", Namespace.Item);
-		myStat.selfRegister();
-
-		myStat = new SimpleStatDef("Min_BULK", Namespace.ItemContainer);
+		myStat = new SimpleStatDef("Bulk", Namespace.Item);
 		myStat.selfRegister();
 
 		myStat = new SimpleStatDef("Wearable", Namespace.ItemContainer);
@@ -104,7 +111,20 @@ public class TestConfig {
 		myStat = new SimpleStatDef("Condition", Namespace.Item);
 		myStat.selfRegister();
 
+		myStat = new SimpleStatDef("NumberOfItems", Namespace.ItemContainer);
+		myStat.selfRegister();
+
 		return;
 	}
+	
+	private static void configItemDefs() {
+		
+	}
 
+
+	private static void configItemContainerDefs() {
+		
+	}
+
+	
 }
