@@ -13,7 +13,7 @@ import java.util.List;
  * @author Chris Maguire
  * @version 0.1
  */
-public class Item {
+public class AbstractItem {
 
     private static final int DEFAULT_BULK = 1;
     private static final int DEFAULT_WEIGHT = 1;
@@ -34,11 +34,11 @@ public class Item {
      * @param id   ID of the item
      * @param name name of the item
      */
-    public Item(int id, String name) {
+    public AbstractItem(int id, String name) {
         this(id, name, DEFAULT_BULK, DEFAULT_WEIGHT, DEFAULT_USES, DEFAULT_CONDITION, new LinkedList<Slot>());
     }
 
-    public Item(int id, String name, int bulk, int weight, int uses, int condition, List<Slot> slots) {
+    public AbstractItem(int id, String name, int bulk, int weight, int uses, int condition, List<Slot> slots) {
         this.id = id;
         this.name = name;
         this.slots = slots;
