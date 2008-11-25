@@ -1,4 +1,4 @@
-package jmud.engine.acccount;
+package jmud.engine.account;
 
 import jmud.engine.character.Character;
 
