@@ -1,4 +1,4 @@
-package jmud.testserver.commands.definitions;
+package jmud.testserver.commands;
 
 /**
  * CreateRoom - facilitates creating rooms in the map at run time

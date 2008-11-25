@@ -1,4 +1,4 @@
-package jmud.testserver.commands.definitions;
+package jmud.testserver.commands;
 
 import jmud.engine.character.Character;
 import jmud.engine.netIO.deprecated.PlayerChannel;
