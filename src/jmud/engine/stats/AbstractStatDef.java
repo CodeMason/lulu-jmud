@@ -1,4 +1,4 @@
-package jmud.engine.character.stats;
+package jmud.engine.stats;
 
 /**
  * Provides mandatory base implementation for all 'StatDef's'

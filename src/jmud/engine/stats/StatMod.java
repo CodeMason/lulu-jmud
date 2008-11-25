@@ -1,4 +1,4 @@
-package jmud.engine.character.stats;
+package jmud.engine.stats;
 
 /**
  * Represents a modification to a Stat. Contains a name for ease of look up and
