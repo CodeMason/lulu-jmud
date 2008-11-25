@@ -7,6 +7,7 @@ package jmud.testserver.config;
  */
 
 import jmud.engine.core.Namespace;
+import jmud.engine.stats.BooleanStatDef;
 import jmud.engine.stats.SimpleStatDef;
 import jmud.testserver.stats.definitions.HitPoint_StatDef;
 
@@ -19,7 +20,6 @@ public class TestConfig {
 		 * Definitions later
 		 */
 
-		
 		// Basic Attributes
 		SimpleStatDef myStat = null;
 		myStat = new SimpleStatDef("Strength", Namespace.Character);
@@ -44,29 +44,48 @@ public class TestConfig {
 		HitPoint_StatDef hpStat = new HitPoint_StatDef("HitPoints", Namespace.Character);
 		hpStat.add(Namespace.Item);
 		hpStat.selfRegister();
-		
+
 		myStat = new SimpleStatDef("ManaPoints", Namespace.Character);
 		myStat.selfRegister();
 
 		myStat = new SimpleStatDef("StaminaPoints", Namespace.Character);
 		myStat.selfRegister();
 
-		//
+		/*
+		 * 
+		 */
 		myStat = new SimpleStatDef("ExperiencePoints", Namespace.Character);
 		myStat.selfRegister();
 
 		myStat = new SimpleStatDef("ReputationPoints", Namespace.Character);
 		myStat.selfRegister();
 
+		/*
+		 * Flags
+		 */
+		BooleanStatDef bStat = null;
 		
+		bStat = new BooleanStatDef("Debug", Namespace.Character);
+		bStat.selfRegister();
+
+		bStat = new BooleanStatDef("AutoLook", Namespace.Character);
+		bStat.selfRegister();
 		
-	//
+		bStat = new BooleanStatDef("AutoLoot", Namespace.Character);
+		bStat.selfRegister();
+		
+		bStat = new BooleanStatDef("AutoSac", Namespace.Character);
+		bStat.selfRegister();
+
+		/*
+		 * 
+		 */
 		myStat = new SimpleStatDef("Weight", Namespace.Item);
 		myStat.selfRegister();
 
 		myStat = new SimpleStatDef("Max_BULK", Namespace.ItemContainer);
 		myStat.selfRegister();
-		
+
 		myStat = new SimpleStatDef("Current_BULK", Namespace.Item);
 		myStat.selfRegister();
 
@@ -75,7 +94,7 @@ public class TestConfig {
 
 		myStat = new SimpleStatDef("Wearable", Namespace.ItemContainer);
 		myStat.selfRegister();
-		
+
 		myStat = new SimpleStatDef("Removeable", Namespace.Item);
 		myStat.selfRegister();
 
@@ -84,8 +103,6 @@ public class TestConfig {
 
 		myStat = new SimpleStatDef("Condition", Namespace.Item);
 		myStat.selfRegister();
-
-		
 
 		return;
 	}

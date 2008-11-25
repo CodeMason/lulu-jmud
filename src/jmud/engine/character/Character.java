@@ -23,11 +23,6 @@ import java.util.HashMap;
 public class Character {
 	private int charID;
 
-	// settings
-	public boolean debug = false;
-	public boolean autoLook = true; // should the player automatically look when
-									// entering a new room?
-
 	// info
 	private String name;
 	private String description;
@@ -51,14 +46,6 @@ public class Character {
 
 	public int getCharID() {
 		return charID;
-	}
-
-	public boolean isDebug() {
-		return debug;
-	}
-
-	public boolean isAutoLook() {
-		return autoLook;
 	}
 
 	public String getName() {
