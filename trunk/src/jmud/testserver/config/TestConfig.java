@@ -1,13 +1,12 @@
 package jmud.testserver.config;
 
-import jmud.engine.config.BaseConfig;
+
 import jmud.engine.stats.SimpleStatDef;
 import jmud.testserver.stats.definitions.HitPoint_StatDef;
 
-public class TestConfig extends BaseConfig {
+public class TestConfig {
 
-	@Override
-	public void doSpecificConfig() {
+	public static void doSpecificConfig() {
 
 		/*
 		 * Right now, use the basic StatDef template BUT we can define custom
