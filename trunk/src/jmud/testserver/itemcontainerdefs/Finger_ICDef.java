@@ -10,14 +10,13 @@
 package jmud.testserver.itemcontainerdefs;
 
 import jmud.engine.item.AbstractItemDef;
-import jmud.testserver.itemcontainerdefs.MultiSlot;
 
 import java.util.List;
 
 /**
  * @author root
  */
-public class Finger extends MultiSlot {
+public class Finger_ICDef extends AbstractItemContainerDef {
     public static final int MAX_BULK = 10;
     public static final int MAX_ITEMS = 2;
     private List<AbstractItemDef> items;
@@ -26,7 +25,7 @@ public class Finger extends MultiSlot {
     /**
      * Creates a new instance of Finger
      */
-    public Finger(int Id, String name) {
+    public Finger_ICDef(int Id, String name) {
         super(Id, name);
     }
 

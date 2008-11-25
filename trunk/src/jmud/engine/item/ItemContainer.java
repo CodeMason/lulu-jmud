@@ -1,29 +1,31 @@
 package jmud.engine.item;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class ItemContainer extends Item {
-	// What itemTypes can be put into this container
-	private List<ItemTypes> validContentTypes;
+import jmud.engine.core.Targetable;
+import jmud.engine.dbio.Persistable;
 
-	private AbstractContainerDef behavior = null;
+public class ItemContainer extends Item implements Targetable, Persistable {
+	private AbstractItemContainerDef behavior = null;
 
-	public ItemContainer(int condition, String name, int uid, List<ItemTypes> validContentTypes) {
+	private ArrayList<Item> items = new ArrayList<Item>();
+	
+	public ItemContainer(int condition, String name, int uid) {
 		super(name, uid);
-
-		this.validContentTypes = validContentTypes;
 	}
 
-	public AbstractContainerDef getBehavior() {
+	public AbstractItemContainerDef getBehavior() {
 		return behavior;
 	}
 
-	public void setBehavior(AbstractContainerDef behavior) {
+	public void setBehavior(AbstractItemContainerDef behavior) {
 		this.behavior = behavior;
 	}
 
-	public List<ItemTypes> getValidContentTypes() {
-		return validContentTypes;
+	public ArrayList<Item> getItems() {
+		return items;
 	}
 
+
+	
 }

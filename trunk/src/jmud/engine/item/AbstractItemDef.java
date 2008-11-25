@@ -1,6 +1,7 @@
 package jmud.engine.item;
 
 import jmud.engine.core.Targetable;
+import jmud.engine.stats.Stat;
 
 /**
  * Represents a definition for the behavior of an item.
@@ -12,6 +13,7 @@ import jmud.engine.core.Targetable;
  */
 public abstract class AbstractItemDef {
 
+	protected int ContainerID = 0;
 	protected String name = "";
 
 	public AbstractItemDef(String name) {
@@ -24,11 +26,13 @@ public abstract class AbstractItemDef {
 	}
 
 	// Force dev to implement logic for when the object is 'used'
-	public abstract boolean use(Targetable targetUsing, Item it);
+	public abstract boolean use(Targetable targetUsing, Item i);
 
 	// Force dev to implement a check for when the object is picked up.
-	public abstract boolean getCheck(Targetable targetGetting, Item it);
+	protected abstract boolean getCheck(Targetable targetGetting, Item i);
 
 	// Force dev to implement a check for when the object is put down.
-	public abstract boolean putCheck(Targetable targetPutting, Item it);
+	protected abstract boolean putCheck(Targetable targetPutting, Item i);
+
+
 }

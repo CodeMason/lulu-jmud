@@ -2,25 +2,21 @@ package jmud.engine.character;
 
 /**
  *
- * 24NOV08:  PlayerAccount should only represent the data that pertains to
- * Account only, aka, username, email and password plus any settings they
- * might have, aka Telnet settings.
- *
- * A playerAccount will point to many Characters.
- *
- *
- *
- *
- * Created on April 21, 2002, 4:24 PM
+ * 24NOV08:  Character objects should only represent the data that pertains to
+ * an individual character... Attribute, Name, Description, etc
+ * 
+ * Created on 25NOV08
  */
 
+import jmud.engine.core.Targetable;
+import jmud.engine.dbio.Persistable;
 import jmud.engine.item.ItemContainer;
 import jmud.engine.rooms.Room;
-import jmud.engine.stats.Stat;
+import jmud.engine.stats.StatMap;
 
 import java.util.HashMap;
 
-public class Character {
+public class Character implements Targetable, Persistable {
 	private int charID;
 
 	// info
@@ -29,7 +25,7 @@ public class Character {
 	private String prompt;
 
 	// stats
-	private HashMap<String, Stat> stats = new HashMap<String, Stat>();
+	private StatMap stats = new StatMap();
 
 	//'Slots'
 	private HashMap<String, ItemContainer> slots = new HashMap<String, ItemContainer>();
@@ -56,7 +52,7 @@ public class Character {
 		return description;
 	}
 
-	public HashMap<String, Stat> getStats() {
+	public StatMap getStatMap() {
 		return stats;
 	}
 

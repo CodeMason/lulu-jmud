@@ -1,5 +1,7 @@
 package jmud.engine.core;
 
+import jmud.engine.stats.StatMap;
+
 /**
  * Targetable is the abstract definition of something that can be attacked.
  *
@@ -13,13 +15,9 @@ package jmud.engine.core;
  */
 public interface Targetable {
 
-    // get the armor class of the target
-    public abstract int getAC();
-
-    // damage the target and return if it's dead
-    public abstract boolean hurt(int dmg);
-
     // get the name of the target
     public abstract String getName();
 
+    //get the statMap of the target
+    public abstract StatMap getStatMap();
 }
