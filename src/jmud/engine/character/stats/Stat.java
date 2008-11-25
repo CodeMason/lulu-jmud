@@ -1,5 +1,12 @@
 package jmud.engine.character.stats;
 
+/**
+ * Stat is the object that represents a Character's statistic.  Behavior of this Stat is defined
+ * by a corresponding StatDef.  Stat objects and StatDef objects are correlated via the 'String name' field.
+ *
+ * @author David Loman
+ * @version 0.1
+ */
 import java.util.ArrayList;
 
 public class Stat {
@@ -9,9 +16,8 @@ public class Stat {
 	private int current = -1;
 	private ArrayList<StatMod> mods = new ArrayList<StatMod>();
 
-
-	public Stat( String name, int max, int min, int current) {
-        this.current = current;
+	public Stat(String name, int max, int min, int current) {
+		this.current = current;
 		this.max = max;
 		this.min = min;
 		this.name = name;
@@ -48,7 +54,5 @@ public class Stat {
 	public String getName() {
 		return name;
 	}
-
-
 
 }
