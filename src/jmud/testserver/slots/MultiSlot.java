@@ -9,7 +9,7 @@
 
 package jmud.testserver.slots;
 
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 import jmud.engine.slot.Slot;
 
 import java.util.LinkedList;
@@ -21,7 +21,7 @@ import java.util.List;
 public abstract class MultiSlot extends Slot {
     public static final int MAX_BULK = 10;
     public static final int MAX_ITEMS = 2;
-    private List<Item> items;
+    private List<AbstractItemDef> items;
     private String name;
 
     /**
@@ -31,7 +31,7 @@ public abstract class MultiSlot extends Slot {
      */
     public MultiSlot(int Id, String name) {
         super(Id, name);
-        items = new LinkedList<Item>();
+        items = new LinkedList<AbstractItemDef>();
     }
 
     public final int itemCount() {
@@ -46,11 +46,11 @@ public abstract class MultiSlot extends Slot {
         return itemCount() == 0;
     }
 
-    public final boolean hasItem(Item item) {
+    public final boolean hasItem(AbstractItemDef item) {
         return items.contains(item);
     }
 
-    public final boolean addItem(Item item) {
+    public final boolean addItem(AbstractItemDef item) {
         if(items.size() < MAX_ITEMS) {
             items.add(item);
             return true;
@@ -61,8 +61,8 @@ public abstract class MultiSlot extends Slot {
     /**
      * Go through all the items and return the first one that matches the name
      */
-    public final Item removeItem(String name) {
-        for(Item i : items) {
+    public final AbstractItemDef removeItem(String name) {
+        for(AbstractItemDef i : items) {
             if(i.getName().equals(name)) {
                 return i;
             }
@@ -70,7 +70,7 @@ public abstract class MultiSlot extends Slot {
         return null;
     }
 
-    public final List<Item> getItems() {
+    public final List<AbstractItemDef> getItems() {
         return items;
     }
 

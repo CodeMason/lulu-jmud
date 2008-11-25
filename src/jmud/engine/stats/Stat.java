@@ -16,6 +16,9 @@ public class Stat {
 	private int current = -1;
 	private ArrayList<StatMod> mods = new ArrayList<StatMod>();
 
+	//TODO why not have the Definition object reference attached at creation?
+	private AbstractStatDef defToUse = null; 
+	
 	public Stat(String name, int max, int min, int current) {
 		this.current = current;
 		this.max = max;

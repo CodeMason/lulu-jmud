@@ -1,6 +1,6 @@
 package jmud.testserver.commands;
 
-import jmud.engine.core.Target;
+import jmud.engine.core.Targetable;
 import jmud.engine.mobs.Mob;
 import jmud.engine.netIO.deprecated.ChannelWriter;
 import jmud.engine.netIO.deprecated.PlayerChannel;
@@ -69,7 +69,7 @@ public class Attack extends Command {
      * @return true if the attack completed or false if the attack needs to be run again.
      */
     public boolean exec() {
-        Target target;
+        Targetable target;
         SocketChannel sc = playerChannel.getSocketChannel();
         int iDamage = 1;
         int iThac0 = 10;

@@ -1,7 +1,7 @@
 package jmud.testserver.commands;
 
 import jmud.engine.character.Character;
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 import jmud.engine.netIO.deprecated.PlayerChannel;
 import jmud.engine.rooms.Room;
 
@@ -40,7 +40,7 @@ public class Get extends Command {
      */
     public boolean exec() {
         StringBuilder strbMessage = new StringBuilder();
-        Item item;
+        AbstractItemDef item;
 
         // DEBUG: has the command been called
         //System.out.println("Get.exec() called");

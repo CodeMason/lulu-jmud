@@ -9,7 +9,7 @@
 
 package jmud.testserver.slots;
 
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 import jmud.engine.slot.Slot;
 
 import java.util.LinkedList;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public abstract class SingleSlot extends Slot {
     private static final int MAX_ITEMS = 1;
-    private Item item;
+    private AbstractItemDef item;
     private List<Slot> slots;
     private String name;
 
@@ -41,7 +41,7 @@ public abstract class SingleSlot extends Slot {
         return slots;
     }
 
-    public boolean hasItem(Item item) {
+    public boolean hasItem(AbstractItemDef item) {
         return this.item == item;
     }
 
@@ -53,12 +53,12 @@ public abstract class SingleSlot extends Slot {
         return !isFull();
     }
 
-    public Item removeItem(Item item) {
+    public AbstractItemDef removeItem(AbstractItemDef item) {
         return item;
     }
 
-    public final List<Item> getItems() {
-        List<Item> items = new LinkedList<Item>();
+    public final List<AbstractItemDef> getItems() {
+        List<AbstractItemDef> items = new LinkedList<AbstractItemDef>();
         if(item != null) {
             items.add(item);
         }
@@ -74,7 +74,7 @@ public abstract class SingleSlot extends Slot {
         return MAX_ITEMS;
     }
 
-    public boolean addItem(Item item) {
+    public boolean addItem(AbstractItemDef item) {
         if(this.item == null) {
             this.item = item;
             return true;
@@ -82,7 +82,7 @@ public abstract class SingleSlot extends Slot {
         return false;
     }
 
-    public Item removeItem(String name) {
+    public AbstractItemDef removeItem(String name) {
         if(item.getName().equals(name)) {
             return item;
         }

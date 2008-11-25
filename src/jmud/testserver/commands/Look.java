@@ -2,7 +2,7 @@ package jmud.testserver.commands;
 
 import jmud.engine.character.Character;
 import jmud.engine.core.Settings;
-import jmud.engine.item.Item;
+import jmud.engine.item.AbstractItemDef;
 import jmud.engine.mobs.Mob;
 import jmud.engine.netIO.deprecated.PlayerChannel;
 import jmud.engine.rooms.Room;
@@ -48,7 +48,7 @@ public class Look extends Command {
     public boolean exec() {
         List<PlayerChannel> playerChannels;
         List<Mob> mobs;
-        List<Item> items;
+        List<AbstractItemDef> items;
         StringBuilder message = new StringBuilder();
         String mobAndPlayerNames = room.getMobAndPlayerNames(player);
         String itemNames = room.getItemNames(player.isDebug());
@@ -127,7 +127,7 @@ public class Look extends Command {
                 }
             }
             if(items != null) {
-                for(Item item : items) {
+                for(AbstractItemDef item : items) {
                     if(needComma) {
                         message.append(", ");
                     } else {
