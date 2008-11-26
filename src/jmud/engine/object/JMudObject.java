@@ -1,8 +1,11 @@
 package jmud.engine.object;
 
+import jmud.engine.attribute.AttributeMap;
+import jmud.engine.behavior.BehaviorMap;
+
 public class JMudObject {
 
-	private ChildObjectMap children = new ChildObjectMap();
+	private JMudObjectMap children = new JMudObjectMap();
 	private AttributeMap attr = new AttributeMap();
 	private BehaviorMap behavior = new BehaviorMap();
 	

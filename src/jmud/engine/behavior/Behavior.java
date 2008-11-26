@@ -1,4 +1,4 @@
-package jmud.engine.object;
+package jmud.engine.behavior;
 
 public class Behavior {
 
