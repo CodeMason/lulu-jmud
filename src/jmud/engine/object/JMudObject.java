@@ -29,9 +29,29 @@ public class JMudObject {
 		return attr;
 	}
 
-	public Map<Class<? extends JMudEvent>, List<Behavior>> getBehavior() {
-        return behaviors;
-	}
+    /**
+     * For any event, return the list of applicable behaviors
+     * @param event the event to find behaviors for
+     * @return the behaviors that match the event
+     */
+    public List<Behavior> getBehaviors(JMudEvent event){
+        return behaviors.get(event.getClass());
+    }
+
+    /**
+     * Register a list of behaviors with an event class
+     * @param clazz Class of JMudEvent to register the behaviors with
+     * @param behaviors Behaviors to handle the JMudEvent
+     */
+    public void registerEventBehaviors(Class<? extends JMudEvent> clazz, List<Behavior> behaviors){
+        this.behaviors.get(clazz).addAll(behaviors);
+    }
+
+    /*
+
+    This needs to be move into the JobQueue somehow
+
+     */
 
     /**
      * Look up the behaviors associated with the Class of the JMudEvent,
@@ -47,6 +67,7 @@ public class JMudObject {
      *
      * @param event the EventObject to fire
      */
+    /*
     public void fireEvent(JMudEvent event){
         synchronized(behaviors){
             List<? extends JMudEvent> resultingEvents;
@@ -60,8 +81,7 @@ public class JMudObject {
             }
         }
     }
+    */
 
-    public void registerEventBehaviors(Class<? extends JMudEvent> clazz, List<Behavior> behaviors){
-        this.behaviors.get(clazz).addAll(behaviors);
-    }
+
 }
