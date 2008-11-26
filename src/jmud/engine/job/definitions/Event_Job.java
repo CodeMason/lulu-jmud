@@ -10,6 +10,8 @@ import java.util.List;
  *
  * Takes a JMudEvent and creates Behavior Jobs for it
  *
+ * ToDo: this job would need to publish this event to any subscribers
+ *
  * @created 26NOV08
  * @author Chris Maguire
  * @version 0.1
