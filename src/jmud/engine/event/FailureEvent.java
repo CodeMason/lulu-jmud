@@ -2,6 +2,10 @@ package jmud.engine.event;
 
 import jmud.engine.object.JMudObject;
 
+/**
+ * An event to fire upon the failure to successfully (in the context of Player intent)
+ * perform a behavior; not to be confused with failure to process a Behavior.
+ */
 public class FailureEvent extends JMudEvent{
 
     private String message;
