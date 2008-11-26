@@ -2,14 +2,11 @@ package jmud.engine.item;
 
 import java.util.ArrayList;
 
-import jmud.engine.core.Targetable;
-import jmud.engine.dbio.Persistable;
-
-public class ItemContainer extends Item implements Targetable, Persistable {
-	private AbstractItemContainerDef behavior = null;
+public class ItemContainer extends Item {
+	private AbstractItemContainerDef behavior;
 
 	private ArrayList<Item> items = new ArrayList<Item>();
-	
+
 	public ItemContainer(int condition, String name, int uid) {
 		super(name, uid);
 	}
@@ -27,5 +24,5 @@ public class ItemContainer extends Item implements Targetable, Persistable {
 	}
 
 
-	
+
 }

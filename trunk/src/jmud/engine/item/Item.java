@@ -10,10 +10,9 @@ public class Item implements Targetable, Persistable {
 
 	private StatMap stats = new StatMap();
 
-	private AbstractItemDef behavior = null;
+	private AbstractItemDef behavior;
 
 	public Item(String name, int uid) {
-		super();
 		this.name = name;
 		this.uid = uid;
 	}
