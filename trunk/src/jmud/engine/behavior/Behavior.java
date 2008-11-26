@@ -1,6 +1,7 @@
 package jmud.engine.behavior;
 
 import jmud.engine.event.JMudEvent;
+import jmud.engine.object.JMudObject;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
  *
  * Behaviors should check that they are handling the right event.
  * Each Behavior might list a top level Event class that it handles.
+ *
+ * ToDo: How will a Behavior get what objects it needs to work on? Should we always pass in the source event and target object?
  */
 public abstract class Behavior {
 
@@ -24,7 +27,7 @@ public abstract class Behavior {
      * @param event the event the bahavior is responding too
      * @return the resulting EventObject
      */
-    public abstract List<? extends JMudEvent> behave(JMudEvent event);
+    public abstract List<? extends JMudEvent> behave(JMudEvent event, JMudObject target);
 
     public abstract List<Class> getValidEvents();
 }

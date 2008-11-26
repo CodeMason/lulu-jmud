@@ -3,6 +3,7 @@ package jmud.engine.behavior;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.SimpleEvent;
 import jmud.engine.event.SuccessEvent;
+import jmud.engine.object.JMudObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,11 +55,14 @@ public class SimpleBehavior extends Behavior{
      * @return the resulting EventObject
      */
     @Override
-    public synchronized List<? extends JMudEvent> behave(JMudEvent event){
+    public synchronized List<? extends JMudEvent> behave(JMudEvent event, JMudObject target){
         return Arrays.asList(new SuccessEvent(event.getSource(), "Simple behavior succeeded"));
     }
 
-    public List<Class> getValidEvents(){
+
+    public List getValidEvents(){
         return VALID_EVENTS;
     }
+
+
 }
