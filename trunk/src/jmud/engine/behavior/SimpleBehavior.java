@@ -27,8 +27,7 @@ public class SimpleBehavior extends Behavior{
      * Protected constructor is sufficient to suppress unauthorized calls to the
      * constructor
      */
-    protected SimpleBehavior(){
-    }
+    protected SimpleBehavior(){}
 
     /**
      * BehaviorHolder is loaded on the first execution of

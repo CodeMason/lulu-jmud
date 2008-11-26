@@ -3,7 +3,14 @@ package jmud.engine.event;
 import jmud.engine.object.JMudObject;
 
 /**
- * An event to return upon the successful completion of a behavior
+ * An event to return upon the successful completion of a behavior from
+ * the perspective of a player: e.g. When successfully sitting on an object
+ * a SuccessEvent might have a message that says "You sit down on the [object]"
+ *
+ * Not to be confused with successfully processing the Behavior's code.
+ *
+ * A fantastic example of this is the "spit" command from Space Quest 2: you can spit,
+ * but it probably won't succeed like you think it will.
  */
 public class SuccessEvent extends JMudEvent{
     private String message;
