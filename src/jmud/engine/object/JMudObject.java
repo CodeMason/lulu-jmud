@@ -46,42 +46,4 @@ public class JMudObject {
     public void registerEventBehaviors(Class<? extends JMudEvent> clazz, List<Behavior> behaviors){
         this.behaviors.get(clazz).addAll(behaviors);
     }
-
-    /*
-
-    This needs to be move into the JobQueue somehow
-
-     */
-
-    /**
-     * Look up the behaviors associated with the Class of the JMudEvent,
-     * run all of the Behaviors and then for each Behavior run all the
-     * resulting events on the appropriate objects.
-     *
-     * Allows event chaining: e.g. Player steps on tack, tack hurts player
-     *
-     * BE CAREFUL OF RECURSIVE EVENTS: maybe we should put a max depth or TTL limit on here?
-     *
-     * Might always store the triggering event in the resulting event like Exceptions. Would facilitate
-     * in debugging event chains.
-     *
-     * @param event the EventObject to fire
-     */
-    /*
-    public void fireEvent(JMudEvent event){
-        synchronized(behaviors){
-            List<? extends JMudEvent> resultingEvents;
-            for(Behavior behavior : behaviors.get(event.getClass())){
-                resultingEvents = behavior.behave(event);
-                if(resultingEvents != null){
-                    for(JMudEvent resultingEvent : behavior.behave(event)){
-                        resultingEvent.getSource().fireEvent(resultingEvent);
-                    }
-                }
-            }
-        }
-    }
-    */
-
-
 }
