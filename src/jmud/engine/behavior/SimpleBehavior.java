@@ -1,7 +1,6 @@
 package jmud.engine.behavior;
 
 import jmud.engine.event.JMudEvent;
-import jmud.engine.event.SimpleEvent;
 import jmud.engine.event.SuccessEvent;
 import jmud.engine.object.JMudObject;
 
@@ -18,8 +17,6 @@ import java.util.List;
  * object without a registered Behavior would just ignore it.
  */
 public class SimpleBehavior extends Behavior{
-    // ToDo: no idea how to genericize this
-    private static final List VALID_EVENTS = Arrays.asList(SimpleEvent.class);
      /*
       * ********************************************
       * Singleton Implementation
@@ -58,11 +55,5 @@ public class SimpleBehavior extends Behavior{
     public synchronized List<? extends JMudEvent> behave(JMudEvent event, JMudObject target){
         return Arrays.asList(new SuccessEvent(event.getSource(), "Simple behavior succeeded"));
     }
-
-
-    public List getValidEvents(){
-        return VALID_EVENTS;
-    }
-
 
 }

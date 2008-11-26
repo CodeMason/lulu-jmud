@@ -29,5 +29,5 @@ public abstract class Behavior {
      */
     public abstract List<? extends JMudEvent> behave(JMudEvent event, JMudObject target);
 
-    public abstract List<Class> getValidEvents();
+
 }
