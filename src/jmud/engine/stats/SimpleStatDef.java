@@ -5,7 +5,12 @@ import jmud.engine.core.Namespace;
 /**
  * A simple implementation of an AbstractStatDef for use with the core JMUD
  * engine.
- * 
+ *
+ * ToDO: can events be kicked off by stat changes? If so we'll want to
+ *       look at using behaviors for stat events.
+ *       (e.g. sending a message to the user that their stat max has changed,
+ *             or that they can now wield a certain weapon or armor)
+ *
  * @author David Loman
  * @version 0.1
  */

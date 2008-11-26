@@ -3,5 +3,7 @@ Pretty obvious what TODO.txt contains:
 
 
 1)	UPDATE COMMENTS!!!!  DAVE IS HORRIBLE AT THIS SO MAKE HIM COMMENT THINGS!!!!!
+2)  synchronized maps    Any problems using java.util.Collections.synchronizedMap(new HashMap());? (see Behavior class)
+3)  StatMap              Not thread-safe
 
 

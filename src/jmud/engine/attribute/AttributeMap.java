@@ -3,6 +3,9 @@ package jmud.engine.attribute;
 /**
  * Thin wrapper around the hashmap.  This class is completely internally
  * synchronized.  No external synch needed.
+ *
+ * ToDo: are we going to do anything specific with an Attribute map, or can
+ * we simply use a SynchronizedHashMap for all the mapping?
  */
 
 import java.util.Collection;
@@ -13,7 +16,7 @@ import java.util.Map.Entry;
 
 public class AttributeMap {
 
-	private HashMap<String, Attribute> map = new HashMap<String, Attribute>();
+	private final HashMap<String, Attribute> map = new HashMap<String, Attribute>();
 
 	public void clear() {
 		synchronized (this.map) {
