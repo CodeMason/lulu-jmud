@@ -1,4 +1,4 @@
-package jmud.engine.object;
+package jmud.engine.behavior;
 
 /**
  * Thin wrapper around the hashmap.  This class is completely internally
@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-public class AttributeMap {
+public class BehaviorMap {
 
-	private HashMap<String, Attribute> map = new HashMap<String, Attribute>();
+	private HashMap<String, Behavior> map = new HashMap<String, Behavior>();
 
 	public void clear() {
 		synchronized (this.map) {
@@ -39,7 +39,7 @@ public class AttributeMap {
 		}
 	}
 
-	public Set<Entry<String, Attribute>> entrySet() {
+	public Set<Entry<String, Behavior>> entrySet() {
 		synchronized (this.map) {
 			return this.map.entrySet();
 		}
@@ -51,7 +51,7 @@ public class AttributeMap {
 		}
 	}
 
-	public Attribute get(Object arg0) {
+	public Behavior get(Object arg0) {
 		synchronized (this.map) {
 			return this.map.get(arg0);
 		}
@@ -75,17 +75,17 @@ public class AttributeMap {
 		}
 	}
 
-	public Attribute put(String arg0, Attribute arg1) {
+	public Behavior put(String arg0, Behavior arg1) {
 		synchronized (this.map) {
 			return this.map.put(arg0, arg1);
 		}
 	}
 
-	public void putAll(Map<? extends String, ? extends Attribute> arg0) {
+	public void putAll(Map<? extends String, ? extends Behavior> arg0) {
 		this.map.putAll(arg0);
 	}
 
-	public Attribute remove(Object arg0) {
+	public Behavior remove(Object arg0) {
 		synchronized (this.map) {
 			return this.map.remove(arg0);
 		}
@@ -103,7 +103,7 @@ public class AttributeMap {
 		}
 	}
 
-	public Collection<Attribute> values() {
+	public Collection<Behavior> values() {
 		synchronized (this.map) {
 			return this.map.values();
 		}

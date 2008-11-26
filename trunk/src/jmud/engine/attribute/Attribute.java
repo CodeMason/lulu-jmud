@@ -1,4 +1,4 @@
-package jmud.engine.object;
+package jmud.engine.attribute;
 
 public class Attribute {
 	private String name = "";

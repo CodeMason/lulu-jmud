@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Map.Entry;
 
-public class ChildObjectMap {
+public class JMudObjectMap {
 
 	private HashMap<UUID, JMudObject> map = new HashMap<UUID, JMudObject>();
 
