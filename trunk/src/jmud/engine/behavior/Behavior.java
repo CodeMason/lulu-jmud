@@ -24,7 +24,7 @@ public abstract class Behavior {
      * perform this Behavior's behavior and return the resultant
      * events, if any.
      *
-     * @param event the event the bahavior is responding too
+     * @param event the event the behavior is responding too
      * @return the resulting EventObject
      */
     public abstract List<? extends JMudEvent> behave(JMudEvent event, JMudObject target);
