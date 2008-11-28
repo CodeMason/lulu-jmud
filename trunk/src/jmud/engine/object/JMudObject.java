@@ -21,7 +21,7 @@ public class JMudObject {
 
 	/**
 	 * Name just for the sake of Human readability. Not required to be
-	 * implemented anywhere.
+	 * implemented anywhere.  Works well for testing though!
 	 */
 	private String name = "";;
 
@@ -95,9 +95,6 @@ public class JMudObject {
 	 * Methods
 	 */
 
-	public Map<String, Attribute> getAttr() {
-		return attr;
-	}
 
 	/**
 	 * For any event, return the list of applicable behaviors
@@ -123,39 +120,83 @@ public class JMudObject {
 	}
 
 	/*
+	 * Attribute HashMap Delegates
+	 */
+
+
+	public void attributeClear() {
+		attr.clear();
+	}
+
+	public boolean attributeContainsKey(String key) {
+		return attr.containsKey(key);
+	}
+
+	public boolean attributeContainsValue(Attribute value) {
+		return attr.containsValue(value);
+	}
+
+	public Attribute attributeGet(String key) {
+		return attr.get(key);
+	}
+
+	public Set<String> attributeKeySet() {
+		return attr.keySet();
+	}
+
+	public Attribute attributePut(String key, Attribute value) {
+		return attr.put(key, value);
+	}
+
+	public Attribute attributeRemove(String key) {
+		return attr.remove(key);
+	}
+
+	public int attributeAize() {
+		return attr.size();
+	}
+
+	public Collection<Attribute> attributeValues() {
+		return attr.values();
+	}
+
+	
+	
+
+	/*
 	 * Children HashMap Delegates
 	 */
 
-	public void clear() {
+	public void childrenClear() {
 		children.clear();
 	}
 
-	public boolean containsKey(UUID uuid) {
+	public boolean childrenContainsKey(UUID uuid) {
 		return children.containsKey(uuid);
 	}
 
-	public boolean containsValue(JMudObject jmo) {
+	public boolean childrenContainsValue(JMudObject jmo) {
 		return children.containsValue(jmo);
 	}
 
-	public Set<UUID> keySet() {
+	public Set<UUID> childrenKeySet() {
 		return children.keySet();
 	}
 
-	public JMudObject getChild(UUID uuid) {
+	public JMudObject childrenGet(UUID uuid) {
 		return children.get(uuid);
 	}
 
-	public Map<UUID, JMudObject> getAllChildren() {
+	public Map<UUID, JMudObject> childrenGetAll() {
 		return this.children;
 	}
 
-	public JMudObject addChild(JMudObject jmo) {
+	public JMudObject childrenAdd(JMudObject jmo) {
 		jmo.setParent(this);
 		return children.put(jmo.getUUID(), jmo);
 	}
 
-	public JMudObject remChild(UUID uuid) {
+	public JMudObject childrenRemove(UUID uuid) {
 		JMudObject jmo = this.children.remove(uuid);
 		if (jmo != null) {
 			jmo.setParent(null);
@@ -163,16 +204,16 @@ public class JMudObject {
 		return jmo;
 	}
 
-	public JMudObject remChild(JMudObject jmo) {
-		this.remChild(jmo.getUUID());
+	public JMudObject childrenRemove(JMudObject jmo) {
+		this.childrenRemove(jmo.getUUID());
 		return jmo;
 	}
 
-	public int size() {
+	public int childrenSize() {
 		return this.children.size();
 	}
 
-	public Collection<JMudObject> values() {
+	public Collection<JMudObject> childrenValues() {
 		return this.children.values();
 	}
 
@@ -186,7 +227,7 @@ public class JMudObject {
 
 		// the ONLY way you should ever have Zero siblings is if you are ROOT
 		if (this.parent != null) {
-			map = this.parent.getAllChildren();
+			map = this.parent.childrenGetAll();
 			map.remove(this.getUUID());
 		}
 		return map;
@@ -197,7 +238,7 @@ public class JMudObject {
 
 		if (parent != null) {
 			// first, remove the parent's reference to the child
-			parent.remChild(this);
+			parent.childrenRemove(this);
 		}
 		// then remove the child's reference to the parent
 		this.setParent(null);
@@ -211,7 +252,7 @@ public class JMudObject {
 
 		// establish newParent's reference to this
 		if (newParent != null) {
-			newParent.addChild(this);
+			newParent.childrenAdd(this);
 		} 
 	}
 
