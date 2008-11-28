@@ -1,11 +1,6 @@
 package jmud.engine.behavior;
 
-import jmud.engine.event.JMudEvent;
-import jmud.engine.event.SuccessEvent;
 import jmud.engine.object.JMudObject;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Simple representation of a Behavior. This is a Singleton
@@ -16,43 +11,35 @@ import java.util.List;
  * register a Behavior for it (e.g. SendSuccessMessageToPlayer); any
  * object without a registered Behavior would just ignore it.
  */
-public class SimpleBehavior extends Behavior{
-     /*
-      * ********************************************
-      * Singleton Implementation
-      * ********************************************
-      */
+public class SimpleBehavior extends Behavior {
+ 
+	public SimpleBehavior() {
+		super();
+	}
 
-    /**
-     * Protected constructor is sufficient to suppress unauthorized calls to the
-     * constructor
-     */
-    protected SimpleBehavior(){}
-
-    /**
-     * BehaviorHolder is loaded on the first execution of
-     * SimpleBehavior.getInstance() or the first access to
-     * SimpleBehaviorHolder.INSTANCE, not before.
-     */
-    private static class SimpleBehaviorHolder{
-        private static final SimpleBehavior INSTANCE = new SimpleBehavior();
-    }
-
-    public static SimpleBehavior getInstance(){
-        return SimpleBehaviorHolder.INSTANCE;
-    }
-
-
-    /**
+	/**
      * perform this Behavior's behavior and return the resultant
      * event.
      *
      * @param event the event the behavior is responding too
      * @return the resulting EventObject
      */
-    @Override
-    public synchronized List<? extends JMudEvent> behave(JMudEvent event, JMudObject target){
-        return Arrays.asList(new SuccessEvent(event.getSource(), "Simple behavior succeeded"));
-    }
+ 
+	@Override
+	public boolean behave() {
+		JMudObject source = this.event.getSource();
+		JMudObject targets = this.event.getTarget();
+	
+		//Send off events here!!
+		
+		return true;
+	}
+
+	@Override
+	public Behavior clone() {
+		return new GetBehavior();
+
+	}
+
 
 }

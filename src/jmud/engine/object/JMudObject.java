@@ -2,6 +2,7 @@ package jmud.engine.object;
 
 import jmud.engine.attribute.Attribute;
 import jmud.engine.behavior.Behavior;
+import jmud.engine.event.EventType;
 import jmud.engine.event.JMudEvent;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public class JMudObject {
 
 	/**
 	 * Name just for the sake of Human readability. Not required to be
-	 * implemented anywhere.  Works well for testing though!
+	 * implemented anywhere. Works well for testing though!
 	 */
 	private String name = "";;
 
@@ -51,31 +52,23 @@ public class JMudObject {
 	 * discrete, atomic behaviors, we can re-use them, e.g. Unlock, Open, Wait,
 	 * Close, Lock, etc.
 	 */
-	private final Map<Class<? extends JMudEvent>, List<Behavior>> behaviors = Collections
-			.synchronizedMap(new HashMap<Class<? extends JMudEvent>, List<Behavior>>());
+	private final Map<EventType, List<Behavior>> behaviors = Collections
+			.synchronizedMap(new HashMap<EventType, List<Behavior>>());
 
 	/*
 	 * 
 	 * Constructors
 	 */
 
-	public JMudObject(UUID uuid, String name, JMudObject parent) {
+	private JMudObject(UUID uuid, String name, JMudObject parent) {
 		super();
 		this.parent = parent;
 		this.name = name;
 		this.uuid = uuid;
 	}
 
-	public JMudObject(UUID uuid, String name) {
-		this(uuid, name, null);
-	}
-
-	public JMudObject(UUID uuid, JMudObject parent) {
-		this(uuid, "", parent);
-	}
-
-	public JMudObject(UUID uuid) {
-		this(uuid, "", null);
+	public JMudObject(String name, JMudObject parent) {
+		this(UUID.randomUUID(), name, parent);
 	}
 
 	public JMudObject(String name) {
@@ -95,7 +88,6 @@ public class JMudObject {
 	 * Methods
 	 */
 
-
 	/**
 	 * For any event, return the list of applicable behaviors
 	 * 
@@ -104,25 +96,44 @@ public class JMudObject {
 	 * @return the behaviors that match the event
 	 */
 	public List<Behavior> getBehaviors(JMudEvent event) {
-		return behaviors.get(event.getClass());
+		return this.getBehaviors(event.getEventType());
+	}
+
+	public List<Behavior> getBehaviors(EventType et) {
+		return behaviors.get(et);
 	}
 
 	/**
-	 * Register a list of behaviors with an event class
+	 * Register a behaviors with an event class
 	 * 
-	 * @param clazz
-	 *            Class of JMudEvent to register the behaviors with
-	 * @param behaviors
-	 *            Behaviors to handle the JMudEvent
+	 * @param b Behavior to mapped to Behavior.getEventTypesHandled();
 	 */
-	public void registerEventBehaviors(Class<? extends JMudEvent> clazz, List<Behavior> behaviors) {
-		this.behaviors.get(clazz).addAll(behaviors);
+	public void addEventBehavior(Behavior b) {
+		List<EventType> ets = b.getEventTypesHandled();
+		
+		for (EventType e : ets) {
+			
+			List<Behavior> behs = this.behaviors.get(e);
+			
+			if (behs == null) {
+				//There was no mapping for EventType e, so make a newone
+				behs = new ArrayList<Behavior>();
+				behs.add(b);
+				this.behaviors.put(e, behs);
+			} else {
+				//There was a mapping for EventType e
+				behs.add(b);
+			}
+		}
 	}
 
+
+	
+	
+	
 	/*
 	 * Attribute HashMap Delegates
 	 */
-
 
 	public void attributeClear() {
 		attr.clear();
@@ -160,9 +171,6 @@ public class JMudObject {
 		return attr.values();
 	}
 
-	
-	
-
 	/*
 	 * Children HashMap Delegates
 	 */
@@ -185,6 +193,15 @@ public class JMudObject {
 
 	public JMudObject childrenGet(UUID uuid) {
 		return children.get(uuid);
+	}
+
+	public JMudObject childrenGet(String name) {
+		for (JMudObject jmo : this.children.values()) {
+			if (jmo.getName().equals(name)) {
+				return jmo;
+			}
+		}
+		return null;
 	}
 
 	public Map<UUID, JMudObject> childrenGetAll() {
@@ -253,7 +270,7 @@ public class JMudObject {
 		// establish newParent's reference to this
 		if (newParent != null) {
 			newParent.childrenAdd(this);
-		} 
+		}
 	}
 
 	/*
@@ -276,6 +293,7 @@ public class JMudObject {
 	private void setParent(JMudObject newParent) {
 		this.parent = newParent;
 	}
+
 	public UUID getUUID() {
 		return this.uuid;
 	}

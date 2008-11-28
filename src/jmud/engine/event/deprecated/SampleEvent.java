@@ -1,5 +1,6 @@
-package jmud.engine.event;
+package jmud.engine.event.deprecated;
 
+import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
 
 /**
@@ -9,6 +10,5 @@ import jmud.engine.object.JMudObject;
 public class SampleEvent extends JMudEvent{
 
     public SampleEvent(JMudObject source){
-        super(source);
-    }
+        super(null, source, null);   }
 }
