@@ -1,22 +1,21 @@
 package jmud.engine.object.test;
 
-import java.util.UUID;
-
+import java.util.Collection;
 import jmud.engine.object.JMudObject;
 
 public class JMudObjectTreeTest01 {
 
 	public static void main(String[] args) {
-		JMudObject root = new JMudObject(UUID.randomUUID());
-		JMudObject room = new JMudObject(UUID.randomUUID());
-		JMudObject pcSteve = new JMudObject(UUID.randomUUID());
-		JMudObject orc0 = new JMudObject(UUID.randomUUID());
-		JMudObject orc1 = new JMudObject(UUID.randomUUID());
-		JMudObject chair = new JMudObject(UUID.randomUUID());
-		JMudObject bag = new JMudObject(UUID.randomUUID());
-		JMudObject goldcoins = new JMudObject(UUID.randomUUID());
-		JMudObject mapOfDungeon = new JMudObject(UUID.randomUUID());
-		JMudObject door = new JMudObject(UUID.randomUUID());
+		JMudObject root = new JMudObject("root");
+		JMudObject room = new JMudObject("room");
+		JMudObject pcSteve = new JMudObject("pcSteve");
+		JMudObject orc0 = new JMudObject("orc0");
+		JMudObject orc1 = new JMudObject("orc1");
+		JMudObject chair = new JMudObject("chair");
+		JMudObject bag = new JMudObject("bag");
+		JMudObject goldcoins = new JMudObject("goldcoins");
+		JMudObject mapOfDungeon = new JMudObject("mapOfDungeon");
+		JMudObject door = new JMudObject("door");
 
 		root.addChild(room);
 		room.addChild(pcSteve);
@@ -30,20 +29,72 @@ public class JMudObjectTreeTest01 {
 		bag.addChild(mapOfDungeon);
 
 		// Printout the tree.
+		System.out.println("\n\nOriginal Tree");
 		JMudObjectTreeTest01.printTreeRecursor(root);
 
-		// re-arrange
-		room.remChild(bag);
-		pcSteve.addChild(bag);
+
+		/*
+		 *  Now I want to see JUST Chair's siblings:
+		 */
+		System.out.println("\n\nChair:");
+		JMudObjectTreeTest01.printTreeRecursor(chair);
 
 		// Printout the tree.
+		System.out.println("\n\nChair's siblings");
+		JMudObjectTreeTest01.printTreeRecursor(chair.getSiblings().values());
+
+
+		
+		/*
+		 *  Re-arrange
+		 */
+		bag.changeParent(pcSteve);
+
+		// Printout the tree.
+		System.out.println("\n\nMoved Bag from the Room to pcSteve using JMudObject.changeParent(bag, pcSteve)");
 		JMudObjectTreeTest01.printTreeRecursor(root);
 
+		
+		/*
+		 *  Drop parent
+		 */
+		bag.changeParent(null);
+
+		// Printout the tree.
+		System.out.println("\n\nRemoved Bag from pcSteve using .changeParent(null)");
+		JMudObjectTreeTest01.printTreeRecursor(root);
+
+		/*
+		 *  Reattach to Orc.0
+		 */
+		bag.changeParent(orc0);
+
+		// Printout the tree.
+		System.out.println("\n\nAttached Bag to ocr0 using .changeParent(orc0)");
+		JMudObjectTreeTest01.printTreeRecursor(root);
+
+		/*
+		 * Orc.0 'drops' bag
+		 */
+		bag.changeParent(orc0.getParent());
+
+		// Printout the tree.
+		System.out.println("\n\nSimulated orc0 'drop' Bag using .changeParent(orc0.getParent())");
+		JMudObjectTreeTest01.printTreeRecursor(root);
+
+		
+		
+		
 	}
 
 	private static void printTreeRecursor(JMudObject jmo) {
-		System.out.println("\n\n");
 		JMudObjectTreeTest01.printTreeRecursor(jmo, 0);
+	}
+
+	private static void printTreeRecursor(Collection<JMudObject> jmo) {
+		for (JMudObject j : jmo) {
+			JMudObjectTreeTest01.printTreeRecursor(j, 0);
+		}
 	}
 
 	private static void printTreeRecursor(JMudObject jmo, int lvl) {
@@ -55,7 +106,7 @@ public class JMudObjectTreeTest01 {
 		}
 
 		// attach the UUID:
-		s += jmo.getUUID().toString();
+		s += jmo.toString();
 
 		// Print the string
 		System.out.println(s);

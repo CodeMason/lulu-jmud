@@ -20,6 +20,12 @@ public class JMudObject {
 	private UUID uuid = null;
 
 	/**
+	 * Name just for the sake of Human readability. Not required to be
+	 * implemented anywhere.
+	 */
+	private String name = "";;
+
+	/**
 	 * Reference to this object's parent JMudObject object. A null parent
 	 * indicates the ROOT JMudObject of the tree.
 	 */
@@ -53,14 +59,35 @@ public class JMudObject {
 	 * Constructors
 	 */
 
-	public JMudObject(UUID uuid, JMudObject parent) {
+	public JMudObject(UUID uuid, String name, JMudObject parent) {
 		super();
 		this.parent = parent;
+		this.name = name;
 		this.uuid = uuid;
 	}
 
+	public JMudObject(UUID uuid, String name) {
+		this(uuid, name, null);
+	}
+
+	public JMudObject(UUID uuid, JMudObject parent) {
+		this(uuid, "", parent);
+	}
+
 	public JMudObject(UUID uuid) {
-		this(uuid, null);
+		this(uuid, "", null);
+	}
+
+	public JMudObject(String name) {
+		this(UUID.randomUUID(), name, null);
+	}
+
+	public JMudObject(JMudObject parent) {
+		this(UUID.randomUUID(), "", parent);
+	}
+
+	public JMudObject() {
+		this(UUID.randomUUID(), "", null);
 	}
 
 	/*
@@ -115,10 +142,6 @@ public class JMudObject {
 		return children.keySet();
 	}
 
-	public JMudObject addChild(JMudObject jmo) {
-		return children.put(jmo.getUUID(), jmo);
-	}
-
 	public JMudObject getChild(UUID uuid) {
 		return children.get(uuid);
 	}
@@ -127,12 +150,22 @@ public class JMudObject {
 		return this.children;
 	}
 
+	public JMudObject addChild(JMudObject jmo) {
+		jmo.setParent(this);
+		return children.put(jmo.getUUID(), jmo);
+	}
+
 	public JMudObject remChild(UUID uuid) {
-		return this.children.remove(uuid);
+		JMudObject jmo = this.children.remove(uuid);
+		if (jmo != null) {
+			jmo.setParent(null);
+		}
+		return jmo;
 	}
 
 	public JMudObject remChild(JMudObject jmo) {
-		return this.children.remove(jmo.getUUID());
+		this.remChild(jmo.getUUID());
+		return jmo;
 	}
 
 	public int size() {
@@ -148,33 +181,74 @@ public class JMudObject {
 	 */
 
 	public Map<UUID, JMudObject> getSiblings() {
-		Map<UUID, JMudObject> map = this.parent.getAllChildren();
-		map.remove(this.getUUID());
+
+		Map<UUID, JMudObject> map = null;
+
+		// the ONLY way you should ever have Zero siblings is if you are ROOT
+		if (this.parent != null) {
+			map = this.parent.getAllChildren();
+			map.remove(this.getUUID());
+		}
 		return map;
 	}
 
+	public void orphan() {
+		JMudObject parent = this.getParent();
+
+		if (parent != null) {
+			// first, remove the parent's reference to the child
+			parent.remChild(this);
+		}
+		// then remove the child's reference to the parent
+		this.setParent(null);
+
+	}
+
+	public void changeParent(JMudObject newParent) {
+
+		// remove ties to old parent
+		this.orphan();
+
+		// establish newParent's reference to this
+		if (newParent != null) {
+			newParent.addChild(this);
+		} 
+	}
+
 	/*
-	 * Parent Getter/Setter
+	 * Getter/Setters
 	 */
 
 	public JMudObject getParent() {
-		synchronized (this.parent) {
-			return this.getParent();
-		}
+		return this.parent;
 	}
 
-	public void setParent(JMudObject jmo) {
-		synchronized (this.parent) {
-			this.parent = jmo;
-		}
-	}
-
-	/*
-	 * UUID Getter/Setter
+	/**
+	 * Directly sets this object's parent JMudObject object reference. WARNING:
+	 * the JMudObject tree is double linked. Setting this object's parent
+	 * without removing this object from the parent's Children list will violate
+	 * the rules of a tree and create a Graph.... bad things will happen if this
+	 * is done!
+	 * 
+	 * @param jmo
 	 */
-
+	private void setParent(JMudObject newParent) {
+		this.parent = newParent;
+	}
 	public UUID getUUID() {
 		return this.uuid;
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String n) {
+		this.name = n;
+	}
+
+	@Override
+	public String toString() {
+		return this.name + " \t(" + this.uuid.toString() + ")";
+	}
 }
