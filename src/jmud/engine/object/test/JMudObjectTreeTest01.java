@@ -17,16 +17,16 @@ public class JMudObjectTreeTest01 {
 		JMudObject mapOfDungeon = new JMudObject("mapOfDungeon");
 		JMudObject door = new JMudObject("door");
 
-		root.addChild(room);
-		room.addChild(pcSteve);
-		room.addChild(orc0);
-		room.addChild(orc1);
-		room.addChild(chair);
-		room.addChild(bag);
-		room.addChild(door);
+		root.childrenAdd(room);
+		room.childrenAdd(pcSteve);
+		room.childrenAdd(orc0);
+		room.childrenAdd(orc1);
+		room.childrenAdd(chair);
+		room.childrenAdd(bag);
+		room.childrenAdd(door);
 
-		bag.addChild(goldcoins);
-		bag.addChild(mapOfDungeon);
+		bag.childrenAdd(goldcoins);
+		bag.childrenAdd(mapOfDungeon);
 
 		// Printout the tree.
 		System.out.println("\n\nOriginal Tree");
@@ -112,7 +112,7 @@ public class JMudObjectTreeTest01 {
 		System.out.println(s);
 
 		// recurse on all children
-		for (JMudObject j : jmo.getAllChildren().values()) {
+		for (JMudObject j : jmo.childrenGetAll().values()) {
 			JMudObjectTreeTest01.printTreeRecursor(j, lvl + 1);
 		}
 		return;
