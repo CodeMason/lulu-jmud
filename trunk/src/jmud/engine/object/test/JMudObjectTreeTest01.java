@@ -1,47 +1,34 @@
 package jmud.engine.object.test;
 
-import java.util.Collection;
 import jmud.engine.object.JMudObject;
+import jmud.engine.test.CommonTestParts;
 
 public class JMudObjectTreeTest01 {
 
 	public static void main(String[] args) {
-		JMudObject root = new JMudObject("root");
-		JMudObject room = new JMudObject("room");
-		JMudObject pcSteve = new JMudObject("pcSteve");
-		JMudObject orc0 = new JMudObject("orc0");
-		JMudObject orc1 = new JMudObject("orc1");
-		JMudObject chair = new JMudObject("chair");
-		JMudObject bag = new JMudObject("bag");
-		JMudObject goldcoins = new JMudObject("goldcoins");
-		JMudObject mapOfDungeon = new JMudObject("mapOfDungeon");
-		JMudObject door = new JMudObject("door");
+		JMudObject root = CommonTestParts.buildTestJMudObjectTree();
 
-		root.childrenAdd(room);
-		room.childrenAdd(pcSteve);
-		room.childrenAdd(orc0);
-		room.childrenAdd(orc1);
-		room.childrenAdd(chair);
-		room.childrenAdd(bag);
-		room.childrenAdd(door);
-
-		bag.childrenAdd(goldcoins);
-		bag.childrenAdd(mapOfDungeon);
-
+		//yes this seems a bit bass-ackwards, but is shows the ability
+		//to look things up by name ;)
+		JMudObject chair = root.childrenGet("room").childrenGet("chair");
+		JMudObject bag = root.childrenGet("room").childrenGet("bag");
+		JMudObject pcSteve = root.childrenGet("room").childrenGet("pcSteve");
+		JMudObject orc0 = root.childrenGet("room").childrenGet("orc0");
+		
 		// Printout the tree.
 		System.out.println("\n\nOriginal Tree");
-		JMudObjectTreeTest01.printTreeRecursor(root);
+		CommonTestParts.printTreeRecursor(root);
 
 
 		/*
 		 *  Now I want to see JUST Chair's siblings:
 		 */
 		System.out.println("\n\nChair:");
-		JMudObjectTreeTest01.printTreeRecursor(chair);
+		CommonTestParts.printTreeRecursor(chair);
 
 		// Printout the tree.
 		System.out.println("\n\nChair's siblings");
-		JMudObjectTreeTest01.printTreeRecursor(chair.getSiblings().values());
+		CommonTestParts.printTreeRecursor(chair.getSiblings().values());
 
 
 		
@@ -52,7 +39,7 @@ public class JMudObjectTreeTest01 {
 
 		// Printout the tree.
 		System.out.println("\n\nMoved Bag from the Room to pcSteve using JMudObject.changeParent(bag, pcSteve)");
-		JMudObjectTreeTest01.printTreeRecursor(root);
+		CommonTestParts.printTreeRecursor(root);
 
 		
 		/*
@@ -62,7 +49,7 @@ public class JMudObjectTreeTest01 {
 
 		// Printout the tree.
 		System.out.println("\n\nRemoved Bag from pcSteve using .changeParent(null)");
-		JMudObjectTreeTest01.printTreeRecursor(root);
+		CommonTestParts.printTreeRecursor(root);
 
 		/*
 		 *  Reattach to Orc.0
@@ -71,7 +58,7 @@ public class JMudObjectTreeTest01 {
 
 		// Printout the tree.
 		System.out.println("\n\nAttached Bag to ocr0 using .changeParent(orc0)");
-		JMudObjectTreeTest01.printTreeRecursor(root);
+		CommonTestParts.printTreeRecursor(root);
 
 		/*
 		 * Orc.0 'drops' bag
@@ -80,42 +67,11 @@ public class JMudObjectTreeTest01 {
 
 		// Printout the tree.
 		System.out.println("\n\nSimulated orc0 'drop' Bag using .changeParent(orc0.getParent())");
-		JMudObjectTreeTest01.printTreeRecursor(root);
+		CommonTestParts.printTreeRecursor(root);
 
 		
 		
 		
-	}
-
-	private static void printTreeRecursor(JMudObject jmo) {
-		JMudObjectTreeTest01.printTreeRecursor(jmo, 0);
-	}
-
-	private static void printTreeRecursor(Collection<JMudObject> jmo) {
-		for (JMudObject j : jmo) {
-			JMudObjectTreeTest01.printTreeRecursor(j, 0);
-		}
-	}
-
-	private static void printTreeRecursor(JMudObject jmo, int lvl) {
-		// Declare output string
-		String s = "";
-		// Build tabs
-		for (int i = 0; i < lvl; ++i) {
-			s += "\t";
-		}
-
-		// attach the UUID:
-		s += jmo.toString();
-
-		// Print the string
-		System.out.println(s);
-
-		// recurse on all children
-		for (JMudObject j : jmo.childrenGetAll().values()) {
-			JMudObjectTreeTest01.printTreeRecursor(j, lvl + 1);
-		}
-		return;
 	}
 
 }

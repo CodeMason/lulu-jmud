@@ -7,20 +7,18 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
- * Singleton patterned class
- * Manages all AbstractJobs in a queue.  Controls all JobWorkers.
- *
+ * Singleton patterned class Manages all AbstractJobs in a queue. Controls all
+ * JobWorkers.
+ * 
  * @author David Loman
  * @version 0.1
  */
 
 public class JobManager {
 	/*
-	 * ********************************************
+	 * 
 	 * Singleton Implementation
-	 * ********************************************
 	 */
 	/**
 	 * Protected constructor is sufficient to suppress unauthorized calls to the
@@ -43,39 +41,40 @@ public class JobManager {
 	}
 
 	/*
-	 * ********************************************
+	 * 
 	 * Concrete Class Implementation
-	 * ********************************************
 	 */
 
 	private Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();
 
 	private final LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
 
-
-	public void init (int numOfWorkers) {
+	public void init(int numOfWorkers) {
 		for (int i = 0; i < numOfWorkers; ++i) {
 			this.createNewWorker();
 		}
 	}
 
 	/*
-	 * ********************************************
+	 * 
 	 * Queue Access
-	 * ********************************************
 	 */
 	public void pushJobToQueue(AbstractJob aj) {
 		synchronized (this.jobQ) {
 			this.jobQ.addLast(aj);
 		}
-		//wake up a worker
+		// wake up a worker
 
 	}
 
 	public AbstractJob popJobFromQueue() {
-		AbstractJob aj;
+		AbstractJob aj = null;
 		synchronized (this.jobQ) {
-			aj = this.jobQ.pop();
+
+			if (this.jobQ.size() != 0) {
+
+				aj = this.jobQ.pop();
+			}
 		}
 		return aj;
 	}
@@ -86,21 +85,19 @@ public class JobManager {
 		}
 	}
 
-
 	/*
-	 * ********************************************
+	 * 
 	 * JobWorker Control
-	 * ********************************************
 	 */
 	public int createNewWorker() {
 		int num = 0;
 
-		//find the first unused number
-		while(this.workers.containsKey(num)) {
+		// find the first unused number
+		while (this.workers.containsKey(num)) {
 			num++;
 		}
 
-		//make new worker
+		// make new worker
 		JobWorker jw = new JobWorker(num);
 		this.workers.put(num, jw);
 		jw.start();
@@ -109,7 +106,7 @@ public class JobManager {
 	}
 
 	public void wakeWorkers() {
-		for(JobWorker jw : this.workers.values()) {
+		for (JobWorker jw : this.workers.values()) {
 			jw.notifyAll();
 		}
 	}
@@ -154,20 +151,3 @@ public class JobManager {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

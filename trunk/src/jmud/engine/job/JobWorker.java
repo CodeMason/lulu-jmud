@@ -42,8 +42,10 @@ public class JobWorker implements Runnable {
 
 			} else {
 				try {
-					//FIXME cannot remember how java handles self Monitoring state.... This wait statement may throw an error.
-					this.myThread.wait(1000L); // Wait a max of 1 second
+					synchronized (this.myThread) {
+						this.myThread.wait(1000L); // Wait a max of 1 second
+						System.out.println("Worker ID: " + this.WorkerID + "\t Wait Finished. Queue len: " + JobManager.getInstance().getQueueLen());
+					}
 				} catch (InterruptedException e) {
 					System.err.println("JobWorker ID:" + this.WorkerID
 							+ " threw a InterruptedException while .wait()ing.\n" + e.getStackTrace().toString());
