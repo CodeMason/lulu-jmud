@@ -35,6 +35,14 @@ public class GetBehavior extends Behavior {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
+		synchronized (System.out) {
+			System.out.println("GetBehavior.behave():  EventType: " 
+					+ this.event.getEventType() + 
+					" Source: " + this.event.getSource().getName() + 
+					" Target: " + this.event.getTarget().getName());
+		}
+
+		
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(EventType.FailedEvent, this.event.getTarget(), this.event.getSource());
 		jme.submitSelf();
@@ -44,8 +52,11 @@ public class GetBehavior extends Behavior {
 
 	@Override
 	public Behavior clone() {
-		return new GetBehavior();
+		synchronized (System.out) {
+			System.out.println("GetBehavior.clone()");
+		}
 
+		return new GetBehavior();
 	}
 
 }
