@@ -15,8 +15,7 @@ public class JMudEvent extends AbstractJob {
 	private UUID eventID = null;
 	private EventType eventType = null;
 
-	private transient JMudObject source; // This makes me wonder if we should
-											// reference via UUID.....
+	private transient JMudObject source;
 	private transient JMudObject target;
 
 	/**
@@ -70,13 +69,23 @@ public class JMudEvent extends AbstractJob {
 
 		List<Behavior> behs = this.target.getBehaviors(this);
 
-		for (Behavior b : behs) {
-			Behavior newB = b.clone();
-			newB.setEvent(this);
-			newB.submitSelf();
+		synchronized (System.out) {
+			System.out.println("JMudEvent.doJob():  EventType: " + this.getEventType() + 
+					" Source: " + this.source.getName() + 
+					" Target: " + this.target.getName());
 		}
+		
 
-		return false;
+		if (behs != null) {
+			for (Behavior b : behs) {
+				Behavior newB = b.clone();
+				newB.setEvent(this);
+				newB.submitSelf();
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

@@ -1,5 +1,7 @@
 package jmud.engine.job.definitions;
 
+import java.util.UUID;
+
 import jmud.engine.job.JobManager;
 
 /**
@@ -10,16 +12,17 @@ import jmud.engine.job.JobManager;
  */
 public abstract class AbstractJob {
 
-	private long JobID = -1L;
+	private UUID JobID = null;
 
 	public abstract boolean doJob();
 
-	public long getJobID() {
-		return JobID;
+	public AbstractJob() {
+		super();
+		this.JobID = UUID.randomUUID();
 	}
 
-	public void setJobID(long jobID) {
-		JobID = jobID;
+	public UUID getJobID() {
+		return JobID;
 	}
 
 	public void submitSelf() {

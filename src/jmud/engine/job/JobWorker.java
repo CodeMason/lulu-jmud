@@ -2,7 +2,6 @@ package jmud.engine.job;
 
 import jmud.engine.job.definitions.AbstractJob;
 
-
 /*
  * JobWorker.java
  *
@@ -17,7 +16,7 @@ public class JobWorker implements Runnable {
 	private Thread myThread;
 
 	public JobWorker(int workerID) {
-        WorkerID = workerID;
+		WorkerID = workerID;
 	}
 
 	@Override
@@ -29,26 +28,38 @@ public class JobWorker implements Runnable {
 			AbstractJob job = JobManager.getInstance().popJobFromQueue();
 
 			if (job != null) {
-				//Call the do Job function.
+				// Call the do Job function.
 				boolean retVal = job.doJob();
 
+				System.out.println("JobWorker ID:" + this.WorkerID + " is working Job ID: "
+						+ job.getJobID());
+
 				if (retVal) {
-					//System.out.println("JobWorker ID:" + this.WorkerID + " reports that JobID: " + job.getJobID() + " has returned TRUE.");
-                    //noinspection UnnecessaryContinue
-                    continue;
+					synchronized (System.out) {
+						System.out.println("JobWorker ID:" + this.WorkerID
+								+ " reports that JobID: " + job.getJobID() + " has returned TRUE.");
+					}
+					continue;
 				} else {
-					System.err.println("JobWorker ID:" + this.WorkerID + " reports that JobID: " + job.getJobID() + " has returned FALSE.");
+					synchronized (System.out) {
+						System.out
+								.println("JobWorker ID:" + this.WorkerID + " reports that JobID: "
+										+ job.getJobID() + " has returned FALSE.");
+					}
 				}
 
 			} else {
 				try {
-					synchronized (this.myThread) {
-						this.myThread.wait(1000L); // Wait a max of 1 second
-						System.out.println("Worker ID: " + this.WorkerID + "\t Wait Finished. Queue len: " + JobManager.getInstance().getQueueLen());
+					synchronized (this) {
+						this.wait(1000L); // Wait a max of 1 second
+						System.out.println("Worker ID: " + this.WorkerID
+								+ "\t Wait Finished. Queue len: "
+								+ JobManager.getInstance().getQueueLen());
 					}
 				} catch (InterruptedException e) {
 					System.err.println("JobWorker ID:" + this.WorkerID
-							+ " threw a InterruptedException while .wait()ing.\n" + e.getStackTrace().toString());
+							+ " threw a InterruptedException while .wait()ing.\n"
+							+ e.getStackTrace().toString());
 				}
 			}
 
@@ -62,6 +73,10 @@ public class JobWorker implements Runnable {
 
 	public JobWorkerStatus getStatus() {
 		return status;
+	}
+
+	public Thread getMyThread() {
+		return myThread;
 	}
 
 	public void start() {

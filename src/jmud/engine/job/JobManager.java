@@ -64,7 +64,7 @@ public class JobManager {
 			this.jobQ.addLast(aj);
 		}
 		// wake up a worker
-
+		this.wakeWorkers();
 	}
 
 	public AbstractJob popJobFromQueue() {
@@ -107,7 +107,9 @@ public class JobManager {
 
 	public void wakeWorkers() {
 		for (JobWorker jw : this.workers.values()) {
-			jw.notifyAll();
+			synchronized (jw) {
+				jw.notify();
+			}
 		}
 	}
 
