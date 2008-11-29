@@ -43,8 +43,11 @@ public class GetBehavior extends Behavior {
 		}
 
 		
+		target.orphan();
+		source.childrenAdd(target);
+		
 		// prep the 'response' JMudEvent
-		JMudEvent jme = new JMudEvent(EventType.FailedEvent, this.event.getTarget(), this.event.getSource());
+		JMudEvent jme = new JMudEvent(EventType.SuccessEvent, this.event.getTarget(), this.event.getSource());
 		jme.submitSelf();
 
 		return true;
