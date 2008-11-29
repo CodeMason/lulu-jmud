@@ -32,17 +32,32 @@ public class EventBehaviorTest01 {
 		CommonTestParts.printTreeRecursor(root);
 
 		
-		//TODO left off here!
+		//make a new event
 		JMudEvent ge = new JMudEvent(EventType.GetEvent, pcSteve, bag);
 		System.out.println("GetEvent jobID is: " + ge.getJobID());
+		
+		//short sleep so we can test 'waking' a JobWorker
 		try {
 			Thread.sleep(250);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		//Submit the event
 		ge.submitSelf();
 		
-		
+		//another sleep to ensure all events are processed
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	
+	
+		// Printout the tree.
+		System.out.println("\n\nModified Tree");
+		CommonTestParts.printTreeRecursor(root);
+
 	}
 
 }
