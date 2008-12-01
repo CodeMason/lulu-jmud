@@ -1,6 +1,6 @@
 package jmud.engine.behavior;
 
-import jmud.engine.event.EventType;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.job.definitions.AbstractJob;
 
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public abstract class Behavior extends AbstractJob {
 
-	protected static List<EventType> eventTypesHandled = Collections.synchronizedList(new ArrayList<EventType>());
+	protected static List<JMudEventType> eventTypesHandled = Collections.synchronizedList(new ArrayList<JMudEventType>());
 	protected JMudEvent event = null;
 
 	public Behavior() {
@@ -43,7 +43,7 @@ public abstract class Behavior extends AbstractJob {
 	 */
 	protected abstract boolean behave();
 
-	public List<EventType> getEventTypesHandled() {
+	public List<JMudEventType> getEventTypesHandled() {
 		return eventTypesHandled;
 	}
 
