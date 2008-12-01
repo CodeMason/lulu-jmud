@@ -1,155 +1,150 @@
 package jmud.engine.job;
 
-import jmud.engine.job.definitions.AbstractJob;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.engine.job.definitions.AbstractJob;
+
 /**
  * Singleton patterned class Manages all AbstractJobs in a queue. Controls all
  * JobWorkers.
- * 
  * @author David Loman
  * @version 0.1
  */
 
 public class JobManager {
-	/*
-	 * 
-	 * Singleton Implementation
-	 */
-	/**
-	 * Protected constructor is sufficient to suppress unauthorized calls to the
-	 * constructor
-	 */
-	protected JobManager() {
-	}
+   /**
+    * JobManagerHolder is loaded on the first execution of
+    * JobManager.getInstance() or the first access to JobManagerHolder.INSTANCE,
+    * not before.
+    */
+   private static class JobManagerHolder {
+      private static final JobManager INSTANCE = new JobManager();
+   }
 
-	/**
-	 * JobManagerHolder is loaded on the first execution of
-	 * JobManager.getInstance() or the first access to
-	 * JobManagerHolder.INSTANCE, not before.
-	 */
-	private static class JobManagerHolder {
-		private static final JobManager INSTANCE = new JobManager();
-	}
+   public static JobManager getInstance() {
+      return JobManagerHolder.INSTANCE;
+   }
 
-	public static JobManager getInstance() {
-		return JobManagerHolder.INSTANCE;
-	}
+   private final Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();
 
-	/*
-	 * 
-	 * Concrete Class Implementation
-	 */
+   /*
+    * Concrete Class Implementation
+    */
 
-	private Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();
+   private final LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
 
-	private final LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
+   /*
+    * Singleton Implementation
+    */
+   /**
+    * Protected constructor is sufficient to suppress unauthorized calls to the
+    * constructor
+    */
+   protected JobManager() {
+   }
 
-	public void init(int numOfWorkers) {
-		for (int i = 0; i < numOfWorkers; ++i) {
-			this.createNewWorker();
-		}
-	}
+   /*
+    * JobWorker Control
+    */
+   public final int createNewWorker() {
+      int num = 0;
 
-	/*
-	 * 
-	 * Queue Access
-	 */
-	public void pushJobToQueue(AbstractJob aj) {
-		synchronized (this.jobQ) {
-			this.jobQ.addLast(aj);
-		}
-		// wake up a worker
-		this.wakeWorkers();
-	}
+      // find the first unused number
+      while (this.workers.containsKey(num)) {
+         num++;
+      }
 
-	public AbstractJob popJobFromQueue() {
-		AbstractJob aj = null;
-		synchronized (this.jobQ) {
+      // make new worker
+      JobWorker jw = new JobWorker(num);
+      this.workers.put(num, jw);
+      jw.start();
 
-			if (this.jobQ.size() != 0) {
+      return num;
+   }
 
-				aj = this.jobQ.pop();
-			}
-		}
-		return aj;
-	}
+   public final Map<Integer, JobWorkerStatus> getAllJobWorkerStatus() {
+      Set<Integer> keys = this.workers.keySet();
 
-	public int getQueueLen() {
-		synchronized (this.jobQ) {
-			return this.jobQ.size();
-		}
-	}
+      Map<Integer, JobWorkerStatus> out = new HashMap<Integer, JobWorkerStatus>();
 
-	/*
-	 * 
-	 * JobWorker Control
-	 */
-	public int createNewWorker() {
-		int num = 0;
+      for (Integer i : keys) {
+         JobWorkerStatus jsw = this.getJobWorkerStatus(i);
+         out.put(i, jsw);
+      }
 
-		// find the first unused number
-		while (this.workers.containsKey(num)) {
-			num++;
-		}
+      return out;
+   }
 
-		// make new worker
-		JobWorker jw = new JobWorker(num);
-		this.workers.put(num, jw);
-		jw.start();
+   public final JobWorkerStatus getJobWorkerStatus(final int WorkerID) {
+      JobWorker jw = this.workers.get(WorkerID);
 
-		return num;
-	}
+      if (jw != null) {
+         return jw.getStatus();
+      }
+      return null;
+   }
 
-	public void wakeWorkers() {
-		for (JobWorker jw : this.workers.values()) {
-			synchronized (jw) {
-				jw.notify();
-			}
-		}
-	}
+   public final int getQueueLen() {
+      synchronized (this.jobQ) {
+         return this.jobQ.size();
+      }
+   }
 
-	public void stopWorker(int WorkerID) {
-		JobWorker jw = this.workers.get(WorkerID);
+   public final void init(final int numOfWorkers) {
+      for (int i = 0; i < numOfWorkers; ++i) {
+         this.createNewWorker();
+      }
+   }
 
-		if (jw != null) {
-			jw.stop();
-		}
-	}
+   public final AbstractJob popJobFromQueue() {
+      AbstractJob aj = null;
+      synchronized (this.jobQ) {
 
-	public void stopAllWorkers() {
-		Set<Integer> keys = this.workers.keySet();
+         if (this.jobQ.size() != 0) {
 
-		for (Integer i : keys) {
-			this.stopWorker(i);
-		}
+            aj = this.jobQ.pop();
+         }
+      }
+      return aj;
+   }
 
-	}
+   /*
+    * Queue Access
+    */
+   public final void pushJobToQueue(final AbstractJob aj) {
+      synchronized (this.jobQ) {
+         this.jobQ.addLast(aj);
+      }
+      // wake up a worker
+      this.wakeWorkers();
+   }
 
-	public JobWorkerStatus getJobWorkerStatus(int WorkerID) {
-		JobWorker jw = this.workers.get(WorkerID);
+   public final void stopAllWorkers() {
+      Set<Integer> keys = this.workers.keySet();
 
-		if (jw != null) {
-			return jw.getStatus();
-		}
-		return null;
-	}
+      for (Integer i : keys) {
+         this.stopWorker(i);
+      }
 
-	public Map<Integer, JobWorkerStatus> getAllJobWorkerStatus() {
-		Set<Integer> keys = this.workers.keySet();
+   }
 
-		Map<Integer, JobWorkerStatus> out = new HashMap<Integer, JobWorkerStatus>();
+   public final void stopWorker(final int WorkerID) {
+      JobWorker jw = this.workers.get(WorkerID);
 
-		for (Integer i : keys) {
-			JobWorkerStatus jsw = this.getJobWorkerStatus(i);
-			out.put(i, jsw);
-		}
+      if (jw != null) {
+         jw.stop();
+      }
+   }
 
-		return out;
-	}
+   public final void wakeWorkers() {
+      for (JobWorker jw : this.workers.values()) {
+         synchronized (jw) {
+            jw.notify();
+         }
+      }
+   }
 
 }
