@@ -5,14 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Author: Chris Maguire
- * Date: 24-Dec-2007
- * Time: 6:46:03 PM
+ * Date: 24-Dec-2007 Time: 6:46:03 PM
+ * @author Chris Maguire
  */
-@java.lang.annotation.Target({ElementType.FIELD})
+@java.lang.annotation.Target( { ElementType.FIELD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Flag {
-    String name() default "";
+   String[] aliases() default {};
 
-    String[] aliases() default {};
+   String name() default "";
 }
