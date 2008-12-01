@@ -1,68 +1,61 @@
 package jmud.engine.character;
 
-/**
- *
- * 24NOV08:  Character objects should only represent the data that pertains to
- * an individual character... Attribute, Name, Description, etc
- * 
- * Created on 25NOV08
- */
+import java.util.HashMap;
 
 import jmud.engine.core.Targetable;
 import jmud.engine.dbio.Persistable;
 import jmud.engine.item.ItemContainer;
 import jmud.engine.stats.StatMap;
 
-import java.util.HashMap;
-
+/**
+ * 24NOV08: Character objects should only represent the data that pertains to an
+ * individual character... Attribute, Name, Description, etc Created on 25NOV08
+ */
 public class Character implements Targetable, Persistable {
-	private int charID;
+   private final int charID;
 
-	// info
-	private String name;
-	private String description;
-	private String prompt;
+   // info
+   private final String name;
+   private final String description;
+   private String prompt;
 
-	// stats
-	private StatMap stats = new StatMap();
+   // stats
+   private final StatMap stats = new StatMap();
 
-	//'Slots'
-	private HashMap<String, ItemContainer> slots = new HashMap<String, ItemContainer>();
+   // 'Slots'
+   private final HashMap<String, ItemContainer> slots = new HashMap<String, ItemContainer>();
 
-	// location
-//	private Room room;
+   // location
+   // private Room room;
 
+   public Character(final int iID, final String name, final String desc) {
+      this.charID = iID;
+      this.name = name;
+      this.description = desc;
+   }
 
-	public Character(int iID, String name, String desc) {
-		this.charID = iID;
-		this.name = name;
-		this.description = desc;
-	}
+   public final int getCharID() {
+      return charID;
+   }
 
-	public int getCharID() {
-		return charID;
-	}
+   public final String getDescription() {
+      return description;
+   }
 
-	public String getName() {
-		return name;
-	}
+   public final String getName() {
+      return name;
+   }
 
-	public String getDescription() {
-		return description;
-	}
+   public final String getPrompt() {
+      return prompt;
+   }
 
-	public StatMap getStatMap() {
-		return stats;
-	}
+   public final HashMap<String, ItemContainer> getSlots() {
+      return slots;
+   }
 
-
-	public HashMap<String, ItemContainer> getSlots() {
-		return slots;
-	}
-
-
-	public String getPrompt() {
-		return prompt;
-	}
+   public final StatMap getStatMap() {
+      return stats;
+   }
 
 }
