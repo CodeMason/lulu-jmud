@@ -4,28 +4,22 @@ import java.util.ArrayList;
 
 public abstract class AbstractCommandDef {
 
-	public abstract boolean doCmd();
+   protected String cmdName = "";
 
+   protected ArrayList<String> aliases = new ArrayList<String>();
 
-	protected String cmdName = "";
-	protected ArrayList<String> aliases = new ArrayList<String>();
+   public AbstractCommandDef(final String cmdName) {
+      this.cmdName = cmdName;
+   }
 
+   public abstract boolean doCmd();
 
+   public final ArrayList<String> getAliases() {
+      return aliases;
+   }
 
-	public AbstractCommandDef(String cmdName) {
-        this.cmdName = cmdName;
-	}
-
-
-
-	public String getCmdName() {
-		return cmdName;
-	}
-	public ArrayList<String> getAliases() {
-		return aliases;
-	}
-
-
-
+   public final String getCmdName() {
+      return cmdName;
+   }
 
 }
