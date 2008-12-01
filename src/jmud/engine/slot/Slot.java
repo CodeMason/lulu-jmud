@@ -9,81 +9,82 @@
 
 package jmud.engine.slot;
 
-import jmud.engine.item.AbstractItemDef;
-
 import java.util.LinkedList;
 import java.util.List;
 
+import jmud.engine.item.AbstractItemDef;
+
 /**
- * A slot is a spot on a player (or mob?) that can hold something
- *
+ * A slot is a spot on a player (or mob?) that can hold something.
  * @author Chris Maguire
  */
 public abstract class Slot {
-    public static final int MAX_BULK = 100;
-    public static final int MIN_BULK = 0;
-    private String name;
-    private List<String> aliases;
-    private int Id;
+   public static final int MAX_BULK = 100;
+   public static final int MIN_BULK = 0;
+   private final String name;
+   private List<String> aliases;
+   private int Id;
 
-    /**
-     * Creates a new instance of Slot
-     *
-     * @param name the name for the new slot
-     */
-    public Slot(int Id, String name) {
-        this(Id, name, new LinkedList<String>());
-    }
+   /**
+    * Creates a new instance of Slot
+    * @param name
+    *           the name for the new slot
+    */
+   public Slot(final int Id, final String name) {
+      this(Id, name, new LinkedList<String>());
+   }
 
-    public Slot(int Id, String name, List<String> aliases) {
-        this.Id = Id;
-        this.name = name;
-        this.aliases = aliases;
-    }
+   public Slot(final int Id, final String name, final List<String> aliases) {
+      this.Id = Id;
+      this.name = name;
+      this.aliases = aliases;
+   }
 
-    public int getId(){
-        return Id;
-    }
+   public abstract boolean addItem(AbstractItemDef item);
 
-    public void setId(int id){
-        this.Id = id;
-    }
+   public final List<String> getAliases() {
+      return aliases;
+   }
 
-    public String getName() {
-        return name;
-    }
+   public final int getId() {
+      return Id;
+   }
 
-    public void setAliases(List<String> aliases) {
-        this.aliases = aliases;
-    }
+   public abstract List<AbstractItemDef> getItems();
 
-    public List<String> getAliases() {
-        return aliases;
-    }
+   public final String getName() {
+      return name;
+   }
 
-    public abstract int itemCount();
+   public abstract boolean hasItem(AbstractItemDef item);
 
-    public abstract boolean isFull();
+   public abstract boolean isEmpty();
 
-    public abstract boolean isEmpty();
+   public abstract boolean isFull();
 
-    public abstract int maxBulk();
+   public abstract boolean isGrabber();
 
-    public abstract int maxItems();
+   public abstract int itemCount();
 
-    public abstract boolean hasItem(AbstractItemDef item);
+   public abstract int maxBulk();
 
-    //public abstract List<Slot> getSlots();
-    // why would slots need to "house" other slots?
-    // For instance, a hand will semantically "house" fingers, but does it need to logically?
-    // Left hand doesn't need to have 'left index finger', the user will just assume it.
+   // public abstract List<Slot> getSlots();
+   // why would slots need to "house" other slots?
+   // For instance, a hand will semantically "house" fingers, but does it need
+   // to logically?
+   // Left hand doesn't need to have 'left index finger', the user will just
+   // assume it.
 
-    public abstract boolean addItem(AbstractItemDef item);
+   public abstract int maxItems();
 
-    public abstract AbstractItemDef removeItem(String name);
+   public abstract AbstractItemDef removeItem(String name);
 
-    public abstract List<AbstractItemDef> getItems();
+   public final void setAliases(final List<String> aliases) {
+      this.aliases = aliases;
+   }
 
-    public abstract boolean isGrabber();
+   public final void setId(final int id) {
+      this.Id = id;
+   }
 
 }
