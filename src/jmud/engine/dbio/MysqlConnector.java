@@ -397,7 +397,6 @@ public class MysqlConnector {
     * via a script file, but the plan is to have in game editing. The in game
     * editing is close, but not quite there.
     * @return The number of rooms stored in the database.
-    * @see MysqlConnector#getRooms(Room[])
     */
    public final int getRoomCount() throws SQLException {
       int iRooms = 0;
