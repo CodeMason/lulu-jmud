@@ -5,27 +5,26 @@ import java.util.UUID;
 import jmud.engine.job.JobManager;
 
 /**
- * Provides mandatory base implementation for all 'Job's'
- *
+ * Provides mandatory base implementation for all 'Job's'.
  * @author David Loman
  * @version 0.1
  */
 public abstract class AbstractJob {
 
-	private UUID JobID = null;
+   private UUID JobID = null;
 
-	public abstract boolean doJob();
+   public AbstractJob() {
+      super();
+      this.JobID = UUID.randomUUID();
+   }
 
-	public AbstractJob() {
-		super();
-		this.JobID = UUID.randomUUID();
-	}
+   public abstract boolean doJob();
 
-	public UUID getJobID() {
-		return JobID;
-	}
+   public final UUID getJobID() {
+      return JobID;
+   }
 
-	public void submitSelf() {
-		JobManager.getInstance().pushJobToQueue(this);
-	}
+   public final void submitSelf() {
+      JobManager.getInstance().pushJobToQueue(this);
+   }
 }
