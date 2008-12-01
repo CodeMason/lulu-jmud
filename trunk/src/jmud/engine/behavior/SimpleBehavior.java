@@ -20,9 +20,6 @@ public class SimpleBehavior extends Behavior {
 
    /**
     * perform this Behavior's behavior and return the resultant event.
-    * @param event
-    *           the event the behavior is responding too
-    * @return the resulting EventObject
     */
 
    @Override
