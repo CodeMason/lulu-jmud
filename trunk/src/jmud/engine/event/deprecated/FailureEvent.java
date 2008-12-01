@@ -1,6 +1,6 @@
 package jmud.engine.event.deprecated;
 
-import jmud.engine.event.EventType;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
 
@@ -23,7 +23,7 @@ public class FailureEvent extends JMudEvent{
     }
 
     public FailureEvent(JMudObject source, String message){
-        super(EventType.FailedEvent, source, null);
+        super(JMudEventType.FailedEvent, source, null);
         this.message = message;
     }
 

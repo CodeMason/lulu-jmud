@@ -1,6 +1,6 @@
 package jmud.engine.behavior;
 
-import jmud.engine.event.EventType;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
 
@@ -19,7 +19,7 @@ public class GetBehavior extends Behavior {
 		super();
 		// Register a Behavior Object of this type to respond to a
 		// EventType.GetEvent
-		this.eventTypesHandled.add(EventType.GetEvent);
+		this.eventTypesHandled.add(JMudEventType.GetEvent);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class GetBehavior extends Behavior {
 		source.childrenAdd(target);
 		
 		// prep the 'response' JMudEvent
-		JMudEvent jme = new JMudEvent(EventType.SuccessEvent, this.event.getTarget(), this.event.getSource());
+		JMudEvent jme = new JMudEvent(JMudEventType.SuccessEvent, this.event.getTarget(), this.event.getSource());
 		jme.submitSelf();
 
 		return true;

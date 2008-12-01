@@ -1,6 +1,6 @@
 package jmud.engine.event;
 
-public enum EventType {
+public enum JMudEventType {
 	SuccessEvent, FailedEvent, 
 	GetEvent, GotEvent, 
 	OpenEvent, OpenedEvent, 

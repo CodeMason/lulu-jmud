@@ -1,7 +1,7 @@
 package jmud.engine.test;
 
 import jmud.engine.behavior.GetBehavior;
-import jmud.engine.event.EventType;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
@@ -33,7 +33,7 @@ public class EventBehaviorTest01 {
 
 		
 		//make a new event
-		JMudEvent ge = new JMudEvent(EventType.GetEvent, pcSteve, bag);
+		JMudEvent ge = new JMudEvent(JMudEventType.GetEvent, pcSteve, bag);
 		System.out.println("GetEvent jobID is: " + ge.getJobID());
 		
 		//short sleep so we can test 'waking' a JobWorker

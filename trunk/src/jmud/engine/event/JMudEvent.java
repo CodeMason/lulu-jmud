@@ -13,7 +13,7 @@ import jmud.engine.object.JMudObject;
 public class JMudEvent extends AbstractJob {
 
 	private UUID eventID = null;
-	private EventType eventType = null;
+	private JMudEventType eventType = null;
 
 	private transient JMudObject source;
 	private transient JMudObject target;
@@ -24,7 +24,7 @@ public class JMudEvent extends AbstractJob {
 	 */
 	private Map<String, Object> dataMap = null;
 
-	public JMudEvent(EventType eventType, JMudObject source, JMudObject target) {
+	public JMudEvent(JMudEventType eventType, JMudObject source, JMudObject target) {
 		super();
 		this.eventID = UUID.randomUUID();
 		this.eventType = eventType;
@@ -56,7 +56,7 @@ public class JMudEvent extends AbstractJob {
 		return this.eventID;
 	}
 
-	public EventType getEventType() {
+	public JMudEventType getEventType() {
 		return eventType;
 	}
 

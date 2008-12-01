@@ -1,6 +1,6 @@
 package jmud.engine.event.deprecated;
 
-import jmud.engine.event.EventType;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
 
@@ -30,7 +30,7 @@ public class SuccessEvent extends JMudEvent {
 	}
 
 	public SuccessEvent(JMudObject source, String message) {
-		super(EventType.SuccessEvent, source, null);
+		super(JMudEventType.SuccessEvent, source, null);
 		this.message = message;
 	}
 

@@ -2,7 +2,7 @@ package jmud.engine.object;
 
 import jmud.engine.attribute.Attribute;
 import jmud.engine.behavior.Behavior;
-import jmud.engine.event.EventType;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
 
 import java.util.*;
@@ -52,8 +52,8 @@ public class JMudObject {
 	 * discrete, atomic behaviors, we can re-use them, e.g. Unlock, Open, Wait,
 	 * Close, Lock, etc.
 	 */
-	private final Map<EventType, List<Behavior>> behaviors = Collections
-			.synchronizedMap(new HashMap<EventType, List<Behavior>>());
+	private final Map<JMudEventType, List<Behavior>> behaviors = Collections
+			.synchronizedMap(new HashMap<JMudEventType, List<Behavior>>());
 
 	/*
 	 * 
@@ -99,7 +99,7 @@ public class JMudObject {
 		return this.getBehaviors(event.getEventType());
 	}
 
-	public List<Behavior> getBehaviors(EventType et) {
+	public List<Behavior> getBehaviors(JMudEventType et) {
 		return behaviors.get(et);
 	}
 
@@ -109,9 +109,9 @@ public class JMudObject {
 	 * @param b Behavior to mapped to Behavior.getEventTypesHandled();
 	 */
 	public void addEventBehavior(Behavior b) {
-		List<EventType> ets = b.getEventTypesHandled();
+		List<JMudEventType> ets = b.getEventTypesHandled();
 		
-		for (EventType e : ets) {
+		for (JMudEventType e : ets) {
 			
 			List<Behavior> behs = this.behaviors.get(e);
 			
