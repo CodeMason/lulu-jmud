@@ -1,64 +1,54 @@
 package jmud.engine.account;
 
-import jmud.engine.character.Character;
-
 import java.util.HashSet;
 import java.util.Set;
 
+import jmud.engine.character.Character;
+
 /**
- *
- * 24NOV08:  PlayerAccount should only represent the data that pertains to
- * Account only, aka, username, email and password plus any settings they
- * might have, aka Telnet settings.
- *
- * A playerAccount will point to many Characters.
- *
+ * 24NOV08: PlayerAccount should only represent the data that pertains to
+ * Account only, aka, username, email and password plus any settings they might
+ * have, aka Telnet settings. A playerAccount will point to many Characters.
  * Created on 24NOV08
  */
-
-
-
 
 public class PlayerAccount {
    private int playerAccountID = -1;
 
-    // validation
-    private String uname = "";
-    private String password = "";
-    private String emailAddress = "";
+   // validation
+   private String uname = "";
+   private String password = "";
+   private String emailAddress = "";
 
-    private Set<Character> characters = new HashSet<Character>();
+   private final Set<Character> characters = new HashSet<Character>();
 
+   public PlayerAccount(final String emailAddress, final String password,
+         final int playerAccountID, final String uname) {
+      super();
+      this.emailAddress = emailAddress;
+      this.password = password;
+      this.playerAccountID = playerAccountID;
+      this.uname = uname;
+   }
 
+   public final Set<Character> getCharacters() {
+      return characters;
+   }
 
-	public PlayerAccount(String emailAddress, String password, int playerAccountID, String uname) {
-		super();
-		this.emailAddress = emailAddress;
-		this.password = password;
-		this.playerAccountID = playerAccountID;
-		this.uname = uname;
-	}
+   public final String getEmailAddress() {
+      return emailAddress;
+   }
 
-	public int getPlayerAccountID() {
-		return playerAccountID;
-	}
+   public final String getPassword() {
+      return password;
+   }
 
-	public String getUname() {
-		return uname;
-	}
+   public final int getPlayerAccountID() {
+      return playerAccountID;
+   }
 
-	public String getPassword() {
-		return password;
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
-
-	public Set<Character> getCharacters() {
-		return characters;
-	}
-
-
+   public final String getUname() {
+      return uname;
+   }
 
 }
