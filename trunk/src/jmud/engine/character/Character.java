@@ -11,7 +11,6 @@ package jmud.engine.character;
 import jmud.engine.core.Targetable;
 import jmud.engine.dbio.Persistable;
 import jmud.engine.item.ItemContainer;
-import jmud.engine.rooms.Room;
 import jmud.engine.stats.StatMap;
 
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class Character implements Targetable, Persistable {
 	private HashMap<String, ItemContainer> slots = new HashMap<String, ItemContainer>();
 
 	// location
-	private Room room;
+//	private Room room;
 
 
 	public Character(int iID, String name, String desc) {
@@ -56,17 +55,11 @@ public class Character implements Targetable, Persistable {
 		return stats;
 	}
 
-	public Room getRoom() {
-		return room;
-	}
 
 	public HashMap<String, ItemContainer> getSlots() {
 		return slots;
 	}
 
-	public void setRoom(Room room) {
-		this.room = room;
-	}
 
 	public String getPrompt() {
 		return prompt;

@@ -1,6 +1,5 @@
 package jmud.engine.commands;
 
-import jmud.testserver.commands.Command;
 
 import java.util.HashMap;
 
@@ -36,29 +35,29 @@ public class CommandRegistrar {
 	 * ********************************************
 	 */
 
-	private final HashMap<String, Command> cmdMap = new HashMap<String, Command>();
+	private final HashMap<String, AbstractCommandDef> cmdMap = new HashMap<String, AbstractCommandDef>();
 
 
 	public void init () {
 
 	}
 
-	public void addCommand(String alias, Command cmd) {
+	public void addAbstractCommandDef(String alias, AbstractCommandDef cmd) {
 		synchronized (this.cmdMap) {
 			this.cmdMap.put(alias, cmd);
 		}
 	}
 
-	public Command getCommand(String alias) {
-		Command c = null;
+	public AbstractCommandDef getAbstractCommandDef(String alias) {
+		AbstractCommandDef c = null;
 		synchronized (this.cmdMap) {
 			c = this.cmdMap.get(alias);
 		}
 		return c;
 	}
 
-	public Command remCommand(String alias) {
-		Command c = null;
+	public AbstractCommandDef remAbstractCommandDef(String alias) {
+		AbstractCommandDef c = null;
 		synchronized (this.cmdMap) {
 			c = this.cmdMap.remove(alias);
 		}

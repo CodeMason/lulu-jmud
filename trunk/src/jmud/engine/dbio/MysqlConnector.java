@@ -1,13 +1,7 @@
 package jmud.engine.dbio;
 
 import jmud.engine.character.Character;
-import jmud.engine.item.AbstractItemDef;
-import jmud.engine.mobs.Mob;
 import jmud.engine.mobs.MobType;
-import jmud.engine.rooms.Room;
-import jmud.engine.slot.Slot;
-
-import java.lang.reflect.Constructor;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -235,113 +229,6 @@ public class MysqlConnector {
 	}
 
 	/**
-	 * Fill an Room array with all the room information stored in the database.
-	 * Need to know beforehand how many rooms there are. Also adds items to
-	 * rooms. <p/> The reason an array is used and not a LinkedList or some
-	 * other collection is that the rooms need to be indexed by other objects by
-	 * the room ID. So adding each <code>Room</code> object to the
-	 * <code>Room</code> Array by its ID allows this to happen.
-	 * 
-	 * @param rooms
-	 *            The Room array to fill with persisted Room objects.
-	 * @throws SQLException
-	 *             if something comes off the rails with the database calls
-	 * @see MysqlConnector#getRoomCount()
-	 */
-	public void getRooms(Room rooms[]) throws SQLException {
-//		// DEBUG: loading rooms
-//		System.out.print("loading rooms: ");
-//
-//		// create and execute a callable statement representing a stored
-//		// procedure
-//		CallableStatement cstmtGetRoomItems = conn.prepareCall("{call spGetRoomItems()}");
-//
-//		// create and execute a callable statement for a stored procedure
-//		rs = conn.prepareCall("{call spGetRooms}").executeQuery();
-//
-//		// loop through all the rooms
-//		while (rs.next()) {
-//
-//			// DEBUG: print an indicator for each Room loaded
-//			System.out.print(".");
-//
-//			// DEBUG:
-//			// System.out.print(rs.getInt(1) + " ");
-//
-//			// fill the room array with rooms pulled from the database and
-//			// indexed
-//			// by room id (Some array slots will be empty)
-//			rooms[rs.getInt(1)] = new Room(rs.getString(2), rs.getString(3), rs.getInt(1), rs.getInt(4), rs.getInt(5),
-//					rs.getInt(6));
-//		}
-//		System.out.print("\n");
-//		rs.close();
-//
-//		// DEBUG: loading room items
-//		System.out.print("loading room items: ");
-//
-//		rs = cstmtGetRoomItems.executeQuery();
-//
-//		while (rs.next()) {
-//			// DEBUG: print an indicator for each room item we find
-//			System.out.print(".");
-//
-//			rooms[rs.getInt(1)].add(new AbstractItemDef(rs.getInt(1), rs.getString(8), rs.getInt(5), rs.getInt(6), rs
-//					.getInt(4), rs.getInt(7), new LinkedList<Slot>()));
-//		}
-//		System.out.print("\n");
-//		rs.close();
-	}
-
-	/**
-	 * Put all the rooms that a player has visited into an array and map the ID
-	 * of each room to the index of that room in the array in a hashtable.
-	 * 
-	 * @param iPlayerID
-	 *            ID of Player to retrieve rooms for
-	 * @param rooms
-	 *            Array to fill with rooms
-	 * @return A Hash Table of the indexes of the visited rooms in the array
-	 *         keyed on the rooms' IDs.
-	 */
-	@SuppressWarnings( { "ObjectAllocationInLoop" })
-	public HashMap getPlayerRooms(int iPlayerID, Room[] rooms) throws SQLException {
-		int iRoomIndex = 0;
-		HashMap<Integer, Integer> hashRooms = new HashMap<Integer, Integer>();
-//
-//		// DEBUG:
-//		System.out.print("loading rooms: ");
-//
-//		// create and execute a callable statement for a stored procedure
-//		CallableStatement cstmtGetPlayerRooms = conn.prepareCall("{call spGetPlayerRooms}");
-//		cstmtGetPlayerRooms.setInt(PLAYERID_PARAM_INDEX, iPlayerID);
-//		rs = cstmtGetPlayerRooms.executeQuery();
-//
-//		// loop through all the player rooms ...
-//		while (rs.next()) {
-//
-//			// DEBUG: print an indicator for each Room loaded
-//			System.out.print(".");
-//
-//			// fill the room array with rooms pulled from the database
-//			rooms[iRoomIndex] = new Room(rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs
-//					.getInt(7));
-//
-//			// put the array index of this room into a hash keyed on the rooms
-//			// ID
-//			hashRooms.put(rooms[iRoomIndex].getID(), iRoomIndex);
-//
-//			// increment the array index
-//			iRoomIndex++;
-//		}
-//		System.out.print("\n");
-//
-//		rs.close();
-//
-		return hashRooms;
-	}
-
-	/**
 	 * Return the number of <code>Room</code> records stored/persisted in the
 	 * database. <p/> I say stored or persisted because at this point the only
 	 * way to get room information into the database is to enter it manually or
@@ -411,89 +298,6 @@ public class MysqlConnector {
 	 *            rooms in it
 	 * @see MysqlConnector#getRooms(Room[])
 	 */
-	public void getRoomConnections(Room rooms[]) throws SQLException {
-//		System.out.print("loading room connections: ");
-//
-//		// create and execute the a stored procedure through a callable sql
-//		// statement
-//		rs = conn.prepareCall("{call spGetRoomConnections}").executeQuery();
-//
-//		while (rs.next()) {
-//			// display an indicator for each connecting room we add
-//			System.out.print(".");
-//			/*
-//			 * The query will tell us the ID of the originating room, the ID of
-//			 * the destination room and the direction of the conenction (for
-//			 * example "south").
-//			 * 
-//			 * The Room array holds rooms indexed on their id, so we can get a
-//			 * reference to the originating room with the Room array indexed on
-//			 * the first field in the recordset which is the originating room's
-//			 * ID. Then we can call addRoom and pass the destination room by
-//			 * using the second field in the recordset as an index into the Room
-//			 * array because the second field is the destination room's ID.
-//			 * We'll also pass the third field in the recordset to addRoom
-//			 * because this says what reference in the originating room to add
-//			 * the destination room to. (There are ten references: eight compass
-//			 * directions as well as up and down)
-//			 */
-//			rooms[rs.getInt(1)].addRoom(rooms[rs.getInt(2)], rs.getString(3));
-//		}
-//		System.out.print("\n");
-//
-//		rs.close();
-	}
-
-	/**
-	 * Creates connections between rooms that the player has visited so that
-	 * when the user requests to see what rooms they remember we can print out a
-	 * map of connected rooms
-	 * 
-	 * @param iPlayerID
-	 *            ID of player to get room connections for
-	 * @param rooms
-	 *            Rooms that the player has visited
-	 * @param hashRooms
-	 *            table of room indexes mapped to their IDs
-	 */
-	public void getPlayerRoomConnections(int iPlayerID, Room[] rooms, HashMap hashRooms) throws SQLException {
-//		Room roomOrig;
-//		Room roomDest;
-//
-//		// DEBUG:
-//		System.out.print("loading player room connections: ");
-//
-//		// use a CallableStatement instead (so we can call a sproc)
-//		CallableStatement cstmtGetPlayerRoomConnections = conn.prepareCall("{call spGetPlayerRoomConnections(?)}");
-//		cstmtGetPlayerRoomConnections.setInt(PLAYERID_PARAM_INDEX, iPlayerID);
-//		rs = cstmtGetPlayerRoomConnections.executeQuery();
-//
-//		// loop through all the room connections we found
-//		while (rs.next()) {
-//
-//			// DEBUG: display an indicator for each connecting room we add
-//			System.out.print(".");
-//
-//			// somehow link the rooms together based on ID, maybe store the
-//			// array ordinal in a hash with the room ID?
-//			// This way we could say
-//			// "Give me the array ordinal for the room with ID = x" and then
-//			// retrieve the room from the array
-//
-//			// get the orig room based on it's array index based on it's ID
-//			roomOrig = rooms[((Integer) hashRooms.get(rs.getInt(1)))];
-//
-//			// get the dest room based on it's array index based on it's ID
-//			roomDest = rooms[((Integer) hashRooms.get(rs.getInt(2)))];
-//
-//			// add a connection from the orig room to the dest room for a
-//			// certain direction reference
-//			roomOrig.addRoom(roomDest, rs.getString(3));
-//		}
-//
-//		rs.close();
-	}
-
 	/**
 	 * This is the first attempt at updating the game world from in the game
 	 * 
@@ -776,49 +580,6 @@ public class MysqlConnector {
 //		rs.close();
 
 		return iMobTypes;
-	}
-
-	/**
-	 * Create <code>Mob</code> objects and add them to their designated
-	 * <code>Room</code> objects in the supplied <code>Room</code> array. <p/>
-	 * The <code>Room</code> array must already contain ALL <code>Room</code>
-	 * objects that Mobs will be assigned too. <p/> An ArrayIndexOutOfBounds
-	 * exception will be thrown if the first field of any record returned from
-	 * the database is not a valid index into the <code>Room</code> array.
-	 * 
-	 * @param rooms
-	 *            The previously populated <code>Room</code> array containing
-	 *            all the rooms for the Mud.
-	 * @param mobTypes
-	 *            The previously populated <code>MobType</code> Array containing
-	 *            all the <code>MobType</code>s for the Mud.
-	 * @throws SQLException
-	 *             on sproc prepare or execute and recordset close
-	 */
-	public void getMobs(Room rooms[], MobType mobTypes[]) throws SQLException {
-//
-//		// DEBUG:
-//		System.out.print("loading room mobs: ");
-//
-//		// create and execute a callable statement representing a stored
-//		// procedure
-//		rs = conn.prepareCall("{call spGetMobs}").executeQuery();
-//
-//		// loop through the resultant records
-//		while (rs.next()) {
-//
-//			// DEBUG:
-//			System.out.print(".");
-//
-//			// Create each mob (monster) and add it to it's room
-//			rooms[rs.getInt(1)].add(new Mob(rs.getInt(1), mobTypes[rs.getInt(2)], rs.getInt(3), rs.getInt(3), rs
-//					.getInt(4), rs.getInt(5), rs.getInt(6)));
-//		}
-//
-//		rs.close();
-//
-//		// DEBUG:
-//		System.out.print("\n");
 	}
 
 	/**
