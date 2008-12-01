@@ -1,61 +1,62 @@
 package jmud.engine.stats;
 
+import java.util.ArrayList;
+
 /**
- * Stat is the object that represents a Character's statistic.  Behavior of this Stat is defined
- * by a corresponding StatDef.  Stat objects and StatDef objects are correlated via the 'String name' field.
- *
+ * Stat is the object that represents a Character's statistic. Behavior of this
+ * Stat is defined by a corresponding StatDef. Stat objects and StatDef objects
+ * are correlated via the 'String name' field.
  * @author David Loman
  * @version 0.1
  */
-import java.util.ArrayList;
-
 public class Stat {
-	private String name = "";
-	private int max = -1;
-	private int min = -1;
-	private int current = -1;
-	private ArrayList<StatMod> mods = new ArrayList<StatMod>();
+   private String name = "";
+   private int max = -1;
+   private int min = -1;
+   private int current = -1;
+   private final ArrayList<StatMod> mods = new ArrayList<StatMod>();
 
-	//TODO why not have the Definition object reference attached at creation?
-	private AbstractStatDef defToUse = null; 
-	
-	public Stat(String name, int max, int min, int current) {
-		this.current = current;
-		this.max = max;
-		this.min = min;
-		this.name = name;
-	}
+   // TODO why not have the Definition object reference attached at creation?
+   private final AbstractStatDef defToUse = null;
 
-	public int getMax() {
-		return max;
-	}
+   public Stat(final String name, final int max, final int min,
+         final int current) {
+      this.current = current;
+      this.max = max;
+      this.min = min;
+      this.name = name;
+   }
 
-	public void setMax(int max) {
-		this.max = max;
-	}
+   public final int getCurrent() {
+      return current;
+   }
 
-	public int getMin() {
-		return min;
-	}
+   public final int getMax() {
+      return max;
+   }
 
-	public void setMin(int min) {
-		this.min = min;
-	}
+   public final int getMin() {
+      return min;
+   }
 
-	public int getCurrent() {
-		return current;
-	}
+   public final ArrayList<StatMod> getMods() {
+      return mods;
+   }
 
-	public ArrayList<StatMod> getMods() {
-		return mods;
-	}
+   public final String getName() {
+      return name;
+   }
 
-	public void setCurrent(int current) {
-		this.current = current;
-	}
+   public final void setCurrent(final int current) {
+      this.current = current;
+   }
 
-	public String getName() {
-		return name;
-	}
+   public final void setMax(final int max) {
+      this.max = max;
+   }
+
+   public final void setMin(final int min) {
+      this.min = min;
+   }
 
 }

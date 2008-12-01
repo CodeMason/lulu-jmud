@@ -3,45 +3,44 @@ package jmud.engine.stats;
 /**
  * Represents a modification to a Stat. Contains a name for ease of look up and
  * a category for Mod filtering.
- * 
  * @author David Loman
  * @version 0.1
  */
 
 public class StatMod {
-	private String name = "";
-	private int value;
-	private String category = "";
+   private String name = "";
+   private int value;
+   private String category = "";
 
-	public StatMod(String category, String name, int value) {
-		super();
-		this.category = category;
-		this.name = name;
-		this.value = value;
-	}
+   public StatMod(final String category, final String name, final int value) {
+      super();
+      this.category = category;
+      this.name = name;
+      this.value = value;
+   }
 
-	public String getName() {
-		return name;
-	}
+   public final String getCategory() {
+      return category;
+   }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+   public final String getName() {
+      return name;
+   }
 
-	public int getValue() {
-		return value;
-	}
+   public final int getValue() {
+      return value;
+   }
 
-	public void setValue(int value) {
-		this.value = value;
-	}
+   public final void setCategory(final String category) {
+      this.category = category;
+   }
 
-	public String getCategory() {
-		return category;
-	}
+   public final void setName(final String name) {
+      this.name = name;
+   }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+   public final void setValue(final int value) {
+      this.value = value;
+   }
 
 }
