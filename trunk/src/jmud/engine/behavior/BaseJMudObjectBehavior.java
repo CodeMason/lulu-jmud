@@ -8,9 +8,6 @@ import jmud.engine.object.JMudObject;
  */
 public class BaseJMudObjectBehavior extends Behavior {
 
-	/**
-	 * Default constructor.
-	 */
 	public BaseJMudObjectBehavior(JMudObject owner) {
 		super(owner);
 	}

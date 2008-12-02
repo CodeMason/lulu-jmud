@@ -2,7 +2,8 @@ package jmud.engine.attribute;
 
 /**
  * Attribute is a data object that holds a name/value pair.
- * @author david.h.loman
+ *
+ * @author david.h.loman (CM: oooh, Dave _H_ Loman, ... I thought it was the other Dave Loman :D)
  */
 public class Attribute {
    /**
@@ -12,17 +13,14 @@ public class Attribute {
    /**
     * The attribute value.
     */
-   private Object value = null;
+   private Object value;
 
    /**
     * Explicit constructor.
-    * @param inName
-    *           the attribute name
-    * @param inValue
-    *           the attribute value
+    * @param inName the attribute name
+    * @param inValue the attribute value
     */
    public Attribute(final String inName, final Object inValue) {
-      super();
       this.name = inName;
       this.value = inValue;
    }

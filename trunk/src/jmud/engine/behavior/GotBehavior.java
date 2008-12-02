@@ -4,8 +4,8 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- * 
- * 
+ *
+ *
  * @author david.h.loman
  */
 public class GotBehavior extends Behavior {
@@ -21,10 +21,11 @@ public class GotBehavior extends Behavior {
 	}
 
 	/**
+     * What the "getter" does (i.e. the JMudObject getting something)
+     *
 	 * @see jmud.engine.behavior.Behavior#behave()
 	 * @return true
 	 */
-
 	@Override
 	public final boolean targetBehavior() {
 		// What the owner sees
@@ -36,11 +37,15 @@ public class GotBehavior extends Behavior {
 		return true;
 	}
 
-	@Override
+    /**
+     * Anything a non-participant does
+     * @return
+     */
+    @Override
 	protected boolean ccBehavior() {
 		// What anyone else sees.
 		synchronized (System.out) {
-			System.out.println(this.owner.getName() + " sees: ");
+			System.out.println("From " + this.owner.getName() + "'s point of view: ");
 			System.out.println("\t" + this.event.getTarget().getName() + " gets the "
 					+ this.event.getSource().getName());
 		}
@@ -48,19 +53,21 @@ public class GotBehavior extends Behavior {
 		return true;
 	}
 
-	@Override
+    /**
+     * Anything the "gotten" object does
+     * @return
+     */
+    @Override
 	protected boolean sourceBehavior() {
 		// What You else sees.
 		synchronized (System.out) {
-			System.out.println(this.owner.getName() + " sees: ");
+			System.out.println("From " + this.owner.getName() + "'s point of view: ");
 			System.out.println("\t" + this.event.getTarget().getName() + " picks YOU up!!");
 		}
 
 		return true;
 	}
 
-
-	
 	/**
 	 * @see jmud.engine.behavior.Behavior#clone()
 	 * @return a new <code>GetBeHavior</code>

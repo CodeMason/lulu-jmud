@@ -1,11 +1,11 @@
 package jmud.engine.job;
 
+import jmud.engine.job.definitions.AbstractJob;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-
-import jmud.engine.job.definitions.AbstractJob;
 
 /**
  * Singleton patterned class Manages all AbstractJobs in a queue. Controls all
@@ -103,7 +103,7 @@ public class JobManager {
       AbstractJob aj = null;
       synchronized (this.jobQ) {
 
-         if (this.jobQ.size() != 0) {
+         if (!this.jobQ.isEmpty()) {
 
             aj = this.jobQ.pop();
          }

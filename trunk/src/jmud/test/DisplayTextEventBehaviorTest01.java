@@ -11,7 +11,7 @@ import jmud.engine.object.JMudObject;
 public class DisplayTextEventBehaviorTest01 {
 
 	/**
-	 * @param args
+	 * @param args command line arguments
 	 */
 	public static void main(final String[] args) {
 
@@ -36,7 +36,7 @@ public class DisplayTextEventBehaviorTest01 {
 
 		// make a new event
 		JMudEvent dtsoe = new JMudEvent(JMudEventType.DisplayTextStdOutEvent, pcSteve, orc0);
-		dtsoe.getDataMap().put("displayText", "This is a test of the StdOut system..... BEEEEEEEP");
+        dtsoe.getDataMap().put("displayText", "This is a test of the StdOut system..... BEEEEEEEP");
 		System.out.println("DisplayTextStdOutEvent eventID is: " + dtsoe.getID());
 
 		// Submit the event
