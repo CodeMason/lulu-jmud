@@ -13,8 +13,8 @@ import jmud.engine.mobs.MobType;
 
 /**
  * Provides access to the database and functions to return specific data from
- * the database Created on April 30, 2002, 9:49 PM ToDo: finish the list of
- * attributes in loadAttrIDs() ToDo: finish the loadModIDs() function
+ * the database.
+ * @author David Loman
  */
 @SuppressWarnings( { "ObjectAllocationInLoop" })
 public class MysqlConnector {
@@ -24,20 +24,20 @@ public class MysqlConnector {
    // FIXME Rework the Database IO layer after the basic mud data structs are
    // in place.
 
-   protected Connection conn;
-   protected ResultSet rs;
    protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=";
-   protected Statement stmt;
-
-   private final int ATTRIBUTE_PARAM_INDEX = 1;
-   private final int MODIFIER_PARAM_INDEX = 2;
    private final int ATTRIBUTE_COLUMN_INDEX = 1;
-   private final int MODIFIER_COLUMN_INDEX = 2;
-   private final int PLAYERID_PARAM_INDEX = 1;
+   private final int ATTRIBUTE_PARAM_INDEX = 1;
+   protected Connection conn;
 
-   int iStrengthAttributeID;
-   int iDexterityAttributeID;
    int iDamageModifierID;
+   int iDexterityAttributeID;
+   int iStrengthAttributeID;
+   private final int MODIFIER_COLUMN_INDEX = 2;
+   private final int MODIFIER_PARAM_INDEX = 2;
+
+   private final int PLAYERID_PARAM_INDEX = 1;
+   protected ResultSet rs;
+   protected Statement stmt;
 
    public MysqlConnector() {
    }
@@ -64,7 +64,7 @@ public class MysqlConnector {
 
    /**
     * Get a player from the database if one exists that matches a login and
-    * password
+    * password.
     * @param login
     *           player login to use (i.e. player name)
     * @param password
@@ -242,10 +242,12 @@ public class MysqlConnector {
 
    /**
     * Return the number of <code>MobType</code> records stored/persisted in the
-    * database. <p/> I say stored or persisted because at this point the only
-    * way to get MobType information into the database is to enter it manually
-    * or via a script file, but the plan is to have in game editing. The in game
-    * editing is close, but not quite there.
+    * database.
+    * <p/>
+    * I say stored or persisted because at this point the only way to get
+    * MobType information into the database is to enter it manually or via a
+    * script file, but the plan is to have in game editing. The in game editing
+    * is close, but not quite there.
     * @return The number of <code>MobType</code>s stored in the database.
     * @throws SQLException
     *            on sproc prepare, sproc execute or rs close
@@ -392,10 +394,12 @@ public class MysqlConnector {
 
    /**
     * Return the number of <code>Room</code> records stored/persisted in the
-    * database. <p/> I say stored or persisted because at this point the only
-    * way to get room information into the database is to enter it manually or
-    * via a script file, but the plan is to have in game editing. The in game
-    * editing is close, but not quite there.
+    * database.
+    * <p/>
+    * I say stored or persisted because at this point the only way to get room
+    * information into the database is to enter it manually or via a script
+    * file, but the plan is to have in game editing. The in game editing is
+    * close, but not quite there.
     * @return The number of rooms stored in the database.
     */
    public final int getRoomCount() throws SQLException {
@@ -510,7 +514,8 @@ public class MysqlConnector {
 
    /**
     * ERROR! This function was copied from loadAttriIDs() but never completed
-    * <p/> Find all the modifier IDs in the database and assign them to local
+    * <p/>
+    * Find all the modifier IDs in the database and assign them to local
     * variables so that modifiers can be referred to by variable rather than
     * constant
     */
