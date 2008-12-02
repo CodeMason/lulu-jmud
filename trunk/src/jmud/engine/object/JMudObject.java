@@ -11,8 +11,8 @@ import java.util.UUID;
 
 import jmud.engine.attribute.Attribute;
 import jmud.engine.behavior.Behavior;
-import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
+import jmud.engine.event.JMudEvent;
 
 /**
  * @author David Loman
@@ -50,7 +50,6 @@ public class JMudObject {
     */
    private final Map<String, Attribute> attr = Collections
          .synchronizedMap(new HashMap<String, Attribute>());
-
    /**
     * Create a map of events to lists of Behaviors that handle the event With so
     * many possibilities for object behavior, making unique event handlers for
@@ -118,9 +117,15 @@ public class JMudObject {
       attr.clear();
    }
 
+
+
    public final boolean attributeContainsKey(final String key) {
       return attr.containsKey(key);
    }
+
+	/*
+	 * Attribute HashMap Delegates
+	 */
 
    public final boolean attributeContainsValue(final Attribute value) {
       return attr.containsValue(value);
@@ -205,6 +210,7 @@ public class JMudObject {
    public final Set<UUID> childrenKeySet() {
       return children.keySet();
    }
+
 
    public final JMudObject childrenRemove(final JMudObject jmo) {
       this.childrenRemove(jmo.getUUID());
