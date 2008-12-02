@@ -7,7 +7,6 @@ import java.util.HashMap;
  * @author David Loman
  * @version 0.1
  */
-
 public class ItemManager {
    /**
     * ItemManagerHolder is loaded on the first execution of
@@ -33,7 +32,7 @@ public class ItemManager {
     */
    /**
     * Protected constructor is sufficient to suppress unauthorized calls to the
-    * constructor
+    * constructor.
     */
    protected ItemManager() {
    }
