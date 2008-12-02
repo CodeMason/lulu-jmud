@@ -57,6 +57,12 @@ public class JMudEventRegistrar {
    protected JMudEventRegistrar() {
    }
 
+
+	public void init() {
+
+	}
+
+
    /*
     * Common Src/Tgt map IO
     */
@@ -64,6 +70,7 @@ public class JMudEventRegistrar {
          final Map<JMudObject, List<JMudEventSubscription>> map) {
       // first, get the ArrayList keyed to the JMudObject:
       List<JMudEventSubscription> al = map.get(jmes.getSource());
+
 
       // check to see if there was a mapping!
       if (al == null) {
@@ -122,12 +129,6 @@ public class JMudEventRegistrar {
       this.addToCommonMap(jmes, this.targetMap);
    }
 
-   /*
-    * UUID map IO
-    */
-   private void addToUUIDMap(final JMudEventSubscription jmes) {
-      this.uuidMap.put(jmes.getSubscriptionID(), jmes);
-   }
 
    public final JMudEventSubscription getSubscriptionByUUID(final UUID uuid) {
       return this.uuidMap.get(uuid);
@@ -138,10 +139,43 @@ public class JMudEventRegistrar {
       return this.eventMap.get(jme);
    }
 
+
+	public final List<JMudEventSubscription> getSubscriptionsBySourceAndTarget(JMudObject source,
+			JMudObject target) {
+
+		// first get the set of matches to target:
+		List<JMudEventSubscription> targets = this.getSubscriptionsByTarget(target);
+
+		if (targets == null) {
+			return null;
+		}
+		
+		// Then filter that set by Source:
+		List<JMudEventSubscription> out = new ArrayList<JMudEventSubscription>();
+		for (JMudEventSubscription jmes : targets) {
+			// Match my UUID
+			if (jmes.getSource().getUUID() == source.getUUID()) {
+				out.add(jmes);
+			}
+		}
+
+		return out;
+	}
+
+	/*
+	 * UUID map IO
+	 */
+	private void addToUUIDMap(JMudEventSubscription jmes) {
+		this.uuidMap.put(jmes.getSubscriptionID(), jmes);
+	}
+
+
    public final List<JMudEventSubscription> getSubscriptionsBySource(
          final JMudObject jmo) {
       return this.sourceMap.get(jmo);
    }
+
+
 
    public final List<JMudEventSubscription> getSubscriptionsByTarget(
          final JMudObject jmo) {

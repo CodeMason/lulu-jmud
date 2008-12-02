@@ -3,6 +3,7 @@ package jmud.engine.behavior;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
@@ -22,7 +23,8 @@ public abstract class Behavior extends AbstractJob {
    protected static List<JMudEventType> eventTypesHandled = Collections
          .synchronizedList(new ArrayList<JMudEventType>());
    protected JMudEvent event = null;
-
+   private UUID BehaviorID = UUID.randomUUID();
+   
    public Behavior() {
    }
 
@@ -53,5 +55,9 @@ public abstract class Behavior extends AbstractJob {
    public final void setEvent(final JMudEvent event) {
       this.event = event;
    }
+
+public UUID getBehaviorID() {
+	return BehaviorID;
+}
 
 }
