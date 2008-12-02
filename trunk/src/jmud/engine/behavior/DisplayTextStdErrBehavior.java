@@ -39,7 +39,7 @@ public class DisplayTextStdErrBehavior extends Behavior {
 		String text = this.event.getDataMap().get("displayText") + "";
 
 		System.err.println("DisplayTextStdOutBehavior(" + this.getID() + ")" + "\t Source: " + source.toStringShort()
-				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text);
+				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text + "\n");
 		return true;
 	}
 

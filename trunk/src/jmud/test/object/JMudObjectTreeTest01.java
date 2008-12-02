@@ -1,12 +1,12 @@
 package jmud.test.object;
 
 import jmud.engine.object.JMudObject;
-import jmud.test.CommonTestParts;
+import jmud.test.CommonTestMethods;
 
 public class JMudObjectTreeTest01 {
 
    public static void main(final String[] args) {
-      JMudObject root = CommonTestParts.buildTestJMudObjectTree();
+      JMudObject root = CommonTestMethods.buildTestJMudObjectTree();
 
       // yes this seems a bit bass-ackwards, but is shows the ability
       // to look things up by name ;)
@@ -17,17 +17,17 @@ public class JMudObjectTreeTest01 {
 
       // Printout the tree.
       System.out.println("\n\nOriginal Tree");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
 
       /*
        * Now I want to see JUST Chair's siblings:
        */
       System.out.println("\n\nChair:");
-      CommonTestParts.printTreeRecursor(chair);
+      CommonTestMethods.printTreeRecursor(chair);
 
       // Printout the tree.
       System.out.println("\n\nChair's siblings");
-      CommonTestParts.printTreeRecursor(chair.getSiblings().values());
+      CommonTestMethods.printTreeRecursor(chair.getSiblings().values());
 
       /*
        * Re-arrange
@@ -37,7 +37,7 @@ public class JMudObjectTreeTest01 {
       // Printout the tree.
       System.out
             .println("\n\nMoved Bag from the Room to pcSteve using JMudObject.changeParent(bag, pcSteve)");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
 
       /*
        * Drop parent
@@ -47,7 +47,7 @@ public class JMudObjectTreeTest01 {
       // Printout the tree.
       System.out
             .println("\n\nRemoved Bag from pcSteve using .changeParent(null)");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
 
       /*
        * Reattach to Orc.0
@@ -56,7 +56,7 @@ public class JMudObjectTreeTest01 {
 
       // Printout the tree.
       System.out.println("\n\nAttached Bag to ocr0 using .changeParent(orc0)");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
 
       /*
        * Orc.0 'drops' bag
@@ -66,7 +66,7 @@ public class JMudObjectTreeTest01 {
       // Printout the tree.
       System.out
             .println("\n\nSimulated orc0 'drop' Bag using .changeParent(orc0.getParent())");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
       
       
       

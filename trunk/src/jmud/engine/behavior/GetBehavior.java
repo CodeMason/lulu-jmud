@@ -40,8 +40,6 @@ public class GetBehavior extends Behavior {
 
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source, JMudEventType.DisplayTextStdOutEvent);
-		// JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target,
-		// source);
 		jme.getDataMap().put("displayText", source.getName() + " picks up the " + target.getName() + ".");
 
 		synchronized (System.out) {

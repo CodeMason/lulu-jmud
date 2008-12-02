@@ -15,7 +15,7 @@ public class DisplayTextStdOutBehavior extends Behavior {
 	 */
 	public DisplayTextStdOutBehavior() {
 		super();
-		this.eventTypesHandled.add(JMudEventType.DisplayTextStdErrEvent);
+		this.eventTypesHandled.add(JMudEventType.DisplayTextStdOutEvent);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class DisplayTextStdOutBehavior extends Behavior {
 		String text = this.event.getDataMap().get("displayText") + "";
 
 		System.out.println("DisplayTextStdOutBehavior(" + this.getID() + ")" + "\t Source: " + source.toStringShort()
-				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text);
+				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text + "\n");
 		return true;
 	}
 

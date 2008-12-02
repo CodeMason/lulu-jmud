@@ -1,8 +1,5 @@
 package jmud.engine.behavior;
 
-import jmud.engine.event.JMudEventType;
-import jmud.engine.object.JMudObject;
-
 /**
  * A Behavior class that is implemented by ALL JMudObjects to ensure there is a
  * base level of behavior from any/all JMudObjects.

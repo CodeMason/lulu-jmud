@@ -248,10 +248,6 @@ public class JMudObject {
 		return this.getBehaviors(event.getEventType());
 	}
 
-	/*
-	 * Parent/Child shortcuts
-	 */
-
 	public final List<Behavior> getBehaviors(final JMudEventType et) {
 		return behaviors.get(et);
 	}
