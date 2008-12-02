@@ -1,11 +1,10 @@
 package jmud.engine.event;
 
+/**
+ * @author David Loman
+ */
 public enum JMudEventType {
 
-	SuccessEvent, FailedEvent, 
-	GetEvent, GotEvent, 
-	OpenEvent, OpenedEvent, 
-	DisplayTextStdOutEvent,
-	DisplayTextStdErrEvent,
+   DisplayTextStdErrEvent, DisplayTextStdOutEvent, FailedEvent, GetEvent, GotEvent, OpenedEvent, OpenEvent, SuccessEvent,
 
 }

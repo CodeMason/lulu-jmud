@@ -5,23 +5,32 @@ import java.util.UUID;
 import jmud.engine.object.JMudObject;
 
 /**
- * This serves as a Struct for linking both Target and Source JMudObjects with a
- * JMudEvent It is *NOT* synchronized in anyway.
+ * This serves as a data class for linking both target and source
+ * <code>JMudObjects</code> with a <code>JMudEvent</code>. It is *NOT*
+ * synchronized in anyway.
  * @author David Loman
  */
 
 public class JMudEventSubscription {
 
-   // UUID
-   UUID SubscriptionID = UUID.randomUUID();
-
-   // If this JMudObject...
-   private JMudObject source = null;
-
-   // generates this JMudEvent...
+   /**
+    * Generates this JMudEvent...
+    */
    private JMudEventType eventType = null;
 
-   // Then also send the event to this JMudObject...
+   /**
+    * If this JMudObject...
+    */
+   private JMudObject source = null;
+
+   /**
+    * UUID.
+    */
+   UUID SubscriptionID = UUID.randomUUID();
+
+   /**
+    * Then also send the event to this JMudObject...
+    */
    private JMudObject target = null;
 
    public JMudEventSubscription(final JMudEventType eventType,
