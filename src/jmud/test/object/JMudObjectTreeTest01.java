@@ -1,7 +1,7 @@
-package jmud.engine.object.test;
+package jmud.test.object;
 
 import jmud.engine.object.JMudObject;
-import jmud.engine.test.CommonTestParts;
+import jmud.test.CommonTestParts;
 
 public class JMudObjectTreeTest01 {
 
@@ -67,7 +67,12 @@ public class JMudObjectTreeTest01 {
       System.out
             .println("\n\nSimulated orc0 'drop' Bag using .changeParent(orc0.getParent())");
       CommonTestParts.printTreeRecursor(root);
-
+      
+      
+      
+      
+      System.out.println("\n\nTest complete.");
+      
    }
 
 }

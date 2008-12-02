@@ -1,4 +1,4 @@
-package jmud.engine.test;
+package jmud.test;
 
 import java.util.Collection;
 
