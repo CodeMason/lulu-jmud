@@ -1,4 +1,4 @@
-package jmud.engine.test;
+package jmud.test;
 
 import jmud.engine.behavior.GetBehavior;
 import jmud.engine.event.JMudEvent;
