@@ -3,7 +3,6 @@ package jmud.engine.behavior;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
@@ -23,10 +22,9 @@ import jmud.engine.job.definitions.AbstractJob;
  */
 public abstract class Behavior extends AbstractJob {
 
-   protected static List<JMudEventType> eventTypesHandled = Collections
-         .synchronizedList(new ArrayList<JMudEventType>());
-   private UUID BehaviorID = UUID.randomUUID();
-   protected JMudEvent event = null;
+
+	protected List<JMudEventType> eventTypesHandled = Collections.synchronizedList(new ArrayList<JMudEventType>());
+	protected JMudEvent event = null;
 
    /**
     * Default constructor.
@@ -47,7 +45,6 @@ public abstract class Behavior extends AbstractJob {
     */
    @Override
    public abstract Behavior clone();
-
    /**
     * @see jmud.engine.job.definitions.AbstractJob#doJob()
     * @return true if <code>doJob</code>, and thus, <code>behave</code> complete
@@ -56,13 +53,6 @@ public abstract class Behavior extends AbstractJob {
    @Override
    public final boolean doJob() {
       return this.behave();
-   }
-
-   /**
-    * @return the bevaior ID
-    */
-   public UUID getBehaviorID() {
-      return BehaviorID;
    }
 
    /**
@@ -86,5 +76,17 @@ public abstract class Behavior extends AbstractJob {
    public final void setEvent(final JMudEvent inEvent) {
       this.event = inEvent;
    }
+	@Override
+	public String toString() {
+		String out = "";
+		out += "BehaviorID:  " + this.getID();
 
+		if (this.event != null) {
+			out += "\t (" + this.event.toString() + ")";
+		} else {
+			out += "\t NO ATTACHED EVENT!!!!!";
+		}
+
+		return out;
+	}
 }
