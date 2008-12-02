@@ -1,5 +1,7 @@
 package jmud.engine.behavior;
 
+import jmud.engine.object.JMudObject;
+
 
 /**
  * Simple representation of a <code>Behavior</code>. This is a singleton because
@@ -15,8 +17,8 @@ public class SimpleBehavior extends Behavior {
    /**
     * Default constructor.
     */
-   public SimpleBehavior() {
-      super();
+   public SimpleBehavior(JMudObject owner) {
+      super(owner);
    }
 
    /**
@@ -24,12 +26,17 @@ public class SimpleBehavior extends Behavior {
     * @return true
     */
    @Override
-   public final boolean behave() {
+   public final boolean ownerBehavior() {
 
       // Send off events here!!
 
       return true;
    }
+	@Override
+	protected boolean ccBehavior() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
    /**
     * @see jmud.engine.behavior.Behavior#clone()
@@ -37,7 +44,7 @@ public class SimpleBehavior extends Behavior {
     */
    @Override
    public final Behavior clone() {
-      return new GetBehavior();
+      return new GetBehavior(this.owner);
 
    }
 

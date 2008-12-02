@@ -14,8 +14,8 @@ public class GetBehavior extends Behavior {
 	/**
 	 * Default constructor.
 	 */
-	public GetBehavior() {
-		super();
+	public GetBehavior(JMudObject owner) {
+		super(owner);
 		// Register a Behavior Object of this type to respond to a
 		// EventType.GetEvent
 		this.eventTypesHandled.add(JMudEventType.GetEvent);
@@ -27,10 +27,12 @@ public class GetBehavior extends Behavior {
 	 */
 
 	@Override
-	public final boolean behave() {
+	public final boolean ownerBehavior() {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
+		
+		
 		synchronized (System.out) {
 			System.out.println("(" + this.getID() + ") GetBehavior.behave(): " + this.event.toString());
 		}
@@ -39,14 +41,20 @@ public class GetBehavior extends Behavior {
 		source.childrenAdd(target);
 
 		// prep the 'response' JMudEvent
-		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source, JMudEventType.DisplayTextStdOutEvent);
-		jme.getDataMap().put("displayText", source.getName() + " picks up the " + target.getName() + ".");
+		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source);
+		//jme.getDataMap().put("displayText", source.getName() + " picks up the " + target.getName() + ".");
 
 		synchronized (System.out) {
 			System.out.println("(" + this.getID() + ") GetBehavior.behave() 'response': " + jme.toString());
 		}
 		jme.submitSelf();
 
+		return true;
+	}
+
+	@Override
+	protected boolean ccBehavior() {
+		// If I get a GetEvent, and I am not the target... I dont care!  Ignore!
 		return true;
 	}
 
@@ -60,7 +68,7 @@ public class GetBehavior extends Behavior {
 			System.out.println("GetBehavior.clone()");
 		}
 
-		return new GetBehavior();
+		return new GetBehavior(this.owner);
 	}
 
 }

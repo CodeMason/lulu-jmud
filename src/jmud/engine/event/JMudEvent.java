@@ -1,5 +1,6 @@
 package jmud.engine.event;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +14,6 @@ import jmud.engine.object.JMudObject;
 
 public class JMudEvent extends AbstractJob {
 	private JMudEventType targetEventType = null;
-	private JMudEventType ccEventType = null;
 
 	private transient final JMudObject source;
 	private transient final JMudObject target;
@@ -24,100 +24,68 @@ public class JMudEvent extends AbstractJob {
 	 */
 	private Map<String, Object> dataMap = null;
 
-	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target,
-			JMudEventType ccEventtype) {
+	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
 		super();
 		this.targetEventType = eventType;
 		this.source = source;
 		this.target = target;
-		this.ccEventType = ccEventtype;
 
 		this.dataMap = Collections.synchronizedMap(new HashMap<String, Object>());
-	}
-
-	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
-		this(eventType, source, target, null);
 	}
 
 	@Override
 	public final boolean doJob() {
 
-		boolean retVal = this.handleTarget();
-		this.handleCC();
-		return retVal;
-	}
+		// Build objects to send Event to List:
+		Set<JMudObject> ccObjs = new HashSet<JMudObject>();
 
-	private void handleCC() {
+		// Get all the siblings
+		ccObjs.addAll(this.source.getParent().childrenValues());
+		ccObjs.addAll(this.target.getParent().childrenValues());
 
-		if (this.ccEventType == JMudEventType.DisplayTextStdOutEvent) {
-			System.out.println();
-		}
+		// Get anything registered
+		ccObjs.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target,
+				this.getEventType()));
 
-		// CC all the target and source siblings
+		// No need to inform the source
+		ccObjs.remove(this.source);
 
-		// Do a null check to see if we WANT to inform anyone else.
-		if (this.ccEventType != null) {
-			System.out.println("(" + this.getID() + ") JMudEvent.doJob(): There was a ccEventType for Event.");
+		// Set success flag
+		boolean allFinishedTrue = true;
 
-			// Build list of JMudObjects to send event to:
-			Set<JMudObject> ccObjs = new HashSet<JMudObject>();
+		// Iterate over the list:
+		for (JMudObject jmo : ccObjs) {
 
-			// Get all the siblings
-			ccObjs.addAll(this.source.getParent().childrenValues());
-			ccObjs.addAll(this.target.getParent().childrenValues());
+			// Now Handle the Target
+			List<Behavior> behs = jmo.getBehaviors(this.getEventType());
 
-			// No need to inform the source or target
-			ccObjs.remove(this.source);
-			ccObjs.remove(this.target);
-
-			for (JMudObject tgt : ccObjs) {
-				// ENSURE there is no CC value on a CC Event! Otherwise an
-				// exponential runaway might occur!
-				JMudEvent jme = new JMudEvent(this.ccEventType, this.source, tgt);
-				jme.getDataMap().putAll(this.dataMap);
-
-				System.out.println("(" + this.getID() + ") New CC event: " + jme.toString());
-
-				jme.submitSelf();
+			if (behs == null) {
+				behs = new ArrayList<Behavior>();
 			}
 
-		} else {
-			System.out.println("(" + this.getID() + ") JMudEvent.doJob(): There was no ccEventType for Event.");
-		}
-	}
-
-	private boolean handleTarget() {
-		// Now Handle the Target
-		List<Behavior> behs = this.target.getBehaviors(this.getEventType());
-
-		synchronized (System.out) {
-			System.out.println("(" + this.getID() + ") JMudEvent.doJob(): " + this.toString());
-			if (behs != null) {
-				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found " + behs.size()
-						+ " behaviors to run.");
-			} else {
-				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found 0 behaviors(" + this.getEventType()
-						+ ") from " + this.target.toStringShort() + " to run.");
+			synchronized (System.out) {
+				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found " + behs.size() + " behaviors("
+						+ this.getEventType() + ") from " + jmo.toStringShort() + " to run.");
 			}
-		}
 
-		if (behs != null) {
-			for (Behavior b : behs) {
-				Behavior newB = b.clone();
-				newB.setEvent(this);
+			if (behs.size() != 0) {
+				for (Behavior b : behs) {
+					Behavior newB = b.clone();
+					newB.setEvent(this);
 
-				synchronized (System.out) {
-					System.out.println("(" + this.getID() + ") Behavior Cloning: " + b.toString()
-							+ " was cloned into: " + newB.toString());
+					synchronized (System.out) {
+						System.out.println("(" + this.getID() + ") Behavior Cloning: " + b.toString()
+								+ " was cloned into: " + newB.toString());
+					}
+					newB.submitSelf();
 				}
 
-				newB.submitSelf();
+			} else {
+				//Set flag to false to show that this event didNOT evoke behavior from every object.
+				allFinishedTrue = false;
 			}
-			return true;
-		} else {
-			return false;
 		}
-
+		return allFinishedTrue;
 	}
 
 	public final Map<String, Object> getDataMap() {

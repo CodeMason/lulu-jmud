@@ -1,8 +1,7 @@
 package jmud.test;
 
-import jmud.engine.behavior.DisplayTextStdErrBehavior;
-import jmud.engine.behavior.DisplayTextStdOutBehavior;
 import jmud.engine.behavior.GetBehavior;
+import jmud.engine.behavior.GotBehavior;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventRegistrar;
 import jmud.engine.event.JMudEventType;
@@ -30,14 +29,17 @@ public class GetEventBehaviorTest01 {
       JMudObject pcSteve = root.childrenGet("room").childrenGet("pcSteve");
       JMudObject orc0 = root.childrenGet("room").childrenGet("orc0");
       JMudObject orc1 = root.childrenGet("room").childrenGet("orc1");
+      JMudObject door = root.childrenGet("room").childrenGet("door");
 
       // Establish behaviors
-      bag.addEventBehavior(new GetBehavior());
-      orc0.addEventBehavior(new DisplayTextStdOutBehavior());
-      orc0.addEventBehavior(new DisplayTextStdErrBehavior());
-      orc1.addEventBehavior(new DisplayTextStdOutBehavior());
-      orc1.addEventBehavior(new DisplayTextStdErrBehavior());
+      bag.addEventBehavior(new GetBehavior(bag));
       
+      bag.addEventBehavior(new GotBehavior(bag));
+      pcSteve.addEventBehavior(new GotBehavior(pcSteve));
+      orc0.addEventBehavior(new GotBehavior(orc0));
+      orc1.addEventBehavior(new GotBehavior(orc1));
+      door.addEventBehavior(new GotBehavior(door));
+           
            
       // Printout the tree.
       System.out.println("\n\nOriginal Tree");

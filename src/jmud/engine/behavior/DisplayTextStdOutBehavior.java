@@ -13,8 +13,8 @@ public class DisplayTextStdOutBehavior extends Behavior {
 	/**
 	 * Default constructor.
 	 */
-	public DisplayTextStdOutBehavior() {
-		super();
+	public DisplayTextStdOutBehavior(JMudObject owner) {
+		super(owner);
 		this.eventTypesHandled.add(JMudEventType.DisplayTextStdOutEvent);
 	}
 
@@ -24,7 +24,7 @@ public class DisplayTextStdOutBehavior extends Behavior {
 	 */
 	@Override
 	public Behavior clone() {
-		return new DisplayTextStdOutBehavior();
+		return new DisplayTextStdOutBehavior(this.owner);
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class DisplayTextStdOutBehavior extends Behavior {
 	 * @return true
 	 */
 	@Override
-	public boolean behave() {
+	public boolean ownerBehavior() {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
@@ -40,6 +40,11 @@ public class DisplayTextStdOutBehavior extends Behavior {
 
 		System.out.println("DisplayTextStdOutBehavior(" + this.getID() + ")" + "\t Source: " + source.toStringShort()
 				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text + "\n");
+		return true;
+	}
+	@Override
+	protected boolean ccBehavior() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 

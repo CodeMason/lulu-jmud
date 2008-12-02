@@ -31,8 +31,8 @@ public class DisplayTextEventBehaviorTest01 {
 		JMudObject orc1 = root.childrenGet("room").childrenGet("orc1");
 
 		// Establish behaviors
-		orc0.addEventBehavior(new DisplayTextStdOutBehavior());
-		orc1.addEventBehavior(new DisplayTextStdErrBehavior());
+		orc0.addEventBehavior(new DisplayTextStdOutBehavior(orc0));
+		orc1.addEventBehavior(new DisplayTextStdErrBehavior(orc1));
 
 		// make a new event
 		JMudEvent dtsoe = new JMudEvent(JMudEventType.DisplayTextStdOutEvent, pcSteve, orc0);
