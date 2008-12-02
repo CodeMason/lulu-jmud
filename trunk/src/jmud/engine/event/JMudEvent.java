@@ -61,8 +61,8 @@ public class JMudEvent extends AbstractJob {
 			}
 
 			synchronized (System.out) {
-				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found " + behs.size() + " behaviors("
-						+ this.getEventType() + ") from " + jmo.toStringShort() + " to run.");
+				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found " + behs.size() + " behaviors of type "
+						+ this.getEventType() + " from " + jmo.toStringShort() + " to run.");
 			}
 
 			if (behs.size() != 0) {

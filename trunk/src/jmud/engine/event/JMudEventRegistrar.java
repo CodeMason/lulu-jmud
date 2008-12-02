@@ -20,9 +20,9 @@ import jmud.engine.object.JMudObject;
 
 public class JMudEventRegistrar {
 	/**
-	 * JobManagerHolder is loaded on the first execution of
-	 * JobManager.getInstance() or the first access to
-	 * JobManagerHolder.INSTANCE, not before.
+	 * Holder is loaded on the first execution of
+	 * EventRegistrar.getInstance() or the first access to
+	 * Holder.INSTANCE, not before.
 	 */
 	private static class Holder {
 		private static final JMudEventRegistrar INSTANCE = new JMudEventRegistrar();

@@ -70,7 +70,6 @@ public class GotBehavior extends Behavior {
 		synchronized (System.out) {
 			System.out.println("GotBehavior.clone()");
 		}
-
 		return new GotBehavior(this.owner);
 	}
 }
