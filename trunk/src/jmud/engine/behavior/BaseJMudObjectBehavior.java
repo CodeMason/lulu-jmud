@@ -20,16 +20,19 @@ public class BaseJMudObjectBehavior extends Behavior {
 	 */
 
 	@Override
-	public final boolean ownerBehavior() {
-
-		// Send off events here!!
-
+	public final boolean targetBehavior() {
 		return true;
 	}
+
 	@Override
 	protected boolean ccBehavior() {
-		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	protected boolean sourceBehavior() {
+		// loop back to ccBehavior()
+		return this.ccBehavior();
 	}
 
 	@Override

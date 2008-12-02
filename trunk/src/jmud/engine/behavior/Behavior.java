@@ -53,9 +53,11 @@ public abstract class Behavior extends AbstractJob {
 			return false;
 		}
 
-		if (this.event.getTarget() == this.owner) {
-			return this.ownerBehavior();
-		} else {
+		if (this.owner == this.event.getTarget()) {
+			return this.targetBehavior();
+		} else if (this.owner == this.event.getSource()) {
+			return this.sourceBehavior();
+		} else  {
 			return this.ccBehavior();
 		}
 
@@ -67,11 +69,20 @@ public abstract class Behavior extends AbstractJob {
 	 * 
 	 * @return true if behavior completes successfully
 	 */
-	protected abstract boolean ownerBehavior();
+	protected abstract boolean targetBehavior();
+
+
+	/**
+	 * perform this <code>Behavior's</code> behavior if this behavior belongs to the
+	 * event's source object
+	 * 
+	 * @return true if behavior completes successfully
+	 */
+	protected abstract boolean sourceBehavior();
 
 	/**
 	 * perform this <code>Behavior's</code> behavior if this behavior belongs to a
-	 * JMudObject other than the event's target object
+	 * JMudObject other than the event's target or source object
 	 * 
 	 * @return true if behavior completes successfully
 	 */
