@@ -2,6 +2,9 @@ package jmud.engine.item;
 
 import jmud.engine.core.Targetable;
 
+/**
+ * @author Chris Maguire
+ */
 public class SimpleItemContainerDef extends AbstractItemContainerDef {
 
    public SimpleItemContainerDef(final String name) {

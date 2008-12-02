@@ -10,7 +10,6 @@ import jmud.engine.core.Targetable;
  * @author Dave Loman
  * @version 0.1
  */
-
 public abstract class AbstractItemContainerDef extends AbstractItemDef {
 
    public AbstractItemContainerDef(final String name) {
@@ -30,13 +29,13 @@ public abstract class AbstractItemContainerDef extends AbstractItemDef {
       return retVal;
    }
 
-   /*
+   /**
     * Check to perform when an attempt is made to place i into ic.
     */
    protected abstract boolean addCheck(Targetable targetAdding,
          ItemContainer ic, Item i);
 
-   /*
+   /**
     * Check to perform when an attempt is made to remove i from ic.
     */
    protected abstract boolean remCheck(Targetable targetRemoving,

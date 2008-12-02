@@ -5,7 +5,6 @@ package jmud.engine.item;
  * @author Dave Loman
  * @version 0.1
  */
-
 public enum ItemTypes {
-   Weapon, Food, Water, Armor
+   Armor, Food, Water, Weapon;
 }

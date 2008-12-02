@@ -3,8 +3,7 @@ package jmud.engine.item;
 import jmud.engine.core.Targetable;
 
 /**
- * Represents a definition for the behavior of an item. Created on April 28,
- * 2002, 8:53 AM Modified: 25NOV08 Dave Loman
+ * Represents a definition for the behavior of an item.
  * @author Chris Maguire
  * @version 0.1
  */
@@ -18,17 +17,32 @@ public abstract class AbstractItemDef {
       this.name = name;
    }
 
-   // Force dev to implement a check for when the object is picked up.
+   /**
+    * Force dev to implement a check for when the object is picked up.
+    * @param targetGetting
+    * @param i
+    * @return
+    */
    protected abstract boolean getCheck(Targetable targetGetting, Item i);
 
    public final String getName() {
       return name;
    }
 
-   // Force dev to implement a check for when the object is put down.
+   /**
+    * Force dev to implement a check for when the object is put down.
+    * @param targetPutting
+    * @param i
+    * @return
+    */
    protected abstract boolean putCheck(Targetable targetPutting, Item i);
 
-   // Force dev to implement logic for when the object is 'used'
+   /**
+    * Force dev to implement logic for when the object is 'used'.
+    * @param targetUsing
+    * @param i
+    * @return
+    */
    public abstract boolean use(Targetable targetUsing, Item i);
 
 }

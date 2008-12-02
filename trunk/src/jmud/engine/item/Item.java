@@ -4,13 +4,16 @@ import jmud.engine.core.Targetable;
 import jmud.engine.dbio.Persistable;
 import jmud.engine.stats.StatMap;
 
+/**
+ * @author Chris Maguire
+ */
 public class Item implements Targetable, Persistable {
-   private final int uid;
+   private AbstractItemDef behavior;
    private final String name;
 
    private final StatMap stats = new StatMap();
 
-   private AbstractItemDef behavior;
+   private final int uid;
 
    public Item(final String name, final int uid) {
       this.name = name;
