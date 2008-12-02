@@ -19,7 +19,11 @@ public class Stat {
    // TODO why not have the Definition object reference attached at creation?
    private final AbstractStatDef defToUse = null;
 
-   public Stat(final String name, final int max, final int min,
+   public AbstractStatDef getDefToUse() {
+	return defToUse;
+}
+
+public Stat(final String name, final int max, final int min,
          final int current) {
       this.current = current;
       this.max = max;

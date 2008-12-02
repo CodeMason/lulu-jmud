@@ -1,6 +1,5 @@
 package jmud.engine.behavior;
 
-import jmud.engine.object.JMudObject;
 
 /**
  * Simple representation of a <code>Behavior</code>. This is a singleton because
@@ -26,8 +25,6 @@ public class SimpleBehavior extends Behavior {
     */
    @Override
    public final boolean behave() {
-      JMudObject source = this.event.getSource();
-      JMudObject targets = this.event.getTarget();
 
       // Send off events here!!
 
