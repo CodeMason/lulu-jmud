@@ -52,8 +52,7 @@ public class JMudEvent extends AbstractJob {
 		if (this.ccEventType == JMudEventType.DisplayTextStdOutEvent) {
 			System.out.println();
 		}
-		
-		
+
 		// CC all the target and source siblings
 
 		// Do a null check to see if we WANT to inform anyone else.
@@ -76,7 +75,7 @@ public class JMudEvent extends AbstractJob {
 				// exponential runaway might occur!
 				JMudEvent jme = new JMudEvent(this.ccEventType, this.source, tgt);
 				jme.getDataMap().putAll(this.dataMap);
-				
+
 				System.out.println("(" + this.getID() + ") New CC event: " + jme.toString());
 
 				jme.submitSelf();
@@ -89,7 +88,7 @@ public class JMudEvent extends AbstractJob {
 
 	private boolean handleTarget() {
 		// Now Handle the Target
-		List<Behavior> behs = this.target.getBehaviors(this);
+		List<Behavior> behs = this.target.getBehaviors(this.getEventType());
 
 		synchronized (System.out) {
 			System.out.println("(" + this.getID() + ") JMudEvent.doJob(): " + this.toString());
@@ -97,8 +96,8 @@ public class JMudEvent extends AbstractJob {
 				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found " + behs.size()
 						+ " behaviors to run.");
 			} else {
-				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found 0 behaviors to run.");
-
+				System.out.println("(" + this.getID() + ") JMudEvent.doJob(): Found 0 behaviors(" + this.getEventType()
+						+ ") from " + this.target.toStringShort() + " to run.");
 			}
 		}
 

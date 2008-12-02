@@ -53,8 +53,8 @@ public class JobWorker implements Runnable {
 				try {
 					synchronized (this) {
 						this.wait(1000L); // Wait a max of 1 second
-						System.out.println("Worker ID: " + this.WorkerID + "\t Wait Finished. Queue len: "
-								+ JobManager.getInstance().getQueueLen());
+						//System.out.println("Worker ID: " + this.WorkerID + "\t Wait Finished. Queue len: "
+						//		+ JobManager.getInstance().getQueueLen());
 					}
 				} catch (InterruptedException e) {
 					System.err.println("JobWorker ID:" + this.WorkerID
@@ -76,5 +76,9 @@ public class JobWorker implements Runnable {
 	public final void stop() {
 		System.out.println("JobWorker ID:" + this.WorkerID + ": Received Shutdown Command.");
 		this.runCmd = false;
+	      synchronized (this) {
+	            this.notify();
+	         }
+	  
 	}
 }

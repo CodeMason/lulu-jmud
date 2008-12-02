@@ -16,14 +16,14 @@ public class GetEventBehaviorTest01 {
     */
    public static void main(final String[] args) {
 
-      // Initialize the JobManager with 1 worker
-      JobManager.getInstance().init(1);
+      // Initialize the JobManager with 3 workers
+      JobManager.getInstance().init(3);
       
       // Initialize the EventRegistrar
       JMudEventRegistrar.getInstance().init();
 
       // Build a simple JMudObjectTree
-      JMudObject root = CommonTestParts.buildTestJMudObjectTree();
+      JMudObject root = CommonTestMethods.buildTestJMudObjectTree();
       
       //get handles on some of the objects
       JMudObject bag = root.childrenGet("room").childrenGet("bag");
@@ -41,7 +41,7 @@ public class GetEventBehaviorTest01 {
            
       // Printout the tree.
       System.out.println("\n\nOriginal Tree");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
       System.out.println("\n\n");
       
       // make a new event
@@ -50,26 +50,25 @@ public class GetEventBehaviorTest01 {
 
 
       // short sleep so we can test 'waking' a JobWorker
-      try {
-         Thread.sleep(250);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      CommonTestMethods.pause(250);
 
       // Submit the event
       ge.submitSelf();
 
       // another sleep to ensure all events are processed
-      try {
-         Thread.sleep(2500);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
+      CommonTestMethods.pause(1000);
 
       // Printout the tree.
       System.out.println("\n\nModified Tree");
-      CommonTestParts.printTreeRecursor(root);
+      CommonTestMethods.printTreeRecursor(root);
+      System.out.println("\n\n");
+           
+ 
+      
+      // another sleep to ensure all events are processed
+      CommonTestMethods.pause(2500);
 
+      JobManager.getInstance().stopAllWorkers();
    }
 
 }
