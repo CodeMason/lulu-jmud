@@ -10,54 +10,81 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.job.definitions.AbstractJob;
 
 /**
- * Following the Command pattern, a Behavior is a discrete portion of logic that
- * can be associated with a JMudObject and called in response to an Event. Each
- * Behavior will return any resulting Events which will facilitate
- * Event-chaining (think Rube Goldberg). Behaviors should check that they are
- * handling the right event. Each Behavior might list a top level Event class
- * that it handles. ToDo: How will a Behavior get what objects it needs to work
- * on? Should we always pass in the source event and target object?
+ * Following the command design pattern [GoF], a <code>Behavior</code> is a
+ * discrete portion of logic that can be associated with a
+ * <code>JMudObject</code> and called in response to a <code>JMUDEvent</code>.
+ * Each <code>Behavior</code> will return any resulting events which will
+ * facilitate event-chaining (think Rube Goldberg). <code>Behaviors</code>
+ * should check that they are handling the right event. Each
+ * <code>Behavior</code> might list a top level event class that it handles.
+ * ToDo: How will a <code>Behavior</code> get what objects it needs to work on?
+ * Should we always pass in the source event and target object?
+ * @author david.h.loman
  */
 public abstract class Behavior extends AbstractJob {
 
    protected static List<JMudEventType> eventTypesHandled = Collections
          .synchronizedList(new ArrayList<JMudEventType>());
-   protected JMudEvent event = null;
    private UUID BehaviorID = UUID.randomUUID();
-   
+   protected JMudEvent event = null;
+
+   /**
+    * Default constructor.
+    */
    public Behavior() {
    }
 
    /**
-    * perform this Behavior's behavior and return the resultant events, if any.
-    * @param event
-    *           the event the behavior is responding too
-    * @return the resulting EventObject
+    * perform this <code>Behavior's</code> behavior.
+    * @return true if behavior completes successfully
     */
    protected abstract boolean behave();
 
+   /**
+    * Typical clone implementation.
+    * @see java.lang.Object#clone()
+    * @return a cloned <code>Behavior</code>
+    */
    @Override
    public abstract Behavior clone();
 
+   /**
+    * @see jmud.engine.job.definitions.AbstractJob#doJob()
+    * @return true if <code>doJob</code>, and thus, <code>behave</code> complete
+    *         successfully
+    */
    @Override
    public final boolean doJob() {
       return this.behave();
    }
 
+   /**
+    * @return the bevaior ID
+    */
+   public UUID getBehaviorID() {
+      return BehaviorID;
+   }
+
+   /**
+    * @return the <code>JMudEvent</code>
+    */
    public final JMudEvent getEvent() {
       return event;
    }
 
+   /**
+    * @return the list of event types handled
+    */
    public final List<JMudEventType> getEventTypesHandled() {
       return eventTypesHandled;
    }
 
-   public final void setEvent(final JMudEvent event) {
-      this.event = event;
+   /**
+    * @param inEvent
+    *           the set event
+    */
+   public final void setEvent(final JMudEvent inEvent) {
+      this.event = inEvent;
    }
-
-public UUID getBehaviorID() {
-	return BehaviorID;
-}
 
 }
