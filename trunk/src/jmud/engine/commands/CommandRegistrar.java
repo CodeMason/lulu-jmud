@@ -2,32 +2,42 @@ package jmud.engine.commands;
 
 import java.util.HashMap;
 
+/**
+ * @author david.h.loman
+ */
 public class CommandRegistrar {
    /**
-    * JobManagerHolder is loaded on the first execution of
-    * JobManager.getInstance() or the first access to JobManagerHolder.INSTANCE,
-    * not before.
+    * <code>JobManagerHolder</code> is loaded on the first execution of
+    * <code>JobManager.getInstance()</code> or the first access to
+    * <code>JobManagerHolder.INSTANCE</code>, not before.
     */
    private static class CommandRegistrarHolder {
+      /**
+       * The singleton instance.
+       */
       private static final CommandRegistrar INSTANCE = new CommandRegistrar();
+
+      /**
+       * <code>CommandRegistrarHolder</code> is a utility class. Disallowing
+       * public/default constructor.
+       */
+      private CommandRegistrarHolder() {
+
+      }
    }
 
+   /**
+    * @return the singleton instance
+    */
    public static CommandRegistrar getInstance() {
       return CommandRegistrarHolder.INSTANCE;
    }
 
    private final HashMap<String, AbstractCommandDef> cmdMap = new HashMap<String, AbstractCommandDef>();
 
-   /*
-    * Concrete Class Implementation
-    */
-
-   /*
-    * Singleton Implementation
-    */
    /**
     * Protected constructor is sufficient to suppress unauthorized calls to the
-    * constructor
+    * constructor.
     */
    protected CommandRegistrar() {
    }
