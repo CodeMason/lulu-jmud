@@ -26,7 +26,7 @@ public class GotBehavior extends Behavior {
 	 */
 
 	@Override
-	public final boolean ownerBehavior() {
+	public final boolean targetBehavior() {
 		// What the owner sees
 		synchronized (System.out) {
 			System.out.println(this.owner.getName() + " sees: ");
@@ -48,6 +48,19 @@ public class GotBehavior extends Behavior {
 		return true;
 	}
 
+	@Override
+	protected boolean sourceBehavior() {
+		// What You else sees.
+		synchronized (System.out) {
+			System.out.println(this.owner.getName() + " sees: ");
+			System.out.println("\t" + this.event.getTarget().getName() + " picks YOU up!!");
+		}
+
+		return true;
+	}
+
+
+	
 	/**
 	 * @see jmud.engine.behavior.Behavior#clone()
 	 * @return a new <code>GetBeHavior</code>
@@ -60,5 +73,4 @@ public class GotBehavior extends Behavior {
 
 		return new GotBehavior(this.owner);
 	}
-
 }

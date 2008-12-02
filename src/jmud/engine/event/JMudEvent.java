@@ -47,9 +47,6 @@ public class JMudEvent extends AbstractJob {
 		ccObjs.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target,
 				this.getEventType()));
 
-		// No need to inform the source
-		ccObjs.remove(this.source);
-
 		// Set success flag
 		boolean allFinishedTrue = true;
 

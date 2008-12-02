@@ -27,12 +27,10 @@ public class GetBehavior extends Behavior {
 	 */
 
 	@Override
-	public final boolean ownerBehavior() {
+	public final boolean targetBehavior() {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
-		
-		
 		synchronized (System.out) {
 			System.out.println("(" + this.getID() + ") GetBehavior.behave(): " + this.event.toString());
 		}
@@ -42,8 +40,7 @@ public class GetBehavior extends Behavior {
 
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source);
-		//jme.getDataMap().put("displayText", source.getName() + " picks up the " + target.getName() + ".");
-
+		
 		synchronized (System.out) {
 			System.out.println("(" + this.getID() + ") GetBehavior.behave() 'response': " + jme.toString());
 		}
@@ -54,8 +51,14 @@ public class GetBehavior extends Behavior {
 
 	@Override
 	protected boolean ccBehavior() {
-		// If I get a GetEvent, and I am not the target... I dont care!  Ignore!
+		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
 		return true;
+	}
+
+	@Override
+	protected boolean sourceBehavior() {
+		// loop back to ccBehavior()
+		return this.ccBehavior();
 	}
 
 	/**

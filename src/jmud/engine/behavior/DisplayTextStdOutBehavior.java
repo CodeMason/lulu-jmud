@@ -19,20 +19,11 @@ public class DisplayTextStdOutBehavior extends Behavior {
 	}
 
 	/**
-	 * @see jmud.engine.behavior.Behavior#clone()
-	 * @return a new <code>DisplayTextStdOutBehavior</code>
-	 */
-	@Override
-	public Behavior clone() {
-		return new DisplayTextStdOutBehavior(this.owner);
-	}
-
-	/**
 	 * @see jmud.engine.behavior.Behavior#behave()
 	 * @return true
 	 */
 	@Override
-	public boolean ownerBehavior() {
+	public boolean targetBehavior() {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
@@ -42,10 +33,25 @@ public class DisplayTextStdOutBehavior extends Behavior {
 				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text + "\n");
 		return true;
 	}
+
 	@Override
 	protected boolean ccBehavior() {
-		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	protected boolean sourceBehavior() {
+		// loop back to ccBehavior()
+		return this.ccBehavior();
+	}
+
+	/**
+	 * @see jmud.engine.behavior.Behavior#clone()
+	 * @return a new <code>DisplayTextStdOutBehavior</code>
+	 */
+	@Override
+	public Behavior clone() {
+		return new DisplayTextStdOutBehavior(this.owner);
 	}
 
 }
