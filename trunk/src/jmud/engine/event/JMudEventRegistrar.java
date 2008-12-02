@@ -14,151 +14,156 @@ import jmud.engine.object.JMudObject;
  * synchronized in anyway as so far as the Maps and Lists are concerned.
  * Synchronization of the individual JMudEvent objects and JMudObject objects
  * must be done externally.
+ * 
  * @author David Loman
  */
 
 public class JMudEventRegistrar {
-   /**
-    * JobManagerHolder is loaded on the first execution of
-    * JobManager.getInstance() or the first access to JobManagerHolder.INSTANCE,
-    * not before.
-    */
-   private static class Holder {
-      private static final JMudEventRegistrar INSTANCE = new JMudEventRegistrar();
-   }
+	/**
+	 * JobManagerHolder is loaded on the first execution of
+	 * JobManager.getInstance() or the first access to
+	 * JobManagerHolder.INSTANCE, not before.
+	 */
+	private static class Holder {
+		private static final JMudEventRegistrar INSTANCE = new JMudEventRegistrar();
+	}
 
-   public static JMudEventRegistrar getInstance() {
-      return Holder.INSTANCE;
-   }
+	public static JMudEventRegistrar getInstance() {
+		return Holder.INSTANCE;
+	}
 
-   private final Map<UUID, JMudEventSubscription> uuidMap = Collections
-         .synchronizedMap(new HashMap<UUID, JMudEventSubscription>());
+	private final Map<UUID, JMudEventSubscription> uuidMap = Collections
+			.synchronizedMap(new HashMap<UUID, JMudEventSubscription>());
 
-   /*
-    * Concrete Class Implementation
-    */
+	/*
+	 * Concrete Class Implementation
+	 */
 
-   private final Map<JMudObject, List<JMudEventSubscription>> sourceMap = Collections
-         .synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
+	private final Map<JMudObject, List<JMudEventSubscription>> sourceMap = Collections
+			.synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
 
-   private final Map<JMudEventType, List<JMudEventSubscription>> eventMap = Collections
-         .synchronizedMap(new HashMap<JMudEventType, List<JMudEventSubscription>>());
+	private final Map<JMudEventType, List<JMudEventSubscription>> eventTypeMap = Collections
+			.synchronizedMap(new HashMap<JMudEventType, List<JMudEventSubscription>>());
 
-   private final Map<JMudObject, List<JMudEventSubscription>> targetMap = Collections
-         .synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
+	private final Map<JMudObject, List<JMudEventSubscription>> ccTargetMap = Collections
+			.synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
 
-   /*
-    * Singleton Implementation
-    */
-   /**
-    * Protected constructor is sufficient to suppress unauthorized calls to the
-    * constructor
-    */
-   protected JMudEventRegistrar() {
-   }
-
+	/*
+	 * Singleton Implementation
+	 */
+	/**
+	 * Protected constructor is sufficient to suppress unauthorized calls to the
+	 * constructor
+	 */
+	protected JMudEventRegistrar() {
+	}
 
 	public void init() {
 
 	}
 
+	/*
+	 * Common Src/Tgt map IO
+	 */
+	private void addToCommonMap(final JMudEventSubscription jmes, final Map<JMudObject, List<JMudEventSubscription>> map) {
+		// first, get the ArrayList keyed to the JMudObject:
+		List<JMudEventSubscription> al = map.get(jmes.getSource());
 
-   /*
-    * Common Src/Tgt map IO
-    */
-   private void addToCommonMap(final JMudEventSubscription jmes,
-         final Map<JMudObject, List<JMudEventSubscription>> map) {
-      // first, get the ArrayList keyed to the JMudObject:
-      List<JMudEventSubscription> al = map.get(jmes.getSource());
+		// check to see if there was a mapping!
+		if (al == null) {
+			// if not then make a new ArrayList
+			al = Collections.synchronizedList(new ArrayList<JMudEventSubscription>());
 
+			// Now that we have a valid list, add in our incoming
+			// JMudEventSubscription
+			al.add(jmes);
 
-      // check to see if there was a mapping!
-      if (al == null) {
-         // if not then make a new ArrayList
-         al = Collections
-               .synchronizedList(new ArrayList<JMudEventSubscription>());
+			// Now map the List into the map by source:
+			this.sourceMap.put(jmes.getSource(), al);
+		} else {
+			// we have a good ArrayList returned:
+			al.add(jmes);
+		}
+	}
 
-         // Now that we have a valid list, add in our incoming
-         // JMudEventSubscription
-         al.add(jmes);
+	/*
+	 * Event map IO
+	 */
+	private void addToEventTypeMap(final JMudEventSubscription jmes) {
+		// first, get the ArrayList keyed to the JMudEventType:
+		List<JMudEventSubscription> al = this.eventTypeMap.get(jmes.getEventType());
 
-         // Now map the List into the map by source:
-         this.sourceMap.put(jmes.getSource(), al);
-      } else {
-         // we have a good ArrayList returned:
-         al.add(jmes);
-      }
-   }
+		// check to see if there was a mapping!
+		if (al == null) {
+			// if not then make a new ArrayList
+			al = Collections.synchronizedList(new ArrayList<JMudEventSubscription>());
 
-   /*
-    * Event map IO
-    */
-   private void addToEventMap(final JMudEventSubscription jmes) {
-      // first, get the ArrayList keyed to the JMudEventType:
-      List<JMudEventSubscription> al = this.eventMap.get(jmes.getEventType());
+			// Now that we have a valid list, add in our incoming
+			// JMudEventSubscription
+			al.add(jmes);
 
-      // check to see if there was a mapping!
-      if (al == null) {
-         // if not then make a new ArrayList
-         al = Collections
-               .synchronizedList(new ArrayList<JMudEventSubscription>());
+			// Now map the List into the map by source:
+			this.eventTypeMap.put(jmes.getEventType(), al);
+		} else {
+			// we have a good ArrayList returned:
+			al.add(jmes);
+		}
+	}
 
-         // Now that we have a valid list, add in our incoming
-         // JMudEventSubscription
-         al.add(jmes);
+	/*
+	 * Source map IO
+	 */
+	private void addToSourceMap(final JMudEventSubscription jmes) {
+		this.addToCommonMap(jmes, this.sourceMap);
+	}
 
-         // Now map the List into the map by source:
-         this.eventMap.put(jmes.getEventType(), al);
-      } else {
-         // we have a good ArrayList returned:
-         al.add(jmes);
-      }
-   }
+	/*
+	 * Target map IO
+	 */
+	private void addToCCTargetMap(final JMudEventSubscription jmes) {
+		this.addToCommonMap(jmes, this.ccTargetMap);
+	}
 
-   /*
-    * Source map IO
-    */
-   private void addToSourceMap(final JMudEventSubscription jmes) {
-      this.addToCommonMap(jmes, this.sourceMap);
-   }
+	public final JMudEventSubscription getSubscriptionByUUID(final UUID uuid) {
+		return this.uuidMap.get(uuid);
+	}
 
-   /*
-    * Target map IO
-    */
-   private void addToTargetMap(final JMudEventSubscription jmes) {
-      this.addToCommonMap(jmes, this.targetMap);
-   }
+	public final List<JMudEventSubscription> getSubscriptionsByEventType(final JMudEventType jmet) {
+		return this.eventTypeMap.get(jmet);
+	}
 
-
-   public final JMudEventSubscription getSubscriptionByUUID(final UUID uuid) {
-      return this.uuidMap.get(uuid);
-   }
-
-   public final List<JMudEventSubscription> getSubscriptionsByEvent(
-         final JMudEvent jme) {
-      return this.eventMap.get(jme);
-   }
-
-
-	public final List<JMudEventSubscription> getSubscriptionsBySourceAndTarget(JMudObject source,
-			JMudObject target) {
+	public final List<JMudEventSubscription> getSubscriptionsBySourceAndEventType(JMudObject source, JMudEventType jmet) {
 
 		// first get the set of matches to target:
-		List<JMudEventSubscription> targets = this.getSubscriptionsByTarget(target);
+		List<JMudEventSubscription> srcs = this.getSubscriptionsByCCTarget(source);
 
-		if (targets == null) {
+		if (srcs == null) {
 			return null;
 		}
-		
+
 		// Then filter that set by Source:
 		List<JMudEventSubscription> out = new ArrayList<JMudEventSubscription>();
-		for (JMudEventSubscription jmes : targets) {
+		for (JMudEventSubscription jmes : srcs) {
 			// Match my UUID
-			if (jmes.getSource().getUUID() == source.getUUID()) {
+			if (jmes.getEventType() == jmet) {
 				out.add(jmes);
 			}
 		}
 
+		return out;
+	}
+
+	public final List<JMudObject> getTargetJMudObjectBySourceAndEvent(JMudObject source, JMudEventType jmet) {
+
+		List<JMudEventSubscription> jmess = this.getSubscriptionsBySourceAndEventType(source, jmet);
+
+		List<JMudObject> out = new ArrayList<JMudObject>();
+
+		if (jmess != null) {
+			for (JMudEventSubscription j : jmess) {
+				out.add(j.getCCTarget());
+			}
+		}
 		return out;
 	}
 
@@ -169,96 +174,91 @@ public class JMudEventRegistrar {
 		this.uuidMap.put(jmes.getSubscriptionID(), jmes);
 	}
 
+	public final List<JMudEventSubscription> getSubscriptionsBySource(final JMudObject jmo) {
+		return this.sourceMap.get(jmo);
+	}
 
-   public final List<JMudEventSubscription> getSubscriptionsBySource(
-         final JMudObject jmo) {
-      return this.sourceMap.get(jmo);
-   }
+	public final List<JMudEventSubscription> getSubscriptionsByCCTarget(final JMudObject jmo) {
+		return this.ccTargetMap.get(jmo);
+	}
 
+	/*
+	 * Subscription IO
+	 */
+	public final void registerSubscription(final JMudEventSubscription jmes) {
+		// Add to uuidMap:
+		this.addToUUIDMap(jmes);
 
+		// Add to targetMap:
+		this.addToCCTargetMap(jmes);
 
-   public final List<JMudEventSubscription> getSubscriptionsByTarget(
-         final JMudObject jmo) {
-      return this.targetMap.get(jmo);
-   }
+		// Add to eventTypeMap:
+		this.addToEventTypeMap(jmes);
 
-   /*
-    * Subscription IO
-    */
-   public final void registerSubscription(final JMudEventSubscription jmes) {
-      // Add to uuidMap:
-      this.addToUUIDMap(jmes);
+		// Add to sourceMap:
+		this.addToSourceMap(jmes);
 
-      // Add to targetMap:
-      this.addToTargetMap(jmes);
+	}
 
-      // Add to eventMap:
-      this.addToEventMap(jmes);
+	private boolean remFromCommonMap(final JMudEventSubscription jmes,
+			final Map<JMudObject, List<JMudEventSubscription>> map) {
+		// first, get the ArrayList keyed to the source JMudObject:
+		List<JMudEventSubscription> al = map.get(jmes.getSource());
 
-      // Add to sourceMap:
-      this.addToSourceMap(jmes);
+		// check to see if there was a mapping!
+		if (al == null) {
+			// if not then looks like we are all good to go.
+			return true;
 
-   }
+		} else {
+			// we have a good ArrayList returned:
+			return al.remove(jmes);
+		}
+	}
 
-   private boolean remFromCommonMap(final JMudEventSubscription jmes,
-         final Map<JMudObject, List<JMudEventSubscription>> map) {
-      // first, get the ArrayList keyed to the source JMudObject:
-      List<JMudEventSubscription> al = map.get(jmes.getSource());
+	private boolean remFromEventTypeMap(final JMudEventSubscription jmes) {
+		// first, get the ArrayList keyed to the source JMudObject:
+		List<JMudEventSubscription> al = this.eventTypeMap.get(jmes.getEventType());
 
-      // check to see if there was a mapping!
-      if (al == null) {
-         // if not then looks like we are all good to go.
-         return true;
+		// check to see if there was a mapping!
+		if (al == null) {
+			// if not then looks like we are all good to go.
+			return true;
 
-      } else {
-         // we have a good ArrayList returned:
-         return al.remove(jmes);
-      }
-   }
+		} else {
+			// we have a good ArrayList returned:
+			return al.remove(jmes);
+		}
+	}
 
-   private boolean remFromEventMap(final JMudEventSubscription jmes) {
-      // first, get the ArrayList keyed to the source JMudObject:
-      List<JMudEventSubscription> al = this.eventMap.get(jmes.getEventType());
+	private boolean remFromSourceMap(final JMudEventSubscription jmes) {
+		return this.remFromCommonMap(jmes, this.sourceMap);
+	}
 
-      // check to see if there was a mapping!
-      if (al == null) {
-         // if not then looks like we are all good to go.
-         return true;
+	private boolean remFromCCTargetMap(final JMudEventSubscription jmes) {
+		return this.remFromCommonMap(jmes, this.ccTargetMap);
+	}
 
-      } else {
-         // we have a good ArrayList returned:
-         return al.remove(jmes);
-      }
-   }
+	private JMudEventSubscription remFromUUIDMap(final JMudEventSubscription jmes) {
+		return this.remFromUUIDMap(jmes.getSubscriptionID());
+	}
 
-   private boolean remFromSourceMap(final JMudEventSubscription jmes) {
-      return this.remFromCommonMap(jmes, this.sourceMap);
-   }
+	private JMudEventSubscription remFromUUIDMap(final UUID uuid) {
+		return this.uuidMap.remove(uuid);
+	}
 
-   private boolean remFromTargetMap(final JMudEventSubscription jmes) {
-      return this.remFromCommonMap(jmes, this.targetMap);
-   }
+	public final void unregisterSubscription(final JMudEventSubscription jmes) {
+		// Remove from uuidMap:
+		this.remFromUUIDMap(jmes);
 
-   private JMudEventSubscription remFromUUIDMap(final JMudEventSubscription jmes) {
-      return this.remFromUUIDMap(jmes.getSubscriptionID());
-   }
+		// Remove from targetMap:
+		this.remFromCCTargetMap(jmes);
 
-   private JMudEventSubscription remFromUUIDMap(final UUID uuid) {
-      return this.uuidMap.remove(uuid);
-   }
+		// Remove from eventTypeMap:
+		this.remFromEventTypeMap(jmes);
 
-   public final void unregisterSubscription(final JMudEventSubscription jmes) {
-      // Remove from uuidMap:
-      this.remFromUUIDMap(jmes);
-
-      // Remove from targetMap:
-      this.remFromTargetMap(jmes);
-
-      // Remove from eventMap:
-      this.remFromEventMap(jmes);
-
-      // Remove from sourceMap:
-      this.remFromSourceMap(jmes);
-   }
+		// Remove from sourceMap:
+		this.remFromSourceMap(jmes);
+	}
 
 }
