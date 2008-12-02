@@ -4,46 +4,49 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- * Simple representation of a Behavior. This is a Singleton
- * because I can't see any need for having multiple instances, although
- * I did make the behave method synchronized.
- *
- * Any object interested in handling the returned SuccessEvent would
- * register a Behavior for it (e.g. SendSuccessMessageToPlayer); any
- * object without a registered Behavior would just ignore it.
+ * Simple representation of a <code>Behavior</code>. This is a singleton because
+ * I can't see any need for having multiple instances, although I did make the
+ * <code>behave</code> method synchronized. Any object interested in handling
+ * the returned <code>SuccessEvent</code> would register a <code>Behavior</code>
+ * for it (e.g. <code>SendSuccessMessageToPlayer</code>); any object without a
+ * registered <code>Behavior</code> would just ignore it.
+ * @author david.h.loman
  */
 public class DisplayTextStdOutBehavior extends Behavior {
- 
-	public DisplayTextStdOutBehavior() {
-		super();
-		this.eventTypesHandled.add(JMudEventType.DisplayTextStdOutEvent);
-	}
 
-	/**
-     * perform this Behavior's behavior and return the resultant
-     * event.
-     *
-     * @param event the event the behavior is responding too
-     * @return the resulting EventObject
-     */
- 
-	@Override
-	public boolean behave() {
-		JMudObject source = this.event.getSource();
-		JMudObject target = this.event.getTarget();
-	
-		//Send off events here!!
-		System.out.println("DisplayTextStdOutBehavior(" + this.getBehaviorID() + ")" +
-				"\t Source: " + source.getUUID() + "(" + source.getName() + ")" +
-				"\t Target: " + target.getUUID() + "(" + target.getName() + ")"				);
-		return true;
-	}
+   /**
+    * Default constructor.
+    */
+   public DisplayTextStdOutBehavior() {
+      super();
+      this.eventTypesHandled.add(JMudEventType.DisplayTextStdOutEvent);
+   }
 
-	@Override
-	public Behavior clone() {
-		return new GetBehavior();
+   /**
+    * @see jmud.engine.behavior.Behavior#behave()
+    * @return true
+    */
+   @Override
+   public boolean behave() {
+      JMudObject source = this.event.getSource();
+      JMudObject target = this.event.getTarget();
 
-	}
+      // Send off events here!!
+      System.out.println("DisplayTextStdOutBehavior(" + this.getBehaviorID()
+            + ")" + "\t Source: " + source.getUUID() + "(" + source.getName()
+            + ")" + "\t Target: " + target.getUUID() + "(" + target.getName()
+            + ")");
+      return true;
+   }
 
+   /**
+    * @see jmud.engine.behavior.Behavior#clone()
+    * @return a new <code>GetBeHavior</code>
+    */
+   @Override
+   public Behavior clone() {
+      return new GetBehavior();
+
+   }
 
 }
