@@ -1,32 +1,25 @@
 package jmud.engine.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import jmud.engine.behavior.Behavior;
 import jmud.engine.job.definitions.AbstractJob;
 import jmud.engine.object.JMudObject;
 
-public class JMudEvent extends AbstractJob {
-	private JMudEventType targetEventType = null;
+import java.util.*;
 
-	private transient final JMudObject source;
-	private transient final JMudObject target;
+public class JMudEvent extends AbstractJob {
+	private JMudEventType targetEventType;
+
+	private final transient JMudObject source;
+	private final transient JMudObject target;
 
 	/**
 	 * Generic map to handle any/all String named data that needs to accompany
 	 * the Event.
 	 */
-	private Map<String, Object> dataMap = null;
+	private Map<String, Object> dataMap;
 
 	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
-		super();
-		this.targetEventType = eventType;
+        this.targetEventType = eventType;
 		this.source = source;
 		this.target = target;
 
@@ -39,13 +32,12 @@ public class JMudEvent extends AbstractJob {
 		// Build objects to send Event to List:
 		Set<JMudObject> ccObjs = new HashSet<JMudObject>();
 
-		// Get all the siblings
+		// Get all the siblings (ToDo CM: including self?)
 		ccObjs.addAll(this.source.getParent().childrenValues());
 		ccObjs.addAll(this.target.getParent().childrenValues());
 
 		// Get anything registered
-		ccObjs.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target,
-				this.getEventType()));
+		ccObjs.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target, this.getEventType()));
 
 		// Set success flag
 		boolean allFinishedTrue = true;
@@ -65,20 +57,20 @@ public class JMudEvent extends AbstractJob {
 						+ this.getEventType() + " from " + jmo.toStringShort() + " to run.");
 			}
 
-			if (behs.size() != 0) {
+			if (!behs.isEmpty()) {
 				for (Behavior b : behs) {
 					Behavior newB = b.clone();
 					newB.setEvent(this);
 
 					synchronized (System.out) {
 						System.out.println("(" + this.getID() + ") Behavior Cloning: " + b.toString()
-								+ " was cloned into: " + newB.toString());
+								         + " was cloned into: " + newB.toString());
 					}
 					newB.submitSelf();
 				}
 
 			} else {
-				//Set flag to false to show that this event didNOT evoke behavior from every object.
+				//Set flag to false to show that this event did NOT evoke behavior from every object.
 				allFinishedTrue = false;
 			}
 		}
@@ -95,7 +87,7 @@ public class JMudEvent extends AbstractJob {
 
 	/**
 	 * The object on which the Event initially occurred.
-	 * 
+	 *
 	 * @return The object on which the Event initially occurred.
 	 */
 	public final JMudObject getSource() {
@@ -104,7 +96,7 @@ public class JMudEvent extends AbstractJob {
 
 	/**
 	 * The objects on which the Event is targeted.
-	 * 
+	 *
 	 * @return The object on which the Event initially occurred.
 	 */
 	public final JMudObject getTarget() {
@@ -113,12 +105,17 @@ public class JMudEvent extends AbstractJob {
 
 	@Override
 	public String toString() {
-		String out = "";
-		out += "EventID: " + this.getID();
-		out += "\t EventType: " + this.targetEventType;
-		out += "\t Source: (" + this.source.toStringShort() + ")";
-		out += "\t Target: (" + this.target.toStringShort() + ")";
-
-		return out;
+		return new StringBuilder()
+           .append("EventID: ")
+           .append(this.getID())
+           .append("\t EventType: ")
+           .append(this.targetEventType)
+           .append("\t Source: (")
+           .append(this.source.toStringShort())
+           .append(")")
+           .append("\t Target: (")
+           .append(this.target.toStringShort())
+           .append(")")
+           .toString();
 	}
 }

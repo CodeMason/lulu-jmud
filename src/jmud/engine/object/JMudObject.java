@@ -1,18 +1,11 @@
 package jmud.engine.object;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import jmud.engine.attribute.Attribute;
 import jmud.engine.behavior.Behavior;
-import jmud.engine.event.JMudEventType;
 import jmud.engine.event.JMudEvent;
+import jmud.engine.event.JMudEventType;
+
+import java.util.*;
 
 /**
  * @author David Loman
@@ -22,20 +15,22 @@ public class JMudObject {
 	/**
 	 * UUID for 99.99999% assured ability to differentiate between any/all
 	 * JMudObjects.
+     *
+     * CM: isn't there a more accurate implementation? I mean, why settle for 2nd best right?
 	 */
-	private UUID uuid = null;
+	private UUID uuid;
 
 	/**
 	 * Name just for the sake of Human readability. Not required to be
 	 * implemented anywhere. Works well for testing though!
 	 */
-	private String name = "";;
+	private String name = "";
 
 	/**
 	 * Reference to this object's parent JMudObject object. A null parent
 	 * indicates the ROOT JMudObject of the tree.
 	 */
-	private JMudObject parent = null;
+	private JMudObject parent;
 
 	/**
 	 * A HashMap that maps a JMudObject object's UUID to the reference to the
@@ -56,7 +51,7 @@ public class JMudObject {
 	 * Lock, etc.
 	 */
 	private final Map<JMudEventType, List<Behavior>> behaviors = Collections
-			.synchronizedMap(new HashMap<JMudEventType, List<Behavior>>());
+			.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
 
 	/**
 	 * Default constructor.
@@ -88,9 +83,8 @@ public class JMudObject {
 
 	/**
 	 * Register a behaviors with an event class.
-	 * 
-	 * @param b
-	 *            Behavior to mapped to Behavior.getEventTypesHandled();
+	 *
+	 * @param b Behavior to mapped to Behavior.getEventTypesHandled();
 	 */
 	public final void addEventBehavior(final Behavior b) {
 		List<JMudEventType> ets = b.getEventTypesHandled();
@@ -100,7 +94,7 @@ public class JMudObject {
 			List<Behavior> behs = this.behaviors.get(e);
 
 			if (behs == null) {
-				// There was no mapping for EventType e, so make a newone
+				// There was no mapping for EventType e, so make a new one
 				behs = new ArrayList<Behavior>();
 				behs.add(b);
 				this.behaviors.put(e, behs);
@@ -189,7 +183,8 @@ public class JMudObject {
 		return children.containsValue(jmo);
 	}
 
-	public final JMudObject childrenGet(final String name) {
+    // ToDo CM: we may want to look at optimizing this (maybe name -> uuid hash?)
+    public final JMudObject childrenGet(final String name) {
 		for (JMudObject jmo : this.children.values()) {
 			if (jmo.getName().equals(name)) {
 				return jmo;
@@ -212,10 +207,11 @@ public class JMudObject {
 
 	public final JMudObject childrenRemove(final JMudObject jmo) {
 		this.childrenRemove(jmo.getUUID());
-		
+
 //		System.err.println("\n Removing " + jmo.toStringShort() + " from " + this.toStringShort() + "\n");
-		
-		if (this.name.equals("pcSteve")) {
+
+        // ToDo CM: interesting :)
+        if ("pcSteve".equals(this.name)) {
 			System.out.println();
 		}
 		return jmo;
@@ -239,7 +235,7 @@ public class JMudObject {
 
 	/**
 	 * For any event, return the list of applicable behaviors
-	 * 
+	 *
 	 * @param event
 	 *            the event to find behaviors for
 	 * @return the behaviors that match the event
@@ -269,10 +265,12 @@ public class JMudObject {
 		Map<UUID, JMudObject> map = null;
 
 		// the ONLY way you should ever have Zero siblings is if you are ROOT
-		if (this.parent != null) {
+        // ToDo CM You mean the only way you won't have a parent? (I could be the only thing in a room, the only thing in a bag, the only brain cell in Dave's head (KIDDING!), etc.)
+        if (this.parent != null) {
 			map = this.parent.childrenGetAll();
-			map.remove(this.getUUID());
-		}
+            // filter out the calling object
+            map.remove(this.getUUID());
+        }
 		return map;
 	}
 
@@ -304,49 +302,49 @@ public class JMudObject {
 	 * without removing this object from the parent's Children list will violate
 	 * the rules of a tree and create a Graph.... bad things will happen if this
 	 * is done!
-	 * 
-	 * @param newParent
-	 *            the new parent of this JMudObject
+     *
+     * ToDo CM: hmmm, should we have a switchParent function that does both? (or do we already?)
+	 *
+	 * @param newParent the new parent of this JMudObject
 	 */
 	private void setParent(final JMudObject newParent) {
 
 //		if (newParent == null) {
 //			System.err.println("\n setParent for " + this.toStringShort() + " to NULL \n");
 //		} else {
-//			System.err.println("\n setParent for " + this.toStringShort() + 
+//			System.err.println("\n setParent for " + this.toStringShort() +
 //					" to " + newParent.toStringShort() + " \n");
 //		}
-		
+
 		this.parent = newParent;
-		
+
 
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public final String toString() {
-		String out = this.toStringShort();
+		StringBuilder out = new StringBuilder(this.toStringShort());
 
 		if (this.parent != null) {
-			out += "\t hasParent:TRUE";
+			out.append("\t hasParent:TRUE");
 		} else {
-			out += "\t hasParent:FALSE";
+			out.append("\t hasParent:FALSE");
 		}
-		
-		out += "\t childrenCount:" + this.childrenSize();
-		out += "\t attrCount:" + this.attributeSize();
-		out += "\t behaviorCount:" + this.behaviors.size();
-		
-		return out;
+
+        out.append("\t childrenCount:")
+           .append(this.childrenSize())
+           .append("\t attrCount:")
+           .append(this.attributeSize())
+           .append("\t behaviorCount:")
+           .append(this.behaviors.size());
+
+		return out.toString();
 	}
 	public final String toStringShort() {
-		String out = "";
-		out += "JMudObject: " + this.name + "(" + this.uuid.toString() + ")";
-
-		return out;
+        return "JMudObject: " + this.name + "(" + this.uuid.toString() + ")";
 	}
+
 //TODO Make behavior delegates look like attribute and children delegates.
+// CM: what are behavior delegates?
 
 }

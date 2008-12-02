@@ -4,8 +4,8 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- * 
- * 
+ *
+ *
  * @author david.h.loman
  */
 public class DisplayTextStdErrBehavior extends Behavior {
@@ -27,7 +27,7 @@ public class DisplayTextStdErrBehavior extends Behavior {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
-		String text = this.event.getDataMap().get("displayText") + "";
+		String text = String.valueOf(this.event.getDataMap().get("displayText"));
 
 		System.err.println("DisplayTextStdOutBehavior(" + this.getID() + ")" + "\t Source: " + source.toStringShort()
 				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text + "\n");

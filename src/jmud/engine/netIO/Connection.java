@@ -29,8 +29,7 @@ public class Connection {
    /**
     * The buffer into which we'll read incoming data when it's available.
     */
-   private final ByteBuffer readBuffer = ByteBuffer
-         .allocate(DEFAULT_BUFFER_SIZE);
+   private final ByteBuffer readBuffer = ByteBuffer.allocate(DEFAULT_BUFFER_SIZE);
 
    /**
     * The buffer into which we'll write outgoing data when it's available.

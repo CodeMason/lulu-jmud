@@ -41,9 +41,8 @@ public class JobWorker implements Runnable {
 			AbstractJob job = JobManager.getInstance().popJobFromQueue();
 
 			if (job != null) {
-				// Call the do Job function.
 				boolean retVal = job.doJob();
-				
+
 				synchronized (System.out) {
 					System.out.println("JobWorker ID:" + this.WorkerID + " reports that Job: " + job.toString()
 							+ " has completed: " + retVal);
@@ -79,6 +78,6 @@ public class JobWorker implements Runnable {
 	      synchronized (this) {
 	            this.notify();
 	         }
-	  
+
 	}
 }
