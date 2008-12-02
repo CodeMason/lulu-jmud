@@ -1,9 +1,7 @@
 package jmud.engine.dbio;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +14,7 @@ import jmud.engine.mobs.MobType;
  * the database.
  * @author David Loman
  */
-@SuppressWarnings( { "ObjectAllocationInLoop" })
+
 public class MysqlConnector {
 
    // TODO Commented out the whole class since its doing nothing but generating
@@ -24,20 +22,20 @@ public class MysqlConnector {
    // FIXME Rework the Database IO layer after the basic mud data structs are
    // in place.
 
-   protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=";
-   private final int ATTRIBUTE_COLUMN_INDEX = 1;
-   private final int ATTRIBUTE_PARAM_INDEX = 1;
-   protected Connection conn;
-
-   int iDamageModifierID;
-   int iDexterityAttributeID;
-   int iStrengthAttributeID;
-   private final int MODIFIER_COLUMN_INDEX = 2;
-   private final int MODIFIER_PARAM_INDEX = 2;
-
-   private final int PLAYERID_PARAM_INDEX = 1;
-   protected ResultSet rs;
-   protected Statement stmt;
+//   protected static String dbUrl = "jdbc:mysql:///jmud?user=root&password=";
+//   private final int ATTRIBUTE_COLUMN_INDEX = 1;
+//   private final int ATTRIBUTE_PARAM_INDEX = 1;
+//   protected Connection conn;
+//
+//   int iDamageModifierID;
+//   int iDexterityAttributeID;
+//   int iStrengthAttributeID;
+//   private final int MODIFIER_COLUMN_INDEX = 2;
+//   private final int MODIFIER_PARAM_INDEX = 2;
+//
+//   private final int PLAYERID_PARAM_INDEX = 1;
+//   protected ResultSet rs;
+//   protected Statement stmt;
 
    public MysqlConnector() {
    }
@@ -74,7 +72,6 @@ public class MysqlConnector {
     *            on sproc prepares, sproc executes, recordset close, sproc param
     *            assignments
     */
-   @SuppressWarnings( { "ObjectAllocationInLoop" })
    public final Character getCharacter(final String login, final String password)
          throws SQLException {
       // int playerID;
