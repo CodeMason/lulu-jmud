@@ -32,11 +32,11 @@ import jmud.engine.job.definitions.CheckConnBufferForValidCmd_Job;
  */
 public class ConnectionManager implements Runnable {
 	/**
-	 * ConnectionManagerHolder is loaded on the first execution of
-	 * ConnectionManager.getInstance() or the first access to
-	 * ConnectionManagerHolder.INSTANCE, not before.
+	 * Holder is loaded on the first execution of
+	 * ConnectionManager.getInstance() or the first access to Holder.INSTANCE,
+	 * not before.
 	 */
-	private static final class ConnectionManagerHolder {
+	private static final class Holder {
 		/**
 		 * The singleton instance of the ConnectionManager.
 		 */
@@ -45,8 +45,7 @@ public class ConnectionManager implements Runnable {
 		/**
 		 * Default constructor is private for utility classes.
 		 */
-		private ConnectionManagerHolder() {
-
+		private Holder() {
 		}
 	}
 
@@ -54,7 +53,7 @@ public class ConnectionManager implements Runnable {
 	 * @return the singleton instance of the ConnectionManager
 	 */
 	public static ConnectionManager getInstance() {
-		return ConnectionManagerHolder.INSTANCE;
+		return Holder.INSTANCE;
 	}
 
 	private Thread myThread;
