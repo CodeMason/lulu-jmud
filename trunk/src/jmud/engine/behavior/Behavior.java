@@ -27,9 +27,10 @@ import java.util.List;
 public abstract class Behavior extends AbstractJob {
 
 	protected List<JMudEventType> eventTypesHandled = Collections.synchronizedList(new ArrayList<JMudEventType>());
-	protected JMudEvent event;
 
-    protected JMudObject owner;
+	//Always initialize non-final's to something, even if its null.
+	protected JMudEvent event = null;
+	protected JMudObject owner = null;
 
 	/**
 	 * Default constructor.

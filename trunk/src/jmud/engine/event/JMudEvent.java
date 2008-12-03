@@ -9,6 +9,7 @@ import java.util.*;
 public class JMudEvent extends AbstractJob {
 	private JMudEventType targetEventType;
 
+	
 	private final transient JMudObject source;
 	private final transient JMudObject target;
 
@@ -16,8 +17,9 @@ public class JMudEvent extends AbstractJob {
 	 * Generic map to handle any/all String named data that needs to accompany
 	 * the Event.
 	 */
-	private Map<String, Object> dataMap;
-
+	//Always initialize non-final's, even if its to null;
+	private Map<String, Object> dataMap = null;
+	
 	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
         this.targetEventType = eventType;
 		this.source = source;
@@ -32,7 +34,9 @@ public class JMudEvent extends AbstractJob {
 		// Build objects to send Event to List:
 		Set<JMudObject> ccObjs = new HashSet<JMudObject>();
 
-		// Get all the siblings (ToDo CM: including self?)
+		// Get all the siblings 
+		// QQQ CM: including self?
+		// AAA DL:Yuppers!  that's where 'pcSteve picks YOU up' comes from!
 		ccObjs.addAll(this.source.getParent().childrenValues());
 		ccObjs.addAll(this.target.getParent().childrenValues());
 

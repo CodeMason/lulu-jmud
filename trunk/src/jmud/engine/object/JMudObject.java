@@ -18,7 +18,8 @@ public class JMudObject {
      *
      * CM: isn't there a more accurate implementation? I mean, why settle for 2nd best right?
 	 */
-	private UUID uuid;
+	//Always initialize non-final's, even if its to null;
+	private UUID uuid = null;
 
 	/**
 	 * Name just for the sake of Human readability. Not required to be
@@ -30,7 +31,7 @@ public class JMudObject {
 	 * Reference to this object's parent JMudObject object. A null parent
 	 * indicates the ROOT JMudObject of the tree.
 	 */
-	private JMudObject parent;
+	private JMudObject parent =  null;
 
 	/**
 	 * A HashMap that maps a JMudObject object's UUID to the reference to the
@@ -361,10 +362,12 @@ public class JMudObject {
 	 * the rules of a tree and create a Graph.... bad things will happen if this
 	 * is done!
      *
-     * ToDo CM: hmmm, should we have a switchParent function that does both? (or do we already?)
-	 *
+ 	 *
 	 * @param newParent the new parent of this JMudObject
 	 */
+//QQQ CM: hmmm, should we have a switchParent function that does both? (or do we already?)
+//AAA DL: Had one... it cause problems.  Two function calls instead of one isn't that bad is it?
+	
 	private void setParent(final JMudObject newParent) {
 
 //		if (newParent == null) {
@@ -381,6 +384,7 @@ public class JMudObject {
 
 	@Override
 	public final String toString() {
+		//QQQ DL: Why StringBuilder over string?
 		StringBuilder out = new StringBuilder(this.toStringShort());
 
 		if (this.parent != null) {
@@ -403,6 +407,7 @@ public class JMudObject {
 	}
 
 //TODO Make behavior delegates look like attribute and children delegates.
-// CM: what are behavior delegates?
+//QQQ CM: what are behavior delegates?
+//AAA DL: Delegates are functions of aggregate objects brought up to the conaining object to allow functionality.  Attribute is a Map, but I delegated the Clear, ContainsKey, ContainsValue, Get,KeySet, etc functions to JMudObject...
 
 }

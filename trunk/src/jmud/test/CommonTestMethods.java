@@ -13,7 +13,8 @@ public class CommonTestMethods {
 		JMudObject orc1 = new JMudObject("orc1");
 		JMudObject chair = new JMudObject("chair");
 		JMudObject bag = new JMudObject("bag");
-        // todo CM: multiple coins as one object? Is this a design decision, or simply a name?
+        // QQQ CM: multiple coins as one object? Is this a design decision, or simply a name?
+		// AAA DHL: Nah, just a place holder.  Dunno how we are going to implement large qtys of the same item...
         JMudObject goldcoins = new JMudObject("goldcoins");
 		JMudObject mapOfDungeon = new JMudObject("mapOfDungeon");
 		JMudObject door = new JMudObject("door");
