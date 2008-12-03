@@ -27,7 +27,8 @@ public class DisplayTextStdErrBehavior extends Behavior {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
-		String text = String.valueOf(this.event.getDataMap().get("displayText"));
+		//Need to keep the + "" in there to ENSURE text is never null
+		String text = String.valueOf(this.event.getDataMap().get("displayText")).concat("");
 
 		System.err.println("DisplayTextStdOutBehavior(" + this.getID() + ")" + "\t Source: " + source.toStringShort()
 				+ "\t Target: " + target.toStringShort() + "\n\t Text: " + text + "\n");
