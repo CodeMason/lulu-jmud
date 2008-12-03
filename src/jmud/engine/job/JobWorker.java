@@ -1,5 +1,6 @@
 package jmud.engine.job;
 
+import jmud.engine.behavior.AttackBehavior;
 import jmud.engine.job.definitions.AbstractJob;
 
 /*
@@ -41,11 +42,15 @@ public class JobWorker implements Runnable {
 			AbstractJob job = JobManager.getInstance().popJobFromQueue();
 
 			if (job != null) {
-				boolean retVal = job.doJob();
+                if(job.getClass().equals(AttackBehavior.class)){
+                    synchronized(System.out){
+                        System.out.println("JobWorker ID:" + this.WorkerID + " about to run AttackBehavior");
+                    }
+                }
+                boolean retVal = job.doJob();
 
 				synchronized (System.out) {
-					System.out.println("JobWorker ID:" + this.WorkerID + " reports that Job: " + job.toString()
-							+ " has completed: " + retVal);
+					System.out.println("JobWorker ID:" + this.WorkerID + " reports that Job: " + job.toString() + " has completed: " + retVal);
 				}
 
 			} else {

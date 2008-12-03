@@ -5,8 +5,8 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- * 
- * 
+ *
+ *
  * @author david.h.loman
  */
 public class GetBehavior extends Behavior {
@@ -35,12 +35,13 @@ public class GetBehavior extends Behavior {
 			System.out.println("(" + this.getID() + ") GetBehavior.behave(): " + this.event.toString());
 		}
 
-		target.orphan();
+        // ToDo CM: I don't think I could be trusted to do this on my own every time :)
+        target.orphan();
 		source.childrenAdd(target);
 
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source);
-		
+
 		synchronized (System.out) {
 			System.out.println("(" + this.getID() + ") GetBehavior.behave() 'response': " + jme.toString());
 		}
