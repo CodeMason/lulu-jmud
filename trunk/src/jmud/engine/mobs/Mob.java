@@ -10,21 +10,33 @@ public class Mob implements Targetable {
 
    private int iID;
    private MobType mobType;
+   /**
+    * Hitpoints.
+    */
    private int iHP = 1;
    private int iMaxHP = 1;
+   /**
+    * Armour class.
+    */
    private int iAC;
+   /**
+    * Strength.
+    */
    private int iStrength = 1;
+   /**
+    * Dexterity.
+    */
    private int iDexterity = 1;
    private boolean bAlive = true;
 
    /**
-    * Creates new Mob
+    * Creates new Mob.
     */
    public Mob() {
    }
 
    /**
-    * Creates new Mob with hitpoints, armour class, strength and dexterity
+    * Creates new Mob with hitpoints, armour class, strength and dexterity.
     */
    public Mob(final int iID, final MobType mobType, final int iHP,
          final int iMaxHP, final int iAC, final int iStrength,
@@ -39,7 +51,9 @@ public class Mob implements Targetable {
    }
 
    /**
-    * Compares two Mobs for equality
+    * Compares two Mobs for equality.
+    * @param o
+    *           the Object to compare for equality
     */
    @Override
    public final boolean equals(final Object o) {
@@ -47,44 +61,44 @@ public class Mob implements Targetable {
    }
 
    /**
-    * Returns the mob's Armour Class
+    * Returns the mob's armour class.
     */
    public final int getAC() {
       return iAC;
    }
 
    /**
-    * Returns the mob's Dexterity
+    * @return the mob's dexterity
     */
    public final int getDex() {
       return iDexterity;
    }
 
    /**
-    * returns the Mob's remaing hit points
+    * @return the Mob's remaining hit points
     */
    public final int getHP() {
       return iHP;
    }
 
    /**
-    * returns the Mob's ID
+    * @return the mob's ID
     */
    public final int getID() {
       return iID;
    }
 
    /**
-    * Get the <code>MobType</code> for this Mob
-    * @return This <code>Mob</code>'s <code>MobType</code> even if null
+    * Get the <code>MobType</code> for this Mob.
+    * @return this <code>Mob</code>'s <code>MobType</code> even if null
     */
    public final MobType getMobType() {
       return mobType;
    }
 
    /**
-    * Get the name of this <code>Mob</code>'s <code>MobType</code> <p/> Required
-    * by Target interface
+    * Get the name of this <code>Mob</code>'s <code>MobType</code>. <p/>
+    * Required by <code>Target</code> interface.
     * @return the <code>MobType</code> name for this <code>Mob</code>
     */
    public final String getName() {
@@ -97,14 +111,14 @@ public class Mob implements Targetable {
    }
 
    /**
-    * Returns the mob's Strength
+    * @return the mob's Strength
     */
    public final int getStr() {
       return iStrength;
    }
 
    /**
-    * returns a unique number for every mob
+    * @return a unique number for every mob
     */
    @Override
    public final int hashCode() {
@@ -112,7 +126,8 @@ public class Mob implements Targetable {
    }
 
    /**
-    * Subtracts hitpoints from the mob, returns true if hitpoints <= 0
+    * Subtracts hitpoints from the mob.
+    * @return true if hitpoints <= 0
     */
    public final boolean hurt(final int iDmg) {
       iHP -= iDmg;
@@ -131,7 +146,7 @@ public class Mob implements Targetable {
    }
 
    /**
-    * Returns true if the Mob is alive
+    * @return true if the Mob is alive
     */
    public final boolean isAlive() {
       return bAlive;
