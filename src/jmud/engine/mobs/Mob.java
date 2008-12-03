@@ -61,7 +61,7 @@ public class Mob implements Targetable {
    }
 
    /**
-    * Returns the mob's armour class.
+    * @return the mob's armour class.
     */
    public final int getAC() {
       return iAC;
@@ -105,13 +105,17 @@ public class Mob implements Targetable {
       return mobType.getType();
    }
 
+   /**
+    * @see jmud.engine.core.Targetable#getStatMap()
+    * @return null for now
+    */
    @Override
    public final StatMap getStatMap() {
       return null;
    }
 
    /**
-    * @return the mob's Strength
+    * @return the mob's strength.
     */
    public final int getStr() {
       return iStrength;
@@ -127,6 +131,8 @@ public class Mob implements Targetable {
 
    /**
     * Subtracts hitpoints from the mob.
+    * @param iDmg
+    *           the amount of damage incurred
     * @return true if hitpoints <= 0
     */
    public final boolean hurt(final int iDmg) {
