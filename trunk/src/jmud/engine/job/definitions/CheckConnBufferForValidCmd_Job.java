@@ -18,7 +18,6 @@ public class CheckConnBufferForValidCmd_Job extends AbstractJob {
    private CharsetDecoder asciiDecoder;
 
    public CheckConnBufferForValidCmd_Job(final Connection c) {
-      // noinspection UnnecessaryCallToSuper
       super();
       this.c = c;
    }
