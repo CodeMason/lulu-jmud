@@ -9,7 +9,7 @@ import jmud.engine.core.Targetable;
  */
 public abstract class AbstractItemDef {
 
-   protected int ContainerID = 0;
+   protected int containerId = 0;
    protected String name = "";
 
    public AbstractItemDef(final String name) {
