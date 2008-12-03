@@ -1,6 +1,6 @@
 package jmud.engine.behavior;
 
-import jmud.engine.event.EventParticipantRole;
+import jmud.engine.event.JMudEventParticipantRole;
 import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
@@ -49,8 +49,8 @@ public class AttackSourceTriggerEventBehavior extends TriggerEventBehavior {
      * Return what to use as the target of the triggered event, the source event's source JMudObject or target JMudObject
      * @return an enum value specifying to use the source Event's target JMudObject or source JMudObject as the triggered Event's target
      */
-    public EventParticipantRole getTargetSource(){
-        return EventParticipantRole.SOURCE;
+    public JMudEventParticipantRole getTargetSource(){
+        return JMudEventParticipantRole.SOURCE;
     }
 
     /**

@@ -129,7 +129,7 @@ public class JMudEventRegistrar {
 		return this.eventTypeMap.get(jmet);
 	}
 
-	public final List<JMudEventSubscription> getSubscriptionsBySourceAndEventType(JMudObject source, JMudEventType jmet, EventParticipantRole role) {
+	public final List<JMudEventSubscription> getSubscriptionsBySourceAndEventType(JMudObject source, JMudEventType jmet, JMudEventParticipantRole roleJMud) {
 
 		// first get the set of matches to target:
 		//List<JMudEventSubscription> subscriptions = this.getSubscriptionsByCCTarget(source);
@@ -143,7 +143,7 @@ public class JMudEventRegistrar {
 		List<JMudEventSubscription> out = new ArrayList<JMudEventSubscription>();
 		for (JMudEventSubscription subscription : subscriptions) {
 			// Match my UUID
-			if (subscription.getEventType() == jmet && subscription.getRole().equals(role)) {
+			if (subscription.getEventType() == jmet && subscription.getRole().equals(roleJMud)) {
 				out.add(subscription);
 			}
 		}
@@ -154,12 +154,12 @@ public class JMudEventRegistrar {
 
     public final List<JMudObject> getTargetJMudObjectBySourceAndEvent(JMudObject source, JMudEventType eventType){
 
-       return this.getTargetJMudObjectBySourceAndEvent(source, eventType, EventParticipantRole.SOURCE);
+       return this.getTargetJMudObjectBySourceAndEvent(source, eventType, JMudEventParticipantRole.SOURCE);
     }
 
-    public final List<JMudObject> getTargetJMudObjectBySourceAndEvent(JMudObject source, JMudEventType eventType, EventParticipantRole role) {
+    public final List<JMudObject> getTargetJMudObjectBySourceAndEvent(JMudObject source, JMudEventType eventType, JMudEventParticipantRole roleJMud) {
 
-		List<JMudEventSubscription> subscriptions = this.getSubscriptionsBySourceAndEventType(source, eventType, role);
+		List<JMudEventSubscription> subscriptions = this.getSubscriptionsBySourceAndEventType(source, eventType, roleJMud);
 
 		List<JMudObject> targetObjects = new ArrayList<JMudObject>();
 

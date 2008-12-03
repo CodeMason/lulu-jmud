@@ -7,6 +7,10 @@ import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
 
+/**
+ * Test that an Orc (Orc0) can see when pcSteve
+ * *tries* to grab a bag and then attack him.
+ */
 public class AttackSourceTriggerEventBehaviorTest01{
 
    /**
@@ -30,13 +34,15 @@ public class AttackSourceTriggerEventBehaviorTest01{
 
       // Establish behaviors
       bag.addEventBehavior(new GetBehavior(bag));
+
+      // give Orc0 a behavior so that if bag is the target of a GetEvent, AttackSourceTriggerEventBehavior will run
       orc0.addEventBehavior(JMudEventType.GetEvent, new AttackSourceTriggerEventBehavior(orc0), bag);
       orc0.addEventBehavior(new AttackBehavior(orc0));
 
       // set up event subscriptions
 
-      // set up orc0 to attack pcSteve when pcSteve takes the bag
-      JMudEventRegistrar.getInstance().registerSubscription(new JMudEventSubscription(JMudEventType.GetEvent, bag, orc0, EventParticipantRole.TARGET));
+      // set up orc0 to be notified if bag is the target of GetEvent
+      JMudEventRegistrar.getInstance().registerSubscription(new JMudEventSubscription(JMudEventType.GetEvent, bag, orc0, JMudEventParticipantRole.TARGET));
 
 
       // Printout the tree.
