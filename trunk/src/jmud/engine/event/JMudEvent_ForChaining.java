@@ -44,8 +44,8 @@ public class JMudEvent_ForChaining extends JMudEvent {
         //    I suppose we could allow registering to be told when something is the source of an event
         //    e.g. if a Character attacks something, an interested NPC might be watching where the player was the SOURCE of the attack,
         //         not the target  ... "Hey, no fighting in my store [out comes shotgun]"
-        interestedObjects.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target, this.getEventType(), EventParticipantRole.TARGET));
-        interestedObjects.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.source, this.getEventType(), EventParticipantRole.SOURCE));
+        interestedObjects.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target, this.getEventType(), JMudEventParticipantRole.TARGET));
+        interestedObjects.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.source, this.getEventType(), JMudEventParticipantRole.SOURCE));
 
 		boolean isJobFinished = true;
 

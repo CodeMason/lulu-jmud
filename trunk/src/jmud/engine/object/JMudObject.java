@@ -107,6 +107,14 @@ public class JMudObject {
 
     /**
      * Register a behavior with a particular target and event type
+     *
+     * This allows us to register a behavior that can handle any type, which
+     * will be necessary for subscriptions (at least the way I prototyped it)
+     * I didn't want to have to add an "any" event type, although that is another option.
+     *
+     * object X can say: if event Z happens to object Y, run behavior Q
+     * Q doesn't have to be a "Z Behavior" because Q isn't handling Z, Q is simply in response to Z
+     *
      * @param eventType the event type to register the behavior with
      * @param behavior the behavior to run in response to the event
      */

@@ -22,7 +22,7 @@ public class JMudEventSubscription {
     /**
      * ... in this role (Target or Source) ...
      */
-    private EventParticipantRole role = null;
+    private JMudEventParticipantRole roleJMud = null;
 
     /**
 	 * Generates/Receives this JMudEvent...
@@ -40,14 +40,14 @@ public class JMudEventSubscription {
 	UUID SubscriptionID = UUID.randomUUID();
 
     public JMudEventSubscription(final JMudEventType eventType, final JMudObject participant, final JMudObject target){
-        this(eventType, participant, target, EventParticipantRole.SOURCE);
+        this(eventType, participant, target, JMudEventParticipantRole.SOURCE);
     }
 
-    public JMudEventSubscription(final JMudEventType eventType, final JMudObject participant, final JMudObject target, EventParticipantRole role) {
+    public JMudEventSubscription(final JMudEventType eventType, final JMudObject participant, final JMudObject target, JMudEventParticipantRole roleJMud) {
 		this.eventType = eventType;
 		this.participant = participant;
 		this.ccTarget = target;
-        this.role = role;
+        this.roleJMud = roleJMud;
     }
 
 	public final JMudEventType getEventType() {
@@ -66,7 +66,7 @@ public class JMudEventSubscription {
 		return ccTarget;
 	}
 
-    public EventParticipantRole getRole(){
-        return role;
+    public JMudEventParticipantRole getRole(){
+        return roleJMud;
     }
 }
