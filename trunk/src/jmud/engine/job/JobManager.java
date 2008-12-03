@@ -1,14 +1,14 @@
 package jmud.engine.job;
 
-import jmud.engine.job.definitions.AbstractJob;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.engine.job.definitions.AbstractJob;
+
 /**
- * Singleton patterned class Manages all AbstractJobs in a queue. Controls all
+ * Singleton patterned class manages all AbstractJobs in a queue. Controls all
  * JobWorkers.
  * @author David Loman
  * @version 0.1
@@ -16,38 +16,45 @@ import java.util.Set;
 
 public class JobManager {
    /**
-    * JobManagerHolder is loaded on the first execution of
-    * JobManager.getInstance() or the first access to JobManagerHolder.INSTANCE,
-    * not before.
+    * <code>JobManagerHolder</code> is loaded on the first execution of
+    * <code>JobManager.getInstance()</code> or the first access to
+    * <code>JobManagerHolder.INSTANCE</code>, not before.
     */
-   private static class JobManagerHolder {
+   private static final class JobManagerHolder {
+      /**
+       * The singleton instance.
+       */
       private static final JobManager INSTANCE = new JobManager();
+
+      /**
+       * <code>JobManagerHolder</code> is a utility class. Disallowing
+       * public/default constructor.
+       */
+      private JobManagerHolder() {
+      }
    }
 
+   /**
+    * @return the singleton instance
+    */
    public static JobManager getInstance() {
       return JobManagerHolder.INSTANCE;
    }
 
    private final Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();
 
-   /*
-    * Concrete Class Implementation
-    */
-
    private final LinkedList<AbstractJob> jobQ = new LinkedList<AbstractJob>();
 
-   /*
-    * Singleton Implementation
-    */
    /**
     * Protected constructor is sufficient to suppress unauthorized calls to the
-    * constructor
+    * constructor.
     */
    protected JobManager() {
    }
 
-   /*
-    * JobWorker Control
+   /**
+    * JobWorker control.
+    * @return the next unused worker number
     */
    public final int createNewWorker() {
       int num = 0;
@@ -111,8 +118,8 @@ public class JobManager {
       return aj;
    }
 
-   /*
-    * Queue Access
+   /**
+    * Queue access.
     */
    public final void pushJobToQueue(final AbstractJob aj) {
       synchronized (this.jobQ) {

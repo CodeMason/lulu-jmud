@@ -12,6 +12,11 @@ import jmud.engine.core.Targetable;
  */
 public abstract class AbstractItemContainerDef extends AbstractItemDef {
 
+   /**
+    * Explicit constructor.
+    * @param name
+    *           the name
+    */
    public AbstractItemContainerDef(final String name) {
       super(name);
    }
