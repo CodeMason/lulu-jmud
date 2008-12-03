@@ -1,14 +1,14 @@
 package jmud.engine.event;
 
-import java.util.UUID;
-
 import jmud.engine.object.JMudObject;
+
+import java.util.UUID;
 
 /**
  * This serves as a data class for linking both target and source
  * <code>JMudObjects</code> with a <code>JMudEvent</code>. It is *NOT*
  * synchronized in anyway.
- * 
+ *
  * @author David Loman
  */
 
@@ -17,10 +17,15 @@ public class JMudEventSubscription {
 	/**
 	 * If this JMudObject...
 	 */
-	private JMudObject source = null;
+	private JMudObject participant = null;
 
-	/**
-	 * Generates this JMudEvent...
+    /**
+     * ... in this role (Target or Source) ...
+     */
+    private EventParticipantRole role = null;
+
+    /**
+	 * Generates/Receives this JMudEvent...
 	 */
 	private JMudEventType eventType = null;
 
@@ -34,19 +39,23 @@ public class JMudEventSubscription {
 	 */
 	UUID SubscriptionID = UUID.randomUUID();
 
-	public JMudEventSubscription(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
-		super();
+    public JMudEventSubscription(final JMudEventType eventType, final JMudObject participant, final JMudObject target){
+        this(eventType, participant, target, EventParticipantRole.SOURCE);
+    }
+
+    public JMudEventSubscription(final JMudEventType eventType, final JMudObject participant, final JMudObject target, EventParticipantRole role) {
 		this.eventType = eventType;
-		this.source = source;
+		this.participant = participant;
 		this.ccTarget = target;
-	}
+        this.role = role;
+    }
 
 	public final JMudEventType getEventType() {
 		return eventType;
 	}
 
-	public final JMudObject getSource() {
-		return source;
+	public final JMudObject getParticipant() {
+		return participant;
 	}
 
 	public final UUID getSubscriptionID() {
@@ -57,4 +66,7 @@ public class JMudEventSubscription {
 		return ccTarget;
 	}
 
+    public EventParticipantRole getRole(){
+        return role;
+    }
 }

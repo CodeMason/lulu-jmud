@@ -27,7 +27,7 @@ public class JMudEvent extends AbstractJob {
 	}
 
 	@Override
-	public final boolean doJob() {
+	public boolean doJob() {
 
 		// Build objects to send Event to List:
 		Set<JMudObject> ccObjs = new HashSet<JMudObject>();

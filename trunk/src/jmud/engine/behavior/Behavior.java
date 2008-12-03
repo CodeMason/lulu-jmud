@@ -28,7 +28,8 @@ public abstract class Behavior extends AbstractJob {
 
 	protected List<JMudEventType> eventTypesHandled = Collections.synchronizedList(new ArrayList<JMudEventType>());
 	protected JMudEvent event;
-	protected JMudObject owner;
+
+    protected JMudObject owner;
 
 	/**
 	 * Default constructor.
@@ -36,6 +37,11 @@ public abstract class Behavior extends AbstractJob {
 	public Behavior(JMudObject owner) {
 		this.owner = owner;
 	}
+
+    /** return the owner of this behavior */
+    public JMudObject getOwner(){
+        return owner;
+    }
 
 	/**
 	 * perform this <code>Behavior's</code> behavior.

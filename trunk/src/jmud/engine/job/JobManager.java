@@ -118,6 +118,7 @@ public class JobManager {
       synchronized (this.jobQ) {
          this.jobQ.addLast(aj);
       }
+
       // wake up a worker
       this.wakeWorkers();
    }
@@ -137,6 +138,7 @@ public class JobManager {
       if (jw != null) {
          jw.stop();
       }
+
    }
 
    public final void wakeWorkers() {

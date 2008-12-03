@@ -50,15 +50,16 @@ public class JMudObject {
 	 * atomic behaviors, we can re-use them, e.g. Unlock, Open, Wait, Close,
 	 * Lock, etc.
 	 */
-	private final Map<JMudEventType, List<Behavior>> behaviors = Collections
-			.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
+	private final Map<JMudEventType, List<Behavior>> behaviors = Collections.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
 
-	/**
+    private final Map<JMudObject, Map<JMudEventType, List<Behavior>>> nonTargetBehaviors = Collections.synchronizedMap(new HashMap<JMudObject, Map<JMudEventType, List<Behavior>>>());
+
+    /**
 	 * Default constructor.
 	 */
 	public JMudObject() {
 		this(UUID.randomUUID(), "", null);
-	}
+    }
 
 	public JMudObject(final JMudObject inParent) {
 		this(UUID.randomUUID(), "", inParent);
@@ -73,13 +74,12 @@ public class JMudObject {
 	}
 
 	private JMudObject(final UUID inUuid, final String inName, final JMudObject inParent) {
-		super();
 		this.parent = inParent;
 		this.name = inName;
 		this.uuid = inUuid;
 
 		//this.addEventBehavior(new BaseJMudObjectBehavior());
-	}
+    }
 
 	/**
 	 * Register a behaviors with an event class.
@@ -105,7 +105,30 @@ public class JMudObject {
 		}
 	}
 
-	/**
+    /**
+     * Register a behavior with a particular target and event type
+     * @param eventType the event type to register the behavior with
+     * @param behavior the behavior to run in response to the event
+     */
+    public void addEventBehavior(JMudEventType eventType, Behavior behavior, JMudObject target){
+        List<Behavior> behaviors;
+        Map<JMudEventType, List<Behavior>> eventBehaviors = this.nonTargetBehaviors.get(target);
+
+        if(eventBehaviors == null){
+            // There was no mapping for EventType e, so make a new one
+            eventBehaviors = new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class);
+        }
+
+        if((behaviors = eventBehaviors.get(eventType)) == null){
+            behaviors = new ArrayList<Behavior>();
+            eventBehaviors.put(eventType, behaviors);
+        }
+
+        behaviors.add(behavior);
+        nonTargetBehaviors.put(target, eventBehaviors);
+    }
+
+    /**
 	 * Remove all attributes.
 	 */
 	public final void attributeClear() {
@@ -248,7 +271,34 @@ public class JMudObject {
 		return behaviors.get(et);
 	}
 
-	public final String getName() {
+    /**
+     * Ok, this is starting to get out of hand, but it's 12:38am and I'm
+     * determined to at least get a trigger event to work!
+     *
+     * What this does is return all the behaviors that respond to events where this
+     * object isn't the target: this means that this object can respond to events that it has
+     * subscribed to from other objects differently than it responds to events where it is the target.
+     * e.g. I might respond different if you grab my wallet than if you grab me. I'll throw a trigger
+     * on my wallet's getEvent and respond to it by shooting you. If you get me, I might respond differently.
+     *
+     * I really don't think their should be two sets of behaviors, necessarily, but I'll sort it out later. Details, details ...
+     *
+     * @param eventType the event type to retrieve the behavior for
+     * @return the is-not-the-target behaviors (i.e where this object isn't the target) for this event
+     */
+    public final List<Behavior> getNonTargetBehaviors(JMudObject target, final JMudEventType eventType){
+        Map<JMudEventType, List<Behavior>> eventTypeBehaviors = nonTargetBehaviors.get(target);
+
+        if(eventTypeBehaviors == null){
+            return null;
+        }
+
+        // may be null
+        return eventTypeBehaviors.get(eventType);
+
+    }
+
+    public final String getName() {
 		return this.name;
 	}
 
