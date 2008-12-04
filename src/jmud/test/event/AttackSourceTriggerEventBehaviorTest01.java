@@ -1,14 +1,18 @@
-package jmud.test;
+package jmud.test.event;
 
+import jmud.engine.behavior.AttackBehavior;
+import jmud.engine.behavior.AttackSourceTriggerEventBehavior;
 import jmud.engine.behavior.GetBehavior;
-import jmud.engine.behavior.GotBehavior;
-import jmud.engine.event.JMudEvent;
-import jmud.engine.event.JMudEventRegistrar;
-import jmud.engine.event.JMudEventType;
+import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
+import jmud.test.CommonTestMethods;
 
-public class GetEventBehaviorTest01 {
+/**
+ * Test that an Orc (Orc0) can see when pcSteve
+ * *tries* to grab a bag and then attack him.
+ */
+public class AttackSourceTriggerEventBehaviorTest01{
 
    /**
     * @param args command line arguments
@@ -28,17 +32,18 @@ public class GetEventBehaviorTest01 {
       JMudObject bag = root.childrenGet("room").childrenGet("bag");
       JMudObject pcSteve = root.childrenGet("room").childrenGet("pcSteve");
       JMudObject orc0 = root.childrenGet("room").childrenGet("orc0");
-      JMudObject orc1 = root.childrenGet("room").childrenGet("orc1");
-      JMudObject door = root.childrenGet("room").childrenGet("door");
 
       // Establish behaviors
       bag.addEventBehavior(new GetBehavior(bag));
 
-      bag.addEventBehavior(new GotBehavior(bag));
-      pcSteve.addEventBehavior(new GotBehavior(pcSteve));
-      orc0.addEventBehavior(new GotBehavior(orc0));
-      orc1.addEventBehavior(new GotBehavior(orc1));
-      door.addEventBehavior(new GotBehavior(door));
+      // give Orc0 a behavior so that if bag is the target of a GetEvent, AttackSourceTriggerEventBehavior will run
+      orc0.addEventBehavior(JMudEventType.GetEvent, new AttackSourceTriggerEventBehavior(orc0), bag);
+      orc0.addEventBehavior(new AttackBehavior(orc0));
+
+      // set up event subscriptions
+
+      // set up orc0 to be notified if bag is the target of GetEvent
+      JMudEventRegistrar.getInstance().registerSubscription(new JMudEventSubscription(JMudEventType.GetEvent, bag, orc0, JMudEventParticipantRole.TARGET));
 
 
       // Printout the tree.
@@ -47,7 +52,7 @@ public class GetEventBehaviorTest01 {
       System.out.println("\n\n");
 
       // make a new event
-      JMudEvent ge = new JMudEvent(JMudEventType.GetEvent, pcSteve, bag);
+      JMudEvent ge = new JMudEvent_ForChaining(JMudEventType.GetEvent, pcSteve, bag);
       System.out.println("GetEvent eventID is: " + ge.getID());
 
 
