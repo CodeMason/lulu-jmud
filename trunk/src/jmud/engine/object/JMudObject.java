@@ -107,37 +107,7 @@ public class JMudObject {
 		}
 	}
 
-    /**
-     * Register a behavior with a particular target and event type
-     *
-     * This allows us to register a behavior that can handle any type, which
-     * will be necessary for subscriptions (at least the way I prototyped it)
-     * I didn't want to have to add an "any" event type, although that is another option.
-     *
-     * object X can say: if event Z happens to object Y, run behavior Q
-     * Q doesn't have to be a "Z Behavior" because Q isn't handling Z, Q is simply in response to Z
-     *
-     * @param eventType the event type to register the behavior with
-     * @param behavior the behavior to run in response to the event
-     */
-    public void addEventBehavior(JMudEventType eventType, Behavior behavior, JMudObject target){
-        List<Behavior> behaviors;
-        Map<JMudEventType, List<Behavior>> eventBehaviors = this.nonTargetBehaviors.get(target);
-
-        if(eventBehaviors == null){
-            // There was no mapping for EventType e, so make a new one
-            eventBehaviors = new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class);
-        }
-
-        if((behaviors = eventBehaviors.get(eventType)) == null){
-            behaviors = new ArrayList<Behavior>();
-            eventBehaviors.put(eventType, behaviors);
-        }
-
-        behaviors.add(behavior);
-        nonTargetBehaviors.put(target, eventBehaviors);
-    }
-
+  
     /**
 	 * Remove all attributes.
 	 */
@@ -280,34 +250,6 @@ public class JMudObject {
 	public final List<Behavior> getBehaviors(final JMudEventType et) {
 		return behaviors.get(et);
 	}
-
-    /**
-     * Ok, this is starting to get out of hand, but it's 12:38am and I'm
-     * determined to at least get a trigger event to work!
-     *
-     * What this does is return all the behaviors that respond to events where this
-     * object isn't the target: this means that this object can respond to events that it has
-     * subscribed to from other objects differently than it responds to events where it is the target.
-     * e.g. I might respond different if you grab my wallet than if you grab me. I'll throw a trigger
-     * on my wallet's getEvent and respond to it by shooting you. If you get me, I might respond differently.
-     *
-     * I really don't think their should be two sets of behaviors, necessarily, but I'll sort it out later. Details, details ...
-     *
-     * @param eventType the event type to retrieve the behavior for
-     * @return the is-not-the-target behaviors (i.e where this object isn't the target) for this event
-     */
-    public final List<Behavior> getNonTargetBehaviors(JMudObject target, final JMudEventType eventType){
-        Map<JMudEventType, List<Behavior>> eventTypeBehaviors = nonTargetBehaviors.get(target);
-
-        if(eventTypeBehaviors == null){
-            return null;
-        }
-
-        // may be null
-        return eventTypeBehaviors.get(eventType);
-
-    }
-
     public final String getName() {
 		return this.name;
 	}

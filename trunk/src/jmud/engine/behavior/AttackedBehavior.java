@@ -33,8 +33,7 @@ public class AttackedBehavior extends Behavior {
 
 	@Override
 	protected boolean ccBehavior() {
-		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
-		String text = this.event.getSource().getName() + " attacks " + this.event.getTarget().getName() + "!!";
+		String text = this.event.getTarget().getName() + " attacks " + this.event.getSource().getName() + "!!";
 		this.owner.sendToConsole(text);
 		return true;
 	}
