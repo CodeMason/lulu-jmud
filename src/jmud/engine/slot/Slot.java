@@ -21,12 +21,12 @@ import jmud.engine.item.AbstractItemDef;
 public abstract class Slot {
    public static final int MAX_BULK = 100;
    public static final int MIN_BULK = 0;
-   private final String name;
    private List<String> aliases;
    private int Id;
+   private final String name;
 
    /**
-    * Creates a new instance of Slot
+    * Creates a new instance of <code>Slot</code>.
     * @param name
     *           the name for the new slot
     */
