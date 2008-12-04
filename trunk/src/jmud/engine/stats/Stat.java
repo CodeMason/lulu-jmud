@@ -3,27 +3,24 @@ package jmud.engine.stats;
 import java.util.ArrayList;
 
 /**
- * Stat is the object that represents a Character's statistic. Behavior of this
- * Stat is defined by a corresponding StatDef. Stat objects and StatDef objects
- * are correlated via the 'String name' field.
+ * <code>Stat</code> is the object that represents a <code>Character's</code> statistic.
+ * Behavior of this <code>Stat</code> is defined by a corresponding
+ * <code>StatDef</code>. <code>Stat</code> objects and StatDef objects are
+ * correlated via the '<code>String name</code>' field.
  * @author David Loman
  * @version 0.1
  */
 public class Stat {
-   private String name = "";
-   private int max = -1;
-   private int min = -1;
    private int current = -1;
-   private final ArrayList<StatMod> mods = new ArrayList<StatMod>();
-
    // TODO why not have the Definition object reference attached at creation?
    private final AbstractStatDef defToUse = null;
+   private int max = -1;
+   private int min = -1;
+   private final ArrayList<StatMod> mods = new ArrayList<StatMod>();
 
-   public AbstractStatDef getDefToUse() {
-	return defToUse;
-}
+   private String name = "";
 
-public Stat(final String name, final int max, final int min,
+   public Stat(final String name, final int max, final int min,
          final int current) {
       this.current = current;
       this.max = max;
@@ -33,6 +30,10 @@ public Stat(final String name, final int max, final int min,
 
    public final int getCurrent() {
       return current;
+   }
+
+   public AbstractStatDef getDefToUse() {
+      return defToUse;
    }
 
    public final int getMax() {
