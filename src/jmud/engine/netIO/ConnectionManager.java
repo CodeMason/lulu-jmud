@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jmud.engine.job.definitions.CheckConnBufferForValidCmd_Job;
-
 /**
  * ConnectionManager is a Runnable class that manages all Connections.
  * ConnectionManager contains a single NIO selector and all routines for
@@ -245,12 +243,7 @@ public class ConnectionManager implements Runnable {
 			return;
 		}
 
-		// Now submit a job to see if this connection has a valid command stored
-		// yet.
-		CheckConnBufferForValidCmd_Job job = new CheckConnBufferForValidCmd_Job(c);
-
-		// Submit next Job
-		job.submitSelf();
+		c.processIncoming();
 	}
 
 	/**
@@ -362,6 +355,20 @@ public class ConnectionManager implements Runnable {
 		}
 
 		System.out.println("ConnectionManager: Shutdown.");
+	}
+
+	/**
+	 * This method is called externally, passing in the SocketChannel to be
+	 * written to and the data to be written. This method simply converts a
+	 * String to a Byte[] and sends the data on.
+	 * 
+	 * @param sockChan
+	 *            the SocketChannel to be written to
+	 * @param String
+	 *            the String to send
+	 */
+	public final void send(final SocketChannel sockChan, String text) {
+		this.send(sockChan, text.getBytes());
 	}
 
 	/**
