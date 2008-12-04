@@ -29,19 +29,9 @@ public class AttackBehavior extends Behavior {
 	 */
 	@Override
 	public final boolean targetBehavior() {
-		JMudObject source = this.event.getSource();
-		JMudObject target = this.event.getTarget();
-
-		synchronized (System.out) {
-			System.out.println("(" + this.getID() + ") AttackBehavior.behave(): " + this.event.toString());
-		}
-
 		// prep the 'response' JMudEvent
-		JMudEvent jme = new JMudEvent(JMudEventType.Attacked, target, source);
+		JMudEvent jme = new JMudEvent(JMudEventType.Attacked, this.event.getTarget(), this.event.getSource());
 
-		synchronized (System.out) {
-			System.out.println("(" + this.getID() + ") AttackBehavior.behave() 'response': " + jme.toString());
-		}
 		jme.submitSelf();
 
 		return true;
@@ -49,27 +39,13 @@ public class AttackBehavior extends Behavior {
 
 	@Override
 	protected boolean ccBehavior() {
-		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
+		// If I get a AttackEvent, and I am not the target... I dont care! Ignore!
 		return true;
 	}
 
 	@Override
 	protected boolean sourceBehavior() {
-        JMudObject source = this.event.getSource();
-        JMudObject target = this.event.getTarget();
-        
-        synchronized(System.out){
-            System.out.println("(" + this.getID() + ") AttackBehavior.behave(): " + this.event.toString());
-        }
-
-        // prep the 'response' JMudEvent
-        JMudEvent jme = new JMudEvent(JMudEventType.Attacked, target, source);
-
-        synchronized(System.out){
-            System.out.println("(" + this.getID() + ") AttackBehavior.behave() 'response': " + jme.toString());
-        }
-        jme.submitSelf();
-
+		// If I get a AttackEvent, and I am not the target... I dont care! Ignore!
         return true;
     }
 
@@ -79,10 +55,6 @@ public class AttackBehavior extends Behavior {
 	 */
 	@Override
 	public final Behavior clone() {
-		synchronized (System.out) {
-			System.out.println("AttackBehavior.clone()");
-		}
-
 		return new AttackBehavior(this.owner);
 	}
 
