@@ -70,7 +70,8 @@ public class CheckConnBufferForValidCmd_Job extends AbstractJob {
          }
          // Now we are done with the ByteBuffer and can release the lock.
       }
-      // notification on stdout
+
+
       System.out.println(this.c.getSc().socket().getInetAddress().toString()
             + ": New Command String Recvd: " + cmd);
 

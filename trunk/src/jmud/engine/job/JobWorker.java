@@ -44,6 +44,7 @@ public class JobWorker implements Runnable {
 //					System.out.println("JobWorker ID:" + this.WorkerID + " about to run a " + job.getClass());
 //				}
 
+				@SuppressWarnings("unused")
 				boolean retVal = job.doJob();
 
 //				synchronized (System.out) {
