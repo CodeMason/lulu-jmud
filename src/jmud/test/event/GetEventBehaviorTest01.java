@@ -16,8 +16,8 @@ public class GetEventBehaviorTest01 {
     */
    public static void main(final String[] args) {
 
-      // Initialize the JobManager with 3 workers
-      JobManager.getInstance().init(3);
+      // Initialize the JobManager with 1 worker
+      JobManager.getInstance().init(1);
 
       // Initialize the EventRegistrar
       JMudEventRegistrar.getInstance().init();

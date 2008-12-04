@@ -48,7 +48,6 @@ public class SimpleBehavior extends Behavior {
 	@Override
 	public final Behavior clone() {
 		return new GetBehavior(this.owner);
-
 	}
 
 }

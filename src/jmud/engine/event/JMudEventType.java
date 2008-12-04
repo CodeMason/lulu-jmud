@@ -12,8 +12,7 @@ import java.util.List;
  * @author David Loman
  */
 public enum JMudEventType {
-    DisplayTextStdErrEvent,
-    DisplayTextStdOutEvent,
+	SendToConsoleEvent,
     FailedEvent,
     GetEvent,
     GotEvent,

@@ -29,10 +29,9 @@ public class GotBehavior extends Behavior {
 	@Override
 	public final boolean targetBehavior() {
 		// What the owner sees
-		synchronized (System.out) {
-			System.out.println(this.owner.getName() + " sees: ");
-			System.out.println("\tYou get the " + this.event.getSource().getName());
-		}
+		
+		String txt = "You get the " + this.event.getSource().getName();
+		this.event.getTarget().sendToConsole(txt);
 
 		return true;
 	}
@@ -44,11 +43,8 @@ public class GotBehavior extends Behavior {
     @Override
 	protected boolean ccBehavior() {
 		// What anyone else sees.
-		synchronized (System.out) {
-			System.out.println("From " + this.owner.getName() + "'s point of view: ");
-			System.out.println("\t" + this.event.getTarget().getName() + " gets the "
-					+ this.event.getSource().getName());
-		}
+	   	String txt = this.event.getTarget().getName() + " gets the " + this.event.getSource().getName();
+		this.owner.sendToConsole(txt);
 
 		return true;
 	}
@@ -59,11 +55,11 @@ public class GotBehavior extends Behavior {
      */
     @Override
 	protected boolean sourceBehavior() {
-		// What You else sees.
-		synchronized (System.out) {
-			System.out.println("From " + this.owner.getName() + "'s point of view: ");
-			System.out.println("\t" + this.event.getTarget().getName() + " picks YOU up!!");
-		}
+		// What You see.
+
+    	String txt = this.event.getTarget().getName() + " picks YOU up!!";
+		this.event.getSource().sendToConsole(txt);
+
 
 		return true;
 	}
@@ -74,9 +70,6 @@ public class GotBehavior extends Behavior {
 	 */
 	@Override
 	public final Behavior clone() {
-		synchronized (System.out) {
-			System.out.println("GotBehavior.clone()");
-		}
 		return new GotBehavior(this.owner);
 	}
 }

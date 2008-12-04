@@ -31,10 +31,6 @@ public class GetBehavior extends Behavior {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
-		synchronized (System.out) {
-			System.out.println("(" + this.getID() + ") GetBehavior.behave(): " + this.event.toString());
-		}
-
         // ToDo CM: I don't think I could be trusted to do this on my own every time :)
         target.orphan();
 		source.childrenAdd(target);
@@ -42,9 +38,6 @@ public class GetBehavior extends Behavior {
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source);
 
-		synchronized (System.out) {
-			System.out.println("(" + this.getID() + ") GetBehavior.behave() 'response': " + jme.toString());
-		}
 		jme.submitSelf();
 
 		return true;
@@ -68,10 +61,6 @@ public class GetBehavior extends Behavior {
 	 */
 	@Override
 	public final Behavior clone() {
-		synchronized (System.out) {
-			System.out.println("GetBehavior.clone()");
-		}
-
 		return new GetBehavior(this.owner);
 	}
 

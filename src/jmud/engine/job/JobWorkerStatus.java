@@ -9,9 +9,9 @@ public enum JobWorkerStatus {
    /**
     * Working.
     */
-   Working,
+   WORKING,
    /**
     * Idle.
     */
-   idle;
+   IDLE;
 }

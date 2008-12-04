@@ -2,6 +2,7 @@ package jmud.engine.object;
 
 import jmud.engine.attribute.Attribute;
 import jmud.engine.behavior.Behavior;
+import jmud.engine.behavior.SendToConsoleBehavior;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
 
@@ -79,8 +80,8 @@ public class JMudObject {
 		this.name = inName;
 		this.uuid = inUuid;
 
-		//this.addEventBehavior(new BaseJMudObjectBehavior());
-    }
+		this.addEventBehavior(new SendToConsoleBehavior(this));
+	}
 
 	/**
 	 * Register a behaviors with an event class.
@@ -406,8 +407,13 @@ public class JMudObject {
         return "JMudObject: " + this.name + "(" + this.uuid.toString() + ")";
 	}
 
+	
+	public final void sendToConsole(String text) {
+		System.out.println("\n" + this.name + "'s console: " + text);
+	}
+	
 //TODO Make behavior delegates look like attribute and children delegates.
 //QQQ CM: what are behavior delegates?
-//AAA DL: Delegates are functions of aggregate objects brought up to the conaining object to allow functionality.  Attribute is a Map, but I delegated the Clear, ContainsKey, ContainsValue, Get,KeySet, etc functions to JMudObject...
+//AAA DL: Delegates are functions of aggregate objects brought up to the containing object to allow functionality.  Attribute is a Map, but I delegated the Clear, ContainsKey, ContainsValue, Get,KeySet, etc functions to JMudObject...
 
 }
