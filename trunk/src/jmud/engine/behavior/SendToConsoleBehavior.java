@@ -15,7 +15,7 @@ public class SendToConsoleBehavior extends Behavior {
 	 */
 	public SendToConsoleBehavior(JMudObject owner) {
 		super(owner);
-		this.eventTypesHandled.add(JMudEventType.SendToConsoleEvent);
+		this.eventTypesHandled.add(JMudEventType.SendToConsole);
 	}
 
 	/**

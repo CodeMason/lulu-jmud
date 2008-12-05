@@ -1,16 +1,17 @@
 package jmud.engine.job.definitions;
 
+import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.ConnectionState;
+
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
  * samples to draw from.
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -40,7 +41,9 @@ public class ProcessIncomingDataJob extends AbstractJob {
 				CharBuffer cb = dec.decode(this.c.getReadBuffer());
 				data = cb.toString();
 
-				// If the string contains a \r\n then its a complete command
+                // ToDo CM: need to check here if they've hit [enter] or if their client sends every char
+
+                // If the string contains a \r\n then its a complete command
 				// which it damned well better because of the 8192 char limit!!!
 				if ((data.length() - data.replace("\r\n", "").length()) == 0) {
 

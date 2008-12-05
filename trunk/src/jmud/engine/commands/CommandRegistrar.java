@@ -34,8 +34,7 @@ public class CommandRegistrar {
 		return Holder.INSTANCE;
 	}
 
-	private final Map<String, AbstractCommand> cmdMap = Collections
-			.synchronizedMap(new HashMap<String, AbstractCommand>());
+	private final Map<String, AbstractCommand> cmdMap = Collections.synchronizedMap(new HashMap<String, AbstractCommand>());
 
 	/**
 	 * Protected constructor is sufficient to suppress unauthorized calls to the
@@ -43,9 +42,10 @@ public class CommandRegistrar {
 	 */
 	protected CommandRegistrar() {
 	}
-	public void init() {
+    
+    public void init() {
 	}
-	
+
 	public final void addAbstractCommand(final AbstractCommand cmd) {
 		for (String alias : cmd.getAliases()) {
 			this.cmdMap.put(alias, cmd);
@@ -56,14 +56,13 @@ public class CommandRegistrar {
 		return this.cmdMap.get(alias);
 	}
 
-
-
-	public final AbstractCommand remAbstractCommand(final String alias) {
+	public final AbstractCommand remAbstractCommandAlias(final String alias) {
 		return this.cmdMap.remove(alias);
 	}
 
 	public final void remAbstractCommand(final AbstractCommand cmd) {
-		for (String alias : cmd.getAliases()) {
+        // ToDo CM: might want to remove based on the set of values in case the set of aliases has changed
+        for (String alias : cmd.getAliases()) {
 			this.cmdMap.remove(alias);
 		}
 

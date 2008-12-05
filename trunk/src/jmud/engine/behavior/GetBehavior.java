@@ -17,8 +17,8 @@ public class GetBehavior extends Behavior {
 	public GetBehavior(JMudObject owner) {
 		super(owner);
 		// Register a Behavior Object of this type to respond to a
-		// EventType.GetEvent
-		this.eventTypesHandled.add(JMudEventType.GetEvent);
+		// EventType.Get
+		this.eventTypesHandled.add(JMudEventType.Get);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class GetBehavior extends Behavior {
 		source.childrenAdd(target);
 
 		// prep the 'response' JMudEvent
-		JMudEvent jme = new JMudEvent(JMudEventType.GotEvent, target, source);
+		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);
 
 		jme.submitSelf();
 

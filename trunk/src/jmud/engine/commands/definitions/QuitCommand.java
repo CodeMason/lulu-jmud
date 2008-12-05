@@ -11,7 +11,9 @@ public class QuitCommand extends AbstractCommand {
 		this(null,null);
 	}
 
-	/**
+    // ToDo CM: as per http://jmud.org/phpbb/viewtopic.php?t=5&sid=49f002405ba93f8d512f96165c9bcb6b
+    //          I'd like to see aliases separated from commands
+    /**
 	 * Use this Constructor to create a fully functional Command
 	 * @param c
 	 * @param cmdArray
@@ -22,18 +24,18 @@ public class QuitCommand extends AbstractCommand {
 		this.getAliases().add("qui");
 		this.getAliases().add("qu");
 		this.getAliases().add("q");
-		
-	}
-	
 
-	
+	}
+
+
+
 	@Override
 	protected boolean doCmd() {
-	
-		
+
+
 		//TODO eventually, lets send them back to character select.
 		this.getConn().disconnect();
-		
+
 		return false;
 	}
 

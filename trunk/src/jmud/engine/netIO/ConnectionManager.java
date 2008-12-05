@@ -26,7 +26,7 @@ import jmud.engine.job.definitions.ProcessIncomingDataJob;
  * Accepting new connections and handling IO for existing connections. Opting
  * for a single thread solution for many reasons, all of which can be summed up
  * here: http://rox-xmlrpc.sourceforge.net/niotut/index.html
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -111,7 +111,7 @@ public class ConnectionManager implements Runnable {
 		Connection c = this.CreateNewConnection(sockChan);
 		this.connMap.put(sockChan, c);
 		System.out.println("ConnectionManager: Total Connections: " + this.connMap.size());
-		
+
 		ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
 		pidj.submitSelf();
 	}
@@ -129,7 +129,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by Key object.
-	 * 
+	 *
 	 * @param key
 	 *            the key to disconnect
 	 * @return true if the disconnect succeeded
@@ -145,7 +145,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by SocketChannel.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to disconnect
 	 * @return true if the disconnect succeeded
@@ -175,7 +175,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by Connection object.
-	 * 
+	 *
 	 * @param c
 	 *            The connection to disconnect
 	 * @return true if the disconnection succeeded
@@ -260,7 +260,7 @@ public class ConnectionManager implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Exception in readIncomming: " + key.toString());
-			
+
 		}
 
 		ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
@@ -285,31 +285,31 @@ public class ConnectionManager implements Runnable {
 					for (ConnEvent pendingEvent : this.pendingEvents) {
 						// noinspection SwitchStatementWithoutDefaultBranch
 						switch (pendingEvent.type) {
-						case ConnEvent.CHANGEOPS:
-							// get a reference to the SelectionKey in the
-							// SocketChannel in the ChangeRequest
-							key = pendingEvent.socket.keyFor(this.selector);
+                            case ConnEvent.CHANGEOPS:
+                                // get a reference to the SelectionKey in the
+                                // SocketChannel in the ChangeRequest
+                                key = pendingEvent.socket.keyFor(this.selector);
 
-							if (key == null) {
-								System.out.println(pendingEvent.toString());
-								if (!pendingEvent.socket.isConnected()) {
-									this.disconnect(pendingEvent.socket);
-								}
-								continue;
-							}
+                                if (key == null) {
+                                    System.out.println(pendingEvent.toString());
+                                    if (!pendingEvent.socket.isConnected()) {
+                                        this.disconnect(pendingEvent.socket);
+                                    }
+                                    continue;
+                                }
 
-							if (!key.isValid()) {
-								//System.err.println("BAD KEY");
-								continue;
-							}
+                                if (!key.isValid()) {
+                                    //System.err.println("BAD KEY");
+                                    continue;
+                                }
 
-							key.interestOps(pendingEvent.ops);
-							break;
-						case ConnEvent.REGISTER:
-							pendingEvent.socket.register(this.selector, pendingEvent.ops);
-							break;
-						default:
-							break;
+                                key.interestOps(pendingEvent.ops);
+                                break;
+                            case ConnEvent.REGISTER:
+                                pendingEvent.socket.register(this.selector, pendingEvent.ops);
+                                break;
+                            default:
+                                break;
 						}
 					}
 					this.pendingEvents.clear();
@@ -386,7 +386,7 @@ public class ConnectionManager implements Runnable {
 	 * This method is called externally, passing in the SocketChannel to be
 	 * written to and the data to be written. This method simply converts a
 	 * String to a Byte[] and sends the data on.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to be written to
 	 * @param String
@@ -400,7 +400,7 @@ public class ConnectionManager implements Runnable {
 	 * This method is called externally, passing in the SocketChannel to be
 	 * written to and the data to be written. This method sets up a ConnEvent to
 	 * be processed by the selector prior to sending the data.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to be written to
 	 * @param data
@@ -454,7 +454,7 @@ public class ConnectionManager implements Runnable {
 	 * SocketChannel. Also, the associated Key is set back to OP_READ so we
 	 * don't waste CPU cycles while it waits for more data to write when there
 	 * isn't any coming!
-	 * 
+	 *
 	 * @param key
 	 *            the key whose SocketChannel we're writing to
 	 * @throws IOException

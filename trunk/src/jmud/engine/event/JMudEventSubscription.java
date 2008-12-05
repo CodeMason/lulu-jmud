@@ -11,7 +11,6 @@ import java.util.UUID;
  *
  * @author David Loman
  */
-
 public class JMudEventSubscription {
 
 	/**
