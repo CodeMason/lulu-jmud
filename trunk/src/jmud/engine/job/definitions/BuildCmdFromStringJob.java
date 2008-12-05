@@ -10,19 +10,19 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class BuildCmdFromString_Job extends AbstractJob {
+public class BuildCmdFromStringJob extends AbstractJob {
 
 	private final Connection c;
 	private String cmd = "";
 
-	public BuildCmdFromString_Job(final Connection c, final String cmd) {
+	public BuildCmdFromStringJob(final Connection c, final String cmd) {
 		this.c = c;
 		this.cmd = cmd;
 	}
 
 	@Override
 	public final boolean doJob() {
-
+		this.c.sendTextLn("Recieved a command: " + this.cmd);
 		return true;
 	}
 
