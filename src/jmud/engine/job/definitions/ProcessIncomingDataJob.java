@@ -41,7 +41,7 @@ public class ProcessIncomingDataJob extends AbstractJob {
 				CharBuffer cb = dec.decode(this.c.getReadBuffer());
 				data = cb.toString();
 
-                // ToDo CM: need to check here if they've hit [enter] or if their client sends every char
+                // ToDo CM: need to check here if they've hit [enter] or if their client sends every char as it's typed
 
                 // If the string contains a \r\n then its a complete command
 				// which it damned well better because of the 8192 char limit!!!
