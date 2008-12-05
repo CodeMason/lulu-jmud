@@ -23,6 +23,10 @@ public class BuildCmdFromStringJob extends AbstractJob {
 	@Override
 	public final boolean doJob() {
 		this.c.sendTextLn("Recieved a command: " + this.cmd);
+		
+		//
+		
+		
 		return true;
 	}
 
