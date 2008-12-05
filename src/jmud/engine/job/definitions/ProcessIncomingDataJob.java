@@ -4,14 +4,8 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
-
-import jmud.engine.character.Character;
-import jmud.engine.character.CharacterManager;
-import jmud.engine.core.JMudStatics;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
-import jmud.engine.netIO.LoginState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -77,7 +71,7 @@ public class ProcessIncomingDataJob extends AbstractJob {
 
 			} else if (this.c.getConnState() == ConnectionState.ConnectedButNotLoggedIn) {
 				// Spin a HandleLoginJob
-				HandleLoginJob hlj = new HandleLoginJob(this.c, data);
+				LoginValidateJob hlj = new LoginValidateJob(this.c, data);
 				hlj.submitSelf();
 
 			} else if (this.c.getConnState() == ConnectionState.LoggedInToCharacterSelect) {

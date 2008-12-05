@@ -16,10 +16,11 @@ public class JMudObject {
 	/**
 	 * UUID for 99.99999% assured ability to differentiate between any/all
 	 * JMudObjects.
-     *
-     * CM: isn't there a more accurate implementation? I mean, why settle for 2nd best right?
+	 * 
+	 * CM: isn't there a more accurate implementation? I mean, why settle for
+	 * 2nd best right?
 	 */
-	//Always initialize non-final's, even if its to null;
+	// Always initialize non-final's, even if its to null;
 	private UUID uuid = null;
 
 	/**
@@ -32,7 +33,7 @@ public class JMudObject {
 	 * Reference to this object's parent JMudObject object. A null parent
 	 * indicates the ROOT JMudObject of the tree.
 	 */
-	private JMudObject parent =  null;
+	private JMudObject parent = null;
 
 	/**
 	 * A HashMap that maps a JMudObject object's UUID to the reference to the
@@ -52,20 +53,21 @@ public class JMudObject {
 	 * atomic behaviors, we can re-use them, e.g. Unlock, Open, Wait, Close,
 	 * Lock, etc.
 	 */
-	private final Map<JMudEventType, List<Behavior>> behaviors = Collections.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
+	private final Map<JMudEventType, List<Behavior>> behaviors = Collections
+			.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
 
 	/*                         */
 	/*                         */
-	/*      Constructors       */
+	/* Constructors */
 	/*                         */
 	/*                         */
-	
-   /**
+
+	/**
 	 * Default constructor.
 	 */
 	public JMudObject() {
 		this(UUID.randomUUID(), "", null);
-    }
+	}
 
 	public JMudObject(final JMudObject inParent) {
 		this(UUID.randomUUID(), "", inParent);
@@ -84,22 +86,21 @@ public class JMudObject {
 		this.name = inName;
 		this.uuid = inUuid;
 
-		//Default behaviors ALL JMudObjects will have.
+		// Default behaviors ALL JMudObjects will have.
 		this.addEventBehavior(new SendToConsoleBehavior(this));
 	}
 
-	
-	
 	/*                         */
 	/*                         */
-	/*     Behavior Tools      */
+	/* Behavior Tools */
 	/*                         */
 	/*                         */
 
 	/**
 	 * Register a behaviors with an event class.
-	 *
-	 * @param b Behavior to mapped to Behavior.getEventTypesHandled();
+	 * 
+	 * @param b
+	 *            Behavior to mapped to Behavior.getEventTypesHandled();
 	 */
 	public final void addEventBehavior(final Behavior b) {
 		List<JMudEventType> ets = b.getEventTypesHandled();
@@ -122,7 +123,7 @@ public class JMudObject {
 
 	/**
 	 * For any event, return the list of applicable behaviors
-	 *
+	 * 
 	 * @param event
 	 *            the event to find behaviors for
 	 * @return the behaviors that match the event
@@ -134,15 +135,6 @@ public class JMudObject {
 	public final List<Behavior> getBehaviors(final JMudEventType et) {
 		return behaviors.get(et);
 	}
-
-  
-	
-	
-	
-	
-	
-	
-
 
 	/*
 	 * Children HashMap Delegates
@@ -165,8 +157,9 @@ public class JMudObject {
 		return children.containsValue(jmo);
 	}
 
-    // TODO CM: we may want to look at optimizing this (maybe name -> uuid hash?)
-    public final JMudObject childrenGet(final String name) {
+	// TODO CM: we may want to look at optimizing this (maybe name -> uuid
+	// hash?)
+	public final JMudObject childrenGet(final String name) {
 		for (JMudObject jmo : this.children.values()) {
 			if (jmo.getName().equals(name)) {
 				return jmo;
@@ -208,60 +201,58 @@ public class JMudObject {
 		return this.children.values();
 	}
 
-
 	/*
 	 * Getter/Setters
 	 */
 
-    public final String getName() {
+	public final String getName() {
 		return this.name;
 	}
-    
+
 	public final void setName(final String n) {
 		this.name = n;
 	}
-	
+
 	public final UUID getUuid() {
 		return this.uuid;
 	}
 
 	/**
 	 * Get a handle on the Attribute Map
+	 * 
 	 * @return
 	 */
 	public Map<String, Attribute> getAttr() {
 		return attr;
 	}
 
+	/*                         */
+	/*                         */
+	/* Hierarchy Tools */
+	/*                         */
+	/*                         */
 
-
-	
-	/*                         */
-	/*                         */
-	/*    Hierarchy Tools      */
-	/*                         */
-	/*                         */
-	
-	
-    public final Map<UUID, JMudObject> getSiblings() {
+	public final Map<UUID, JMudObject> getSiblings() {
 
 		Map<UUID, JMudObject> map = null;
 
 		// the ONLY way you should ever have Zero siblings is if you are ROOT
-        // QQQ CM You mean the only way you won't have a parent? (I could be the only thing in a room, the only thing in a bag, the only brain cell in Dave's head (KIDDING!), etc.)
-		// AAA DHL:  Root, by definition will have no siblings nor will it have a parent.  (ignores the brain cell thing :P)
+		// QQQ CM You mean the only way you won't have a parent? (I could be the
+		// only thing in a room, the only thing in a bag, the only brain cell in
+		// Dave's head (KIDDING!), etc.)
+		// AAA DHL: Root, by definition will have no siblings nor will it have a
+		// parent. (ignores the brain cell thing :P)
 
 		if (this.parent != null) {
 			map = this.parent.childrenGetAll();
-            // filter out the calling object
-            map.remove(this.getUuid());
-        }
+			// filter out the calling object
+			map.remove(this.getUuid());
+		}
 		return map;
 	}
 
-
 	public final void orphan() {
-		//System.err.println("\nOrphaning " + this.toStringShort() + "\n");
+		// System.err.println("\nOrphaning " + this.toStringShort() + "\n");
 
 		JMudObject parent = this.getParent();
 
@@ -286,31 +277,29 @@ public class JMudObject {
 	}
 
 	/**
-	 * Directly sets this object's parent JMudObject object reference.      *
- 	 *
-	 * @param newParent the new parent of this JMudObject
+	 * Directly sets this object's parent JMudObject object reference. *
+	 * 
+	 * @param newParent
+	 *            the new parent of this JMudObject
 	 */
 
 	private void setParent(final JMudObject newParent) {
 		this.parent = newParent;
 	}
-	
 
 	public final JMudObject getParent() {
 		return this.parent;
 	}
-	
-	
-	
+
 	/*                         */
 	/*                         */
-	/*   Information Tools     */
+	/* Information Tools */
 	/*                         */
 	/*                         */
 
 	@Override
 	public final String toString() {
-		//QQQ DL: Why StringBuilder over string?
+		// QQQ DL: Why StringBuilder over string?
 		StringBuilder out = new StringBuilder(this.toStringShort());
 
 		if (this.parent != null) {
@@ -319,22 +308,26 @@ public class JMudObject {
 			out.append("\t hasParent:FALSE");
 		}
 
-        out.append("\t childrenCount:")
-           .append(this.childrenSize())
-           .append("\t attrCount:")
-           .append(this.getAttr().size())
-           .append("\t behaviorCount:")
-           .append(this.behaviors.size());
+		out.append("\t childrenCount:").append(this.childrenSize()).append("\t attrCount:").append(
+				this.getAttr().size()).append("\t behaviorCount:").append(this.behaviors.size());
 
 		return out.toString();
 	}
+
 	public final String toStringShort() {
-        return "JMudObject: " + this.name + "(" + this.uuid.toString() + ")";
+		return "JMudObject: " + this.name + "(" + this.uuid.toString() + ")";
 	}
 
-	
 	public void sendToConsole(String text) {
 		System.out.println("\n" + this.name + "'s console: " + text);
 	}
-	
+
+	public void saveToDB() {
+		// TODO stubbed the JMudObject db save here.
+	}
+
+	public void deleteFromDB() {
+		// TODO stubbed the JMudObject db delete here.
+	}
+
 }

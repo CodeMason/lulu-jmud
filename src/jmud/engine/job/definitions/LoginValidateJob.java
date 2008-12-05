@@ -1,6 +1,7 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.core.JMudStatics;
+import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 import jmud.engine.netIO.LoginState;
@@ -13,17 +14,17 @@ import jmud.engine.netIO.LoginState;
  * @version 0.1
  */
 
-public class HandleLoginJob extends AbstractJob {
+public class LoginValidateJob extends AbstractJob {
 
 	private String data = "";
 	private Connection c = null;
 
-	public HandleLoginJob(Connection c, String data) {
+	public LoginValidateJob(Connection c, String data) {
 		super();
 		this.c = c;
 		this.data = data + "";
 	}
-	HandleLoginJob(Connection c) {
+	LoginValidateJob(Connection c) {
 		this(c, "");
 	}
 
@@ -41,10 +42,13 @@ public class HandleLoginJob extends AbstractJob {
 			} else if (this.c.getLoginstate() == LoginState.uName) {
 				this.c.setPassWd(data);
 				// Here we are... validate password.
-				if (this.validatePassWd()) {
+				int retVal = MysqlConnection.verifyLogin(this.c.getUName(), this.c.getPassWd());
+				
+				if (retVal != -1) {
 					this.c.sendTextLn("Validated.");
 					this.c.setConnState(ConnectionState.LoggedInToCharacterSelect);
 					this.c.setLoginstate(LoginState.uNameAndPassword);
+					this.c.setAccountID(retVal);
 					CharacterSelectJob csj = new CharacterSelectJob(this.c);
 					csj.submitSelf();
 				} else {
@@ -68,17 +72,6 @@ public class HandleLoginJob extends AbstractJob {
 		return false;
 	}
 
-	private boolean validatePassWd() {
-		// TODO hook in the DB query here.
-
-		// Temporary validation
-		if (this.c.getUName().equals(JMudStatics.hardcodeUName)
-				&& this.c.getPassWd().equals(JMudStatics.hardcodePasswd)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	public void sendLoginPrompt() {
 		this.c.sendText(JMudStatics.SplashScreen);
 	}

@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+import jmud.engine.character.Character;
 import jmud.engine.core.JMudStatics;
 
 /**
@@ -23,16 +27,15 @@ public class MysqlConnection {
 
 	/*                                      */
 	/*                                      */
-	/*      Generic Utility Methods         */
+	/* Generic Utility Methods */
 	/*                                      */
 	/*                                      */
-	
 
-/**
- * Use values from JMudStatics and create a DB connection.
- * 
- * @return the new database connection.
- */
+	/**
+	 * Use values from JMudStatics and create a DB connection.
+	 * 
+	 * @return the new database connection.
+	 */
 	public static Connection makeNewConnection() {
 		Connection c;
 		/*
@@ -101,6 +104,86 @@ public class MysqlConnection {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	/*                                      */
+	/*                                      */
+	/* Specific DataGet Methods */
+	/*                                      */
+	/*                                      */
+
+	/**
+	 * Takes two strings and returns an int that represents the AccountID A
+	 * return value of -1 means validation failed.
+	 */
+	public static int verifyLogin(String uname, String passwd) {
+//		Connection c = MysqlConnection.makeNewConnection();
+//
+//		String sql = "SELECT id, passwd FROM Accounts WHERE (uname='" + uname + "');";
+//		ResultSet rs = MysqlConnection.Query(c, sql);
+//		int accountID = -1;
+//		
+//		try {
+//			while (rs.next()) {
+//				String dbpd = rs.getString("passwd");
+//				if (dbpd.equals(passwd)) {
+//					accountID = rs.getInt("id");
+//				}
+//
+//				// can't think of a better way to make
+//				// sure there is only ONE is row processed.
+//				break;
+//			}
+//			
+//			rs.close();
+//			c.close();
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return accountID;
+
+		// TODO hook in the DB query here.
+
+		// Temporary validation
+		if (uname.equals(JMudStatics.hardcodeUName)
+				&& passwd.equals(JMudStatics.hardcodePasswd)) {
+			return 42;
+		} else {
+			return -1;
+		}		
+	}
+
+	public static Map<String, Character> getCharactersByAccountID(int accountID) {
+		Map<String, Character> chars = new HashMap<String, Character>();
+
+//		Connection c = MysqlConnection.makeNewConnection();
+//		String sql = "SELECT * FROM Characters WHERE (accountid='" + accountID + "');";
+//		ResultSet rs = MysqlConnection.Query(c, sql);
+
+		
+//		try {
+//
+//
+//			//ALL THIS DEPENDS ON THE DB SCHEMA.
+//			
+//			rs.close();
+//			c.close();
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+
+		
+		//Temp
+		for (String s : JMudStatics.characters) {
+			chars.put(s, new Character(s));
+		}
+	
+		
+		
+		return chars;
 	}
 
 }
