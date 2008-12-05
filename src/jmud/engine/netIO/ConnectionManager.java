@@ -108,6 +108,9 @@ public class ConnectionManager implements Runnable {
 		// Make and register a new Connection Object
 		Connection c = this.CreateNewConnection(sockChan);
 		this.connMap.put(sockChan, c);
+		System.out.println("ConnectionManager: Total Connections: " + this.connMap.size());
+		
+		c.processIncoming();
 	}
 
 	private Connection CreateNewConnection(final SocketChannel sockChan) {
@@ -116,8 +119,8 @@ public class ConnectionManager implements Runnable {
 
 		System.out.println("ConnectionManager: New Connection.  Name: " + s);
 
-		Connection c = new Connection(sockChan);
-		this.connMap.put(sockChan, c);
+		Connection c = new Connection(sockChan, s);
+		c.setConnState(ConnectionState.ConnectedButNotLoggedIn);
 		return c;
 	}
 
@@ -145,8 +148,8 @@ public class ConnectionManager implements Runnable {
 	 * @return true if the disconnect succeeded
 	 * @throws IOException
 	 */
-	private boolean disconnect(final SocketChannel sockChan) throws IOException {
-		System.err.println("ConnectionManager.disconnect(SocketChannel): sockChan=" + sockChan.toString());
+	private boolean disconnect(final SocketChannel sockChan) {
+		System.out.println("ConnectionManager.disconnect(SocketChannel): sockChan=" + sockChan.toString());
 
 		// noinspection UnusedDeclaration
 		Connection c = this.connMap.remove(sockChan);
@@ -156,7 +159,14 @@ public class ConnectionManager implements Runnable {
 		// abstracted out
 		// and made extendable with rules
 		c.toString();
-		sockChan.close();
+		try {
+			sockChan.close();
+		} catch (IOException e) {
+			System.err.println("ConnectionManager.disconnect(SocketChannel): Failed to close socket connection.");
+			e.printStackTrace();
+		}
+		this.connMap.remove(sockChan);
+		System.out.println("ConnectionManager: Total Connections: " + this.connMap.size());
 		return sockChan.isConnected();
 	}
 
@@ -168,7 +178,7 @@ public class ConnectionManager implements Runnable {
 	 * @return true if the disconnection succeeded
 	 * @throws IOException
 	 */
-	public final boolean disconnectFrom(final Connection c) throws IOException {
+	public final boolean disconnectFrom(final Connection c) {
 		System.out.println("ConnectionManager.disconnect(Connection): c=" + c.toString());
 		SocketChannel sockChan = c.getSc();
 		return this.disconnect(sockChan);
@@ -215,9 +225,10 @@ public class ConnectionManager implements Runnable {
 		// Register the server socket channel, indicating an interest in
 		// accepting new connections
 		serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
+		System.out.println("ConnectionManager ready at "+hostAddress.toString() + ":" + port);
 	}
 
-	private void readIncoming(final SelectionKey key) throws IOException {
+	private void readIncoming(final SelectionKey key) {
 
 		// Obtain handle on the passed SocketChannel from 'key'
 		SocketChannel sockChan = (SocketChannel) key.channel();
@@ -235,12 +246,18 @@ public class ConnectionManager implements Runnable {
 		 * ByteBuffer. If the socket channel activates it's key but doesn't send
 		 * any data it means that the connection was dropped.
 		 */
-		if (sockChan.read(c.getReadBuffer()) < 0) {
-			System.out.println("CommandListenerThread: Lost connection");
+		try {
+			if (sockChan.read(c.getReadBuffer()) < 0) {
+				System.out.println("CommandListenerThread: Lost connection");
 
-			// close the dropped connection
-			this.disconnect(sockChan);
-			return;
+				// close the dropped connection
+				this.disconnect(sockChan);
+				return;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("Exception in readIncomming: " + key.toString());
+			
 		}
 
 		c.processIncoming();
@@ -278,7 +295,7 @@ public class ConnectionManager implements Runnable {
 							}
 
 							if (!key.isValid()) {
-								System.err.println("BAD KEY");
+								//System.err.println("BAD KEY");
 								continue;
 							}
 
@@ -309,7 +326,6 @@ public class ConnectionManager implements Runnable {
 
 					if (!key.isValid()) {
 						// if its a bad key, then attempt to drop the connection
-						// TODO Do we want to actually do this here? TESTPOINT
 						this.disconnect(key);
 					}
 
@@ -335,7 +351,7 @@ public class ConnectionManager implements Runnable {
 					System.err.println("During CancelledKeyException, a key failed to disconnect.");
 				}
 			} catch (Exception e) {
-				System.err.println(key.toString());
+				System.err.println("Exception: " + key.toString());
 			}
 		}
 		// End the main run loop.
@@ -354,6 +370,11 @@ public class ConnectionManager implements Runnable {
 			}
 		}
 
+		try {
+			this.selector.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		System.out.println("ConnectionManager: Shutdown.");
 	}
 

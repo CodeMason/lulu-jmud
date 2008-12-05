@@ -12,12 +12,12 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class CheckConnBufferForValidCmd_Job extends AbstractJob {
+public class CheckConnBufferForValidCmdJob extends AbstractJob {
 
    private final Connection c;
    private CharsetDecoder asciiDecoder;
 
-   public CheckConnBufferForValidCmd_Job(final Connection c) {
+   public CheckConnBufferForValidCmdJob(final Connection c) {
       super();
       this.c = c;
    }
@@ -76,7 +76,7 @@ public class CheckConnBufferForValidCmd_Job extends AbstractJob {
             + ": New Command String Recvd: " + cmd);
 
       // Build next Job
-      BuildCmdFromString_Job job = new BuildCmdFromString_Job(c, cmd);
+      BuildCmdFromStringJob job = new BuildCmdFromStringJob(c, cmd);
 
       // Submit next Job
       job.submitSelf();

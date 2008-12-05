@@ -1,7 +1,7 @@
 package jmud.engine.job.definitions;
 
 /**
- * Just a template. Can be deleted once the Job Repository has suffiecient
+ * Just a template. Can be deleted once the Job Repository has sufficient
  * samples to draw from.
  * @author David Loman
  * @version 0.1
