@@ -54,9 +54,13 @@ public class JMudObject {
 	 */
 	private final Map<JMudEventType, List<Behavior>> behaviors = Collections.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
 
-    private final Map<JMudObject, Map<JMudEventType, List<Behavior>>> nonTargetBehaviors = Collections.synchronizedMap(new HashMap<JMudObject, Map<JMudEventType, List<Behavior>>>());
-
-    /**
+	/*                         */
+	/*                         */
+	/*      Constructors       */
+	/*                         */
+	/*                         */
+	
+   /**
 	 * Default constructor.
 	 */
 	public JMudObject() {
@@ -80,8 +84,17 @@ public class JMudObject {
 		this.name = inName;
 		this.uuid = inUuid;
 
+		//Default behaviors ALL JMudObjects will have.
 		this.addEventBehavior(new SendToConsoleBehavior(this));
 	}
+
+	
+	
+	/*                         */
+	/*                         */
+	/*     Behavior Tools      */
+	/*                         */
+	/*                         */
 
 	/**
 	 * Register a behaviors with an event class.
@@ -107,72 +120,38 @@ public class JMudObject {
 		}
 	}
 
-  
-    /**
-	 * Remove all attributes.
-	 */
-	public final void attributeClear() {
-		attr.clear();
-	}
-
-	public final boolean attributeContainsKey(final String key) {
-		return attr.containsKey(key);
-	}
-
-	/*
-	 * Attribute HashMap Delegates
-	 */
-
-	public final boolean attributeContainsValue(final Attribute value) {
-		return attr.containsValue(value);
-	}
-
-	public final Attribute attributeGet(final String key) {
-		return attr.get(key);
-	}
-
-	public final Set<String> attributeKeySet() {
-		return attr.keySet();
-	}
-
-	public final Attribute attributePut(final String key, final Attribute value) {
-		return attr.put(key, value);
-	}
-
-	public final Attribute attributeRemove(final String key) {
-		return attr.remove(key);
-	}
-
 	/**
-	 * @return the the number of elements in the attribute collection
+	 * For any event, return the list of applicable behaviors
+	 *
+	 * @param event
+	 *            the event to find behaviors for
+	 * @return the behaviors that match the event
 	 */
-	public final int attributeSize() {
-		return attr.size();
+	public final List<Behavior> getBehaviors(final JMudEvent event) {
+		return this.getBehaviors(event.getEventType());
 	}
 
-	public final Collection<Attribute> attributeValues() {
-		return attr.values();
+	public final List<Behavior> getBehaviors(final JMudEventType et) {
+		return behaviors.get(et);
 	}
 
-	public final void changeParent(final JMudObject newParent) {
+  
+	
+	
+	
+	
+	
+	
 
-		// remove ties to old parent
-		this.orphan();
-
-		// establish newParent's reference to this
-		if (newParent != null) {
-			newParent.childrenAdd(this);
-		}
-	}
-
-	public final JMudObject childrenAdd(final JMudObject jmo) {
-		jmo.setParent(this);
-		return this.children.put(jmo.getUUID(), jmo);
-	}
 
 	/*
 	 * Children HashMap Delegates
 	 */
+
+	public final JMudObject childrenAdd(final JMudObject jmo) {
+		jmo.setParent(this);
+		return this.children.put(jmo.getUuid(), jmo);
+	}
 
 	public final void childrenClear() {
 		children.clear();
@@ -186,7 +165,7 @@ public class JMudObject {
 		return children.containsValue(jmo);
 	}
 
-    // ToDo CM: we may want to look at optimizing this (maybe name -> uuid hash?)
+    // TODO CM: we may want to look at optimizing this (maybe name -> uuid hash?)
     public final JMudObject childrenGet(final String name) {
 		for (JMudObject jmo : this.children.values()) {
 			if (jmo.getName().equals(name)) {
@@ -209,14 +188,7 @@ public class JMudObject {
 	}
 
 	public final JMudObject childrenRemove(final JMudObject jmo) {
-		this.childrenRemove(jmo.getUUID());
-
-//		System.err.println("\n Removing " + jmo.toStringShort() + " from " + this.toStringShort() + "\n");
-
-        // ToDo CM: interesting :)
-        if ("pcSteve".equals(this.name)) {
-			System.out.println();
-		}
+		this.childrenRemove(jmo.getUuid());
 		return jmo;
 	}
 
@@ -236,49 +208,57 @@ public class JMudObject {
 		return this.children.values();
 	}
 
-	/**
-	 * For any event, return the list of applicable behaviors
-	 *
-	 * @param event
-	 *            the event to find behaviors for
-	 * @return the behaviors that match the event
-	 */
-	public final List<Behavior> getBehaviors(final JMudEvent event) {
-		return this.getBehaviors(event.getEventType());
-	}
-
-	public final List<Behavior> getBehaviors(final JMudEventType et) {
-		return behaviors.get(et);
-	}
-    public final String getName() {
-		return this.name;
-	}
-
-	public final JMudObject getParent() {
-		return this.parent;
-	}
 
 	/*
 	 * Getter/Setters
 	 */
 
-	public final Map<UUID, JMudObject> getSiblings() {
+    public final String getName() {
+		return this.name;
+	}
+    
+	public final void setName(final String n) {
+		this.name = n;
+	}
+	
+	public final UUID getUuid() {
+		return this.uuid;
+	}
+
+	/**
+	 * Get a handle on the Attribute Map
+	 * @return
+	 */
+	public Map<String, Attribute> getAttr() {
+		return attr;
+	}
+
+
+
+	
+	/*                         */
+	/*                         */
+	/*    Hierarchy Tools      */
+	/*                         */
+	/*                         */
+	
+	
+    public final Map<UUID, JMudObject> getSiblings() {
 
 		Map<UUID, JMudObject> map = null;
 
 		// the ONLY way you should ever have Zero siblings is if you are ROOT
-        // ToDo CM You mean the only way you won't have a parent? (I could be the only thing in a room, the only thing in a bag, the only brain cell in Dave's head (KIDDING!), etc.)
-        if (this.parent != null) {
+        // QQQ CM You mean the only way you won't have a parent? (I could be the only thing in a room, the only thing in a bag, the only brain cell in Dave's head (KIDDING!), etc.)
+		// AAA DHL:  Root, by definition will have no siblings nor will it have a parent.  (ignores the brain cell thing :P)
+
+		if (this.parent != null) {
 			map = this.parent.childrenGetAll();
             // filter out the calling object
-            map.remove(this.getUUID());
+            map.remove(this.getUuid());
         }
 		return map;
 	}
 
-	public final UUID getUUID() {
-		return this.uuid;
-	}
 
 	public final void orphan() {
 		//System.err.println("\nOrphaning " + this.toStringShort() + "\n");
@@ -294,36 +274,39 @@ public class JMudObject {
 
 	}
 
-	public final void setName(final String n) {
-		this.name = n;
+	public final void changeParent(final JMudObject newParent) {
+
+		// remove ties to old parent
+		this.orphan();
+
+		// establish newParent's reference to this
+		if (newParent != null) {
+			newParent.childrenAdd(this);
+		}
 	}
 
 	/**
-	 * Directly sets this object's parent JMudObject object reference. WARNING:
-	 * the JMudObject tree is double linked. Setting this object's parent
-	 * without removing this object from the parent's Children list will violate
-	 * the rules of a tree and create a Graph.... bad things will happen if this
-	 * is done!
-     *
+	 * Directly sets this object's parent JMudObject object reference.      *
  	 *
 	 * @param newParent the new parent of this JMudObject
 	 */
-//QQQ CM: hmmm, should we have a switchParent function that does both? (or do we already?)
-//AAA DL: Had one... it cause problems.  Two function calls instead of one isn't that bad is it?
-	
+
 	private void setParent(final JMudObject newParent) {
-
-//		if (newParent == null) {
-//			System.err.println("\n setParent for " + this.toStringShort() + " to NULL \n");
-//		} else {
-//			System.err.println("\n setParent for " + this.toStringShort() +
-//					" to " + newParent.toStringShort() + " \n");
-//		}
-
 		this.parent = newParent;
-
-
 	}
+	
+
+	public final JMudObject getParent() {
+		return this.parent;
+	}
+	
+	
+	
+	/*                         */
+	/*                         */
+	/*   Information Tools     */
+	/*                         */
+	/*                         */
 
 	@Override
 	public final String toString() {
@@ -339,7 +322,7 @@ public class JMudObject {
         out.append("\t childrenCount:")
            .append(this.childrenSize())
            .append("\t attrCount:")
-           .append(this.attributeSize())
+           .append(this.getAttr().size())
            .append("\t behaviorCount:")
            .append(this.behaviors.size());
 
@@ -350,12 +333,8 @@ public class JMudObject {
 	}
 
 	
-	public final void sendToConsole(String text) {
+	public void sendToConsole(String text) {
 		System.out.println("\n" + this.name + "'s console: " + text);
 	}
 	
-//TODO Make behavior delegates look like attribute and children delegates.
-//QQQ CM: what are behavior delegates?
-//AAA DL: Delegates are functions of aggregate objects brought up to the containing object to allow functionality.  Attribute is a Map, but I delegated the Clear, ContainsKey, ContainsValue, Get,KeySet, etc functions to JMudObject...
-
 }
