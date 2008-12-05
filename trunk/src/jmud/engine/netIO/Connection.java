@@ -225,5 +225,10 @@ public class Connection {
 		}
 		this.sendText(out);
 	}
+	
+	public void sendPrompt() {
+		this.sendText(JMudStatics.PROMPT);
+	}
+
 
 }

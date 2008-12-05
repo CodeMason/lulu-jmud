@@ -40,17 +40,8 @@ public class JobWorker implements Runnable {
 
 			if (job != null) {
 
-//				synchronized (System.out) {
-//					System.out.println("JobWorker ID:" + this.WorkerID + " about to run a " + job.getClass());
-//				}
-
 				@SuppressWarnings("unused")
 				boolean retVal = job.doJob();
-
-//				synchronized (System.out) {
-//					System.out.println("JobWorker ID:" + this.workerId + " reports that Job: " + job.toString()
-//							+ " has completed: " + retVal);
-//				}
 
 			} else {
 				try {

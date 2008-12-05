@@ -1,5 +1,7 @@
 package jmud.engine.job.definitions;
 
+import jmud.engine.commands.AbstractCommand;
+import jmud.engine.commands.CommandRegistrar;
 import jmud.engine.netIO.Connection;
 
 /**
@@ -23,11 +25,25 @@ public class BuildCmdFromStringJob extends AbstractJob {
 	@Override
 	public final boolean doJob() {
 		this.c.sendTextLn("Recieved a command: " + this.cmd);
-		
-		//
-		
-		
-		return true;
+
+		String[] ca = this.cmd.split(" ");
+
+		AbstractCommand ac = CommandRegistrar.getInstance().getAbstractCommand(ca[0]);
+		if (ac != null) {
+			AbstractCommand nac = ac.clone(c, ca);
+			nac.submitSelf();
+			// Finally send the prompt.
+			this.c.sendCRLF();
+			this.c.sendPrompt();
+
+			return true;
+		} else {
+			// Finally send the prompt.
+			this.c.sendCRLF();
+			this.c.sendPrompt();
+
+			return false;
+		}
 	}
 
 	public Connection getC() {
