@@ -48,7 +48,7 @@ public class GetEventBehaviorTest01 {
       System.out.println("\n\n");
 
       // make a new event
-      JMudEvent ge = new JMudEvent(JMudEventType.GetEvent, pcSteve, bag);
+      JMudEvent ge = new JMudEvent(JMudEventType.Get, pcSteve, bag);
       System.out.println("GetEvent eventID is: " + ge.getID());
 
 

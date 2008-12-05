@@ -17,7 +17,7 @@ public class AttackBehavior extends Behavior {
 	public AttackBehavior(JMudObject owner) {
 		super(owner);
 		// Register a Behavior Object of this type to respond to a
-		// EventType.GetEvent
+		// EventType.Get
 		this.eventTypesHandled.add(JMudEventType.Attack);
 	}
 

@@ -13,8 +13,7 @@ public class ConnEvent {
    public int type;
    public int ops;
 
-   public ConnEvent(final SocketChannel inSocket, final int inType,
-         final int inOps) {
+   public ConnEvent(final SocketChannel inSocket, final int inType, final int inOps) {
       this.socket = inSocket;
       this.type = inType;
       this.ops = inOps;

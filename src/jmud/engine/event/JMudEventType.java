@@ -4,21 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * ToDo CM: is calling them nEvent misleading? could be JMudEventType.GetType, .GetEventType or simply JMudEventType.Get (i.e. we know it's a type of event)
- *
  * ToDo CM: We could potentially put in the events what classes of data are required in the data map
  *
  * @author David Loman
  */
 public enum JMudEventType {
-	SendToConsoleEvent,
-    FailedEvent,
-    GetEvent,
-    GotEvent,
-    OpenedEvent,
-    OpenEvent,
-    SuccessEvent,
+    SendToConsole,
+    Get, Got,
+    Open, Opened,
     Trigger{
         public List<JMudEventTypeParameter> getRequiredDataTypes(){
             List<JMudEventTypeParameter> parameters = new ArrayList<JMudEventTypeParameter>();
@@ -26,8 +19,7 @@ public enum JMudEventType {
             return parameters;
         }
     },
-    Attack,
-    Attacked;
+    Attack, Attacked;
 
     /**
      * Specify what data objects are required in the event's data map

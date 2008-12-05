@@ -16,8 +16,8 @@ public class GotBehavior extends Behavior {
 	public GotBehavior(JMudObject owner) {
 		super(owner);
 		// Register a Behavior Object of this type to respond to a
-		// EventType.GetEvent
-		this.eventTypesHandled.add(JMudEventType.GotEvent);
+		// EventType.Get
+		this.eventTypesHandled.add(JMudEventType.Got);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class GotBehavior extends Behavior {
 	@Override
 	public final boolean targetBehavior() {
 		// What the owner sees
-		
+
 		String txt = "You get the " + this.event.getSource().getName();
 		this.event.getTarget().sendToConsole(txt);
 
