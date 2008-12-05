@@ -34,6 +34,7 @@ public class ConnectionManagerTest01 {
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
 		ConnectionManager.getInstance().stop();
+		JobManager.getInstance().stopAllWorkers();
 	}
 
 }

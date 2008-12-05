@@ -1,6 +1,8 @@
 package jmud.engine.commands;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author david.h.loman
@@ -32,7 +34,8 @@ public class CommandRegistrar {
 		return Holder.INSTANCE;
 	}
 
-	private final HashMap<String, AbstractCommandDef> cmdMap = new HashMap<String, AbstractCommandDef>();
+	private final Map<String, AbstractCommand> cmdMap = Collections
+			.synchronizedMap(new HashMap<String, AbstractCommand>());
 
 	/**
 	 * Protected constructor is sufficient to suppress unauthorized calls to the
@@ -40,31 +43,30 @@ public class CommandRegistrar {
 	 */
 	protected CommandRegistrar() {
 	}
-
-	public final void addAbstractCommandDef(final String alias, final AbstractCommandDef cmd) {
-		synchronized (this.cmdMap) {
+	public void init() {
+	}
+	
+	public final void addAbstractCommand(final AbstractCommand cmd) {
+		for (String alias : cmd.getAliases()) {
 			this.cmdMap.put(alias, cmd);
 		}
 	}
 
-	public final AbstractCommandDef getAbstractCommandDef(final String alias) {
-		AbstractCommandDef c = null;
-		synchronized (this.cmdMap) {
-			c = this.cmdMap.get(alias);
-		}
-		return c;
+	public final AbstractCommand getAbstractCommand(final String alias) {
+		return this.cmdMap.get(alias);
 	}
 
-	public void init() {
 
+
+	public final AbstractCommand remAbstractCommand(final String alias) {
+		return this.cmdMap.remove(alias);
 	}
 
-	public final AbstractCommandDef remAbstractCommandDef(final String alias) {
-		AbstractCommandDef c = null;
-		synchronized (this.cmdMap) {
-			c = this.cmdMap.remove(alias);
+	public final void remAbstractCommand(final AbstractCommand cmd) {
+		for (String alias : cmd.getAliases()) {
+			this.cmdMap.remove(alias);
 		}
-		return c;
+
 	}
 
 }

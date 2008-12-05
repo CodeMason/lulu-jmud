@@ -9,7 +9,7 @@ public class JMudStatics {
 	public final static int dbPort = 3306;
 	  
 	
-	
+	public final static String PROMPT = "jmud> ";
 	
 	
 	// These are only temporary.

@@ -26,8 +26,6 @@ public class NewCharacterJob extends AbstractJob {
 	}
 	@Override
 	public final boolean doJob() {
-		// TODO hook in the DB query here.
-
 		
 		//TODO finish the new character stuff
 		this.c.sendCRLFs(2);
