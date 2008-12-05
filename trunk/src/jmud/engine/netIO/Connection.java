@@ -1,17 +1,8 @@
 package jmud.engine.netIO;
 
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-
 import jmud.engine.core.JMudStatics;
-import jmud.engine.job.definitions.BuildCmdFromStringJob;
-import jmud.engine.job.definitions.CharacterSelectJob;
-import jmud.engine.job.definitions.HandleLoginJob;
-import jmud.engine.job.definitions.NewCharacterJob;
 
 /**
  * The Connection class represents a single connection to/from a user. The
@@ -23,6 +14,12 @@ import jmud.engine.job.definitions.NewCharacterJob;
  * @version 0.1
  */
 public class Connection {
+
+	/**
+	 * Number of login Attempts
+	 */
+	private int accountID = 0;
+
 	/**
 	 * Connection uName
 	 */
@@ -93,6 +90,14 @@ public class Connection {
 	 */
 	public final SocketChannel getSc() {
 		return sc;
+	}
+
+	public int getAccountID() {
+		return accountID;
+	}
+
+	public void setAccountID(int accountID) {
+		this.accountID = accountID;
 	}
 
 	/**

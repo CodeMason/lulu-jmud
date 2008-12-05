@@ -1,10 +1,8 @@
 package jmud.engine.job.definitions;
 
-import java.util.ArrayList;
-
+import java.util.Map;
 import jmud.engine.character.Character;
-import jmud.engine.character.CharacterManager;
-import jmud.engine.core.JMudStatics;
+import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 import jmud.engine.netIO.LoginState;
@@ -34,14 +32,9 @@ public class CharacterSelectJob extends AbstractJob {
 
 	@Override
 	public final boolean doJob() {
-		// TODO hook in the DB query here.  Look up will
-
-		// Temporary character select based on Statics
-		ArrayList<String> chars = new ArrayList<String>();
-		for (String s : JMudStatics.characters) {
-			chars.add(s);
-		}
-
+		//Map of character names to the Character object refs
+		Map<String, Character> chars = MysqlConnection.getCharactersByAccountID(this.c.getAccountID());
+		
 		synchronized (this.c) {
 
 			if (this.data.length() == 0) {
@@ -52,8 +45,8 @@ public class CharacterSelectJob extends AbstractJob {
 				this.c.sendTextLn("     Character Select");
 				this.c.sendTextLn("-----~--------------~-----");
 
-				for (int i = 0; i < chars.size(); ++i) {
-					this.c.sendTextLn(i + ") " + chars.get(i));
+				for (String s : chars.keySet()) {
+					this.c.sendTextLn("- " + s);
 				}
 				this.c.sendTextLn("-----~--------------~-----");
 				this.c.sendText("Please type the name of the character you wish to use, "
@@ -69,13 +62,13 @@ public class CharacterSelectJob extends AbstractJob {
 					this.c.setConnState(ConnectionState.ConnectedButNotLoggedIn);
 					this.c.setLoginstate(LoginState.Neither);
 					this.c.sendCRLFs(2);
-					HandleLoginJob hlj = new HandleLoginJob(this.c);
+					LoginValidateJob hlj = new LoginValidateJob(this.c);
 					hlj.submitSelf();
 
 				} else {
 					// Check to see if the character list has the character they
 					// want
-					if (chars.contains(data)) {
+					if (chars.keySet().contains(data)) {
 						// show selection and enter game
 						this.c.sendTextLn("You selected: " + data);
 						this.c.sendTextLn("Entering game...");
@@ -83,9 +76,10 @@ public class CharacterSelectJob extends AbstractJob {
 						this.c.setConnState(ConnectionState.LoggedInToGameServer);
 						
 						//Get the character object & pass it a reference to its associated Connection object
-						Character ch = CharacterManager.getInstance().loadCharacterFromDB(data);						
+						Character ch = chars.get(data);						
 						ch.setConnection(this.c);
 						
+						ch.getConnection().sendText("WOOT");
 					} else {
 						// otherwise, show them the list again.
 						this.c.sendTextLn("'" + data + "' is not a valid character selection. Try again.");

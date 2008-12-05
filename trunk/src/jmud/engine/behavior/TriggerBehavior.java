@@ -58,7 +58,7 @@ public class TriggerBehavior extends Behavior {
 		}
 
 		// check vs objMonitor
-		if (this.objMonitor.getUUID() != obj.getUUID()) {
+		if (this.objMonitor.getUuid() != obj.getUuid()) {
 			// Nope this isn't the object that will trip the trigger
 			return false;
 		}
