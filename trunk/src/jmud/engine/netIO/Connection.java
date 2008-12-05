@@ -39,7 +39,7 @@ public class Connection {
 	private int logAttempts = 0;
 
 	/**
-	 * Field to store the loginstate
+	 * Field to store the LoginState
 	 */
 	private LoginState loginstate = LoginState.Neither;
 
@@ -194,78 +194,6 @@ public class Connection {
 	/*
 	 * Data IO
 	 */
-
-	public void processIncoming() {
-
-		// decode the buffer
-		String data = "";
-		Charset cs = Charset.forName("ISO-8859-1");
-		CharsetDecoder dec = cs.newDecoder();
-
-		try {
-			this.readBuffer.flip();
-
-			// Build a string out of the connections ByteBuffer.
-			CharBuffer cb = dec.decode(this.readBuffer);
-			data = cb.toString();
-
-			// If the string contains a \r\n then its a complete command
-			if ((data.length() - data.replace("\r\n", "").length()) == 0) {
-
-			}
-			data = data.replace("\r\n", "");
-
-		} catch (CharacterCodingException e) {
-			System.err.println("Connection: CharacterCodingException in ByteBuffer of: "
-					+ sc.socket().getInetAddress().toString());
-			e.printStackTrace();
-			return;
-		} catch (Exception e) {
-			System.err.println("Connection: Exception in ByteBuffer of: " + sc.socket().getInetAddress().toString());
-			e.printStackTrace();
-			return;
-		}
-
-		System.out.println("From " + this.name + ": " + data + "(" + data.length() + ")");
-		this.readBuffer.clear();
-
-		// Now that we have a valid string, lets route it!
-
-		if (this.connState == ConnectionState.NotConnected) {
-			// Shouldn't be here!
-			System.err.println("An attempt was made to processIncoming() while ConnectionState == NotConnected");
-			return;
-
-		} else if (this.connState == ConnectionState.ConnectedButNotLoggedIn) {
-			// Spin a HandleLoginJob
-			HandleLoginJob hlj = new HandleLoginJob(this, data);
-			hlj.submitSelf();
-
-		} else if (this.connState == ConnectionState.LoggedInToCharacterSelect) {
-			// Spin a CharacterSelectJob
-			CharacterSelectJob csj = new CharacterSelectJob(this, data);
-			csj.submitSelf();
-
-		} else if (this.connState == ConnectionState.LoggedInToNewCharacter) {
-			// Spin a NewCharacterJob
-			NewCharacterJob ncj = new NewCharacterJob(this, data);
-			ncj.submitSelf();
-
-		} else if (this.connState == ConnectionState.LoggedInToGameServer) {
-
-			// Build next Job
-			BuildCmdFromStringJob job = new BuildCmdFromStringJob(this, data);
-
-			// Submit next Job
-			job.submitSelf();
-
-		} else {
-			// Shouldn't be here!
-			System.err
-					.println("An attempt was made to processIncoming() while ConnectionState was in an unknown state.");
-			return;
-		}
-	}
 
 	public void disconnect() {
 		ConnectionManager.getInstance().disconnectFrom(this);

@@ -2,6 +2,8 @@ package jmud.engine.job.definitions;
 
 import java.util.ArrayList;
 
+import jmud.engine.character.Character;
+import jmud.engine.character.CharacterManager;
 import jmud.engine.core.JMudStatics;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
@@ -32,7 +34,7 @@ public class CharacterSelectJob extends AbstractJob {
 
 	@Override
 	public final boolean doJob() {
-		// TODO hook in the DB query here.
+		// TODO hook in the DB query here.  Look up will
 
 		// Temporary character select based on Statics
 		ArrayList<String> chars = new ArrayList<String>();
@@ -79,6 +81,11 @@ public class CharacterSelectJob extends AbstractJob {
 						this.c.sendTextLn("Entering game...");
 						this.c.sendCRLFs(2);
 						this.c.setConnState(ConnectionState.LoggedInToGameServer);
+						
+						//Get the character object & pass it a reference to its associated Connection object
+						Character ch = CharacterManager.getInstance().loadCharacterFromDB(data);						
+						ch.setConnection(this.c);
+						
 					} else {
 						// otherwise, show them the list again.
 						this.c.sendTextLn("'" + data + "' is not a valid character selection. Try again.");

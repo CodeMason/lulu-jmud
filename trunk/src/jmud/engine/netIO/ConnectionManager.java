@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.engine.job.definitions.ProcessIncomingDataJob;
+
 /**
  * ConnectionManager is a Runnable class that manages all Connections.
  * ConnectionManager contains a single NIO selector and all routines for
@@ -110,7 +112,8 @@ public class ConnectionManager implements Runnable {
 		this.connMap.put(sockChan, c);
 		System.out.println("ConnectionManager: Total Connections: " + this.connMap.size());
 		
-		c.processIncoming();
+		ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
+		pidj.submitSelf();
 	}
 
 	private Connection CreateNewConnection(final SocketChannel sockChan) {
@@ -260,7 +263,8 @@ public class ConnectionManager implements Runnable {
 			
 		}
 
-		c.processIncoming();
+		ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
+		pidj.submitSelf();
 	}
 
 	/**
