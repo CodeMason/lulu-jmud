@@ -96,7 +96,8 @@ public class ProcessIncomingDataJob extends AbstractJob {
 				job.submitSelf();
 
 			} else {
-				// Shouldn't be here!
+                // ToDo CM: What are these broken lines about? Is this a style?
+                // Shouldn't be here!
 				System.err
 						.println("An attempt was made to processIncoming() while ConnectionState was in an unknown state.");
 				return false;
