@@ -16,7 +16,7 @@ public class JMudObject {
 	/**
 	 * UUID for 99.99999% assured ability to differentiate between any/all
 	 * JMudObjects.
-	 * 
+	 *
 	 * CM: isn't there a more accurate implementation? I mean, why settle for
 	 * 2nd best right?
 	 */
@@ -98,7 +98,7 @@ public class JMudObject {
 
 	/**
 	 * Register a behaviors with an event class.
-	 * 
+	 *
 	 * @param b
 	 *            Behavior to mapped to Behavior.getEventTypesHandled();
 	 */
@@ -123,7 +123,7 @@ public class JMudObject {
 
 	/**
 	 * For any event, return the list of applicable behaviors
-	 * 
+	 *
 	 * @param event
 	 *            the event to find behaviors for
 	 * @return the behaviors that match the event
@@ -219,7 +219,7 @@ public class JMudObject {
 
 	/**
 	 * Get a handle on the Attribute Map
-	 * 
+	 *
 	 * @return
 	 */
 	public Map<String, Attribute> getAttr() {
@@ -242,8 +242,10 @@ public class JMudObject {
 		// Dave's head (KIDDING!), etc.)
 		// AAA DHL: Root, by definition will have no siblings nor will it have a
 		// parent. (ignores the brain cell thing :P)
+        // QQQ CM: It's just that below, you're not referring to siblings, you're
+        // referring to the parent. :)
 
-		if (this.parent != null) {
+        if (this.parent != null) {
 			map = this.parent.childrenGetAll();
 			// filter out the calling object
 			map.remove(this.getUuid());
@@ -278,7 +280,7 @@ public class JMudObject {
 
 	/**
 	 * Directly sets this object's parent JMudObject object reference. *
-	 * 
+	 *
 	 * @param newParent
 	 *            the new parent of this JMudObject
 	 */
@@ -300,7 +302,9 @@ public class JMudObject {
 	@Override
 	public final String toString() {
 		// QQQ DL: Why StringBuilder over string?
-		StringBuilder out = new StringBuilder(this.toStringShort());
+        // AAA CM: Faster: Strings are immutable, adding to one creates another one;
+        // the String work might be optimized out by the compiler, but still ...
+        StringBuilder out = new StringBuilder(this.toStringShort());
 
 		if (this.parent != null) {
 			out.append("\t hasParent:TRUE");
