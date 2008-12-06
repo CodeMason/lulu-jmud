@@ -1,5 +1,6 @@
 package jmud.engine.job.definitions;
 
+import jmud.engine.core.JMudStatics;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 
@@ -28,27 +29,31 @@ public class ProcessIncomingDataJob extends AbstractJob {
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
+            int bufferPosition = 0;
 
-			// decode the buffer
-			String data = "";
+            boolean isCommandComplete = false;
+            // decode the buffer
+            String data = "";
 			Charset cs = Charset.forName("ISO-8859-1");
 			CharsetDecoder dec = cs.newDecoder();
 
 			try {
-				this.c.getReadBuffer().flip();
+                bufferPosition = this.c.getReadBuffer().position();
+                this.c.getReadBuffer().flip();
 
 				// Build a string out of the connections ByteBuffer.
 				CharBuffer cb = dec.decode(this.c.getReadBuffer());
 				data = cb.toString();
 
                 // ToDo CM: need to check here if they've hit [enter] or if their client sends every char as it's typed
+                isCommandComplete = data.indexOf(JMudStatics.CRLF) != -1;
 
                 // If the string contains a \r\n then its a complete command
 				// which it damned well better because of the 8192 char limit!!!
-				if ((data.length() - data.replace("\r\n", "").length()) == 0) {
+				if ((data.length() - data.replace(JMudStatics.CRLF, "").length()) == 0) {
 
 				}
-				data = data.replace("\r\n", "");
+				data = data.replace(JMudStatics.CRLF, "");
 
 			} catch (CharacterCodingException e) {
 				System.err.println("Connection: CharacterCodingException in ByteBuffer of: "
@@ -63,9 +68,16 @@ public class ProcessIncomingDataJob extends AbstractJob {
 			}
 
 			System.out.println("From " + this.c.getName() + ": " + data + "(" + data.length() + ")");
-			this.c.getReadBuffer().clear();
+            if(isCommandComplete){
+                this.c.getReadBuffer().clear();
+            }else{
+                // leave the data in the buffer but put the limit and position back where they were
+                this.c.getReadBuffer().limit(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
+                this.c.getReadBuffer().position(bufferPosition);
+                return true;
+            }
 
-			// Now that we have a valid string, lets route it!
+            // Now that we have a valid string, lets route it!
 
 			if (this.c.getConnState() == ConnectionState.NotConnected) {
 				// Shouldn't be here!

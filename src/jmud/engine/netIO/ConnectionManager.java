@@ -1,24 +1,15 @@
 package jmud.engine.netIO;
 
+import jmud.engine.job.definitions.LoginValidateJob;
+import jmud.engine.job.definitions.ProcessIncomingDataJob;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.CancelledKeyException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.channels.spi.SelectorProvider;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import jmud.engine.job.definitions.ProcessIncomingDataJob;
+import java.util.*;
 
 /**
  * ConnectionManager is a Runnable class that manages all Connections.
@@ -112,8 +103,9 @@ public class ConnectionManager implements Runnable {
 		this.connMap.put(sockChan, c);
 		System.out.println("ConnectionManager: Total Connections: " + this.connMap.size());
 
-		ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
-		pidj.submitSelf();
+		//ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
+        LoginValidateJob job = new LoginValidateJob(c, "");
+        job.submitSelf();
 	}
 
 	private Connection CreateNewConnection(final SocketChannel sockChan) {
@@ -233,7 +225,9 @@ public class ConnectionManager implements Runnable {
 
 	private void readIncoming(final SelectionKey key) {
 
-		// Obtain handle on the passed SocketChannel from 'key'
+        System.out.println("Reading from connection ");
+
+        // Obtain handle on the passed SocketChannel from 'key'
 		SocketChannel sockChan = (SocketChannel) key.channel();
 
 		// Look up to see if we have a mapping to a connection:
