@@ -24,7 +24,7 @@ public class LoginValidateJob extends AbstractJob {
 		this.c = c;
 		this.data = (data == null ? "" : data); 
 	}
-	LoginValidateJob(Connection c) {
+	public LoginValidateJob(Connection c) {
 		this(c, "");
 	}
 

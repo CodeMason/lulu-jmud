@@ -16,17 +16,17 @@ import jmud.engine.core.JMudStatics;
 public class Connection {
 
 	/**
-	 * Number of login Attempts
+	 * The AccountID associated with this Connection
 	 */
 	private int accountID = 0;
 
 	/**
-	 * Connection uName
+	 * The username associated with this Connection
 	 */
 	private String uName = "";
 
 	/**
-	 * Connection passWd
+	 * The password associated with this Connection
 	 */
 	private String passWd = "";
 
@@ -36,12 +36,13 @@ public class Connection {
 	private int logAttempts = 0;
 
 	/**
-	 * Field to store the LoginState
+	 * The current Login State associated with this Connection
 	 */
 	private LoginState loginstate = LoginState.Neither;
 
 	/**
-	 * Connection name
+	 * The name associated with this Connection.  This is not to be confused with
+	 * the username.
 	 */
 	private final String name;
 
@@ -56,15 +57,15 @@ public class Connection {
 	private ByteBuffer readBuffer = ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
 
 	/**
-	 * This connection's State
+	 * This Connection object's Connection State
 	 */
 	private ConnectionState connState = ConnectionState.NotConnected;
 
 	/**
 	 * Explicit constructor.
 	 * 
-	 * @param inSc
-	 *            the source data
+	 * @param inSc SocketChannel used for communications
+	 * @param name Name to identify this object by.
 	 */
 	public Connection(final SocketChannel inSc, final String name) {
 		this.sc = inSc;
@@ -86,29 +87,35 @@ public class Connection {
 	}
 
 	/**
-	 * @return this connection object's data socket
+	 * @return this Connection object's data socket
 	 */
 	public final SocketChannel getSc() {
 		return sc;
 	}
-
+/**
+ * @return the AccountID associated with this Connection.
+ */
 	public int getAccountID() {
 		return accountID;
 	}
 
+/**
+ * Set the AccountID associated with this Connection
+ * @param accountID
+ */
 	public void setAccountID(int accountID) {
 		this.accountID = accountID;
 	}
 
 	/**
-	 * @return this connection object's state.
+	 * @return the Connection State associated with this Connection
 	 */
 	public ConnectionState getConnState() {
 		return connState;
 	}
 
 	/**
-	 * Set this Connection object's state
+	 * Set this Connection object's Connection State.
 	 * 
 	 * @param connState
 	 */
@@ -124,14 +131,14 @@ public class Connection {
 	}
 
 	/**
-	 * @return this Connection object's uName.
+	 * @return the username associated with this Connection.
 	 */
 	public String getUName() {
 		return uName;
 	}
 
 	/**
-	 * Set this Connection object's uName;
+	 * Set the username associated with this Connection.
 	 * 
 	 * @param uName
 	 */
@@ -140,14 +147,14 @@ public class Connection {
 	}
 
 	/**
-	 * @return this Connection object's passWd.
+	 * @return the password associated with this Connection.
 	 */
 	public String getPassWd() {
 		return passWd;
 	}
 
 	/**
-	 * Set this Connection object's passWd;
+	 * Set the password associated with this Connection
 	 * 
 	 * @param passWd
 	 */
@@ -181,14 +188,14 @@ public class Connection {
 	}
 
 	/**
-	 * @return this Connection object's state.
+	 * @return the Login State associated with this Connection
 	 */
 	public LoginState getLoginstate() {
 		return loginstate;
 	}
 
 	/**
-	 * Set this Connection object's loginstate
+	 * Set this Connection object's Login State
 	 * 
 	 * @param loginstate
 	 */
@@ -200,24 +207,43 @@ public class Connection {
 	 * Data IO
 	 */
 
+	/**
+	 * Force this connection to close.
+	 */
 	public void disconnect() {
 		ConnectionManager.getInstance().disconnectFrom(this);
 	}
 
+	/**
+	 * Send the text, without a CRLF, to the client.
+	 * @param text
+	 */
 	public void sendText(String text) {
 		// Attach the SocketChannel and send the text on its way!
 		ConnectionManager.getInstance().send(this.sc, text);
 	}
 
+	/**
+	 * Send the text, with a CRLF, to the client.
+	 * @param text
+	 */
 	public void sendTextLn(String text) {
 		// Attach the SocketChannel and send the text on its way!
 		this.sendText(text + JMudStatics.CRLF);
 	}
 
+	/**
+	 * Send a CRLF to the client.
+	 * @param text
+	 */
 	public void sendCRLF() {
 		this.sendText(JMudStatics.CRLF);
 	}
 
+	/**
+	 * Send multiple CRLFs to the client.
+	 * @param text
+	 */
 	public void sendCRLFs(int numberOfCRLFs) {
 		String out = "";
 		for (int i = 0; i < numberOfCRLFs; ++i) {
@@ -226,6 +252,10 @@ public class Connection {
 		this.sendText(out);
 	}
 	
+	/**
+	 * Send the mud prompt to the client.
+	 * @param text
+	 */
 	public void sendPrompt() {
 		this.sendText(JMudStatics.PROMPT);
 	}
