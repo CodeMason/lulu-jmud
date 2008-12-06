@@ -1,8 +1,8 @@
 package jmud.engine.job.definitions;
 
-import java.util.UUID;
-
 import jmud.engine.job.JobManager;
+
+import java.util.UUID;
 
 /**
  * Provides mandatory base implementation for all 'Job's'.
@@ -18,6 +18,10 @@ public abstract class AbstractJob {
       this.ID = UUID.randomUUID();
    }
 
+    /**
+     * What does the return tell us? 
+     * @return
+     */
    public abstract boolean doJob();
 
    public final UUID getID() {

@@ -45,8 +45,9 @@ public class ProcessIncomingDataJob extends AbstractJob {
 				CharBuffer cb = dec.decode(this.c.getReadBuffer());
 				data = cb.toString();
 
-                // ToDo CM: need to check here if they've hit [enter] or if their client sends every char as it's typed
-                isCommandComplete = data.indexOf(JMudStatics.CRLF) != -1;
+                // check if they've hit [enter]; they're client might send every char as it's typed,
+                // in which case we'll wait till it's all entered.
+                isCommandComplete = data.contains(JMudStatics.CRLF);
 
                 // If the string contains a \r\n then its a complete command
 				// which it damned well better because of the 8192 char limit!!!
