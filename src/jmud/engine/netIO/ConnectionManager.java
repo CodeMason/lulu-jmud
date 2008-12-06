@@ -1,7 +1,7 @@
 package jmud.engine.netIO;
 
-import jmud.engine.job.definitions.LoginValidateJob;
 import jmud.engine.job.definitions.ProcessIncomingDataJob;
+import jmud.engine.job.definitions.SplashScreenJob;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -104,7 +104,7 @@ public class ConnectionManager implements Runnable {
 		System.out.println("ConnectionManager: Total Connections: " + this.connMap.size());
 
 		//ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
-        LoginValidateJob job = new LoginValidateJob(c, "");
+        SplashScreenJob job = new SplashScreenJob(c);
         job.submitSelf();
 	}
 

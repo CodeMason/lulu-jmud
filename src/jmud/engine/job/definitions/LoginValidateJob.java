@@ -9,7 +9,7 @@ import jmud.engine.netIO.LoginState;
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
  * samples to draw from.
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -22,7 +22,7 @@ public class LoginValidateJob extends AbstractJob {
 	public LoginValidateJob(Connection c, String data) {
 		super();
 		this.c = c;
-		this.data = data + "";
+		this.data = (data == null ? "" : data); 
 	}
 	LoginValidateJob(Connection c) {
 		this(c, "");
@@ -31,10 +31,7 @@ public class LoginValidateJob extends AbstractJob {
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
-			if (this.c.getLoginstate() == LoginState.Neither && data.length() == 0) {
-				// We must be sending this to the user the first time
-				this.sendLoginPrompt();
-			} else if (this.c.getLoginstate() == LoginState.Neither && data.length() != 0) {
+            if (this.c.getLoginstate() == LoginState.Neither) {
 				// just received the uName
 				this.c.setUName(data);
 				this.c.sendText("Password: ");
@@ -43,7 +40,7 @@ public class LoginValidateJob extends AbstractJob {
 				this.c.setPassWd(data);
 				// Here we are... validate password.
 				int retVal = MysqlConnection.verifyLogin(this.c.getUName(), this.c.getPassWd());
-				
+
 				if (retVal != -1) {
 					this.c.sendTextLn("Validated.");
 					this.c.setConnState(ConnectionState.LoggedInToCharacterSelect);
