@@ -3,8 +3,8 @@ package jmud.engine.core;
 public class JMudStatics {
 
 	//TODO ultimately, these values will be read in from a config file.
-    public static final String dbUrl = "jdbc:mysql://localhost:3306/mysql";
-	public static final String dbUName = "jmud";
+    public static final String dbUrl = "jdbc:mysql://localhost:3306/jmuddb";
+	public static final String dbUName = "root";
 	public static final String dbPassWd = "jmud";
 	public static final int dbPort = 3306;
 

@@ -46,6 +46,7 @@ public class MysqlConnection {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			c = DriverManager.getConnection(JMudStatics.dbUrl, JMudStatics.dbUName, JMudStatics.dbPassWd);
+			
 			return c;
 		} catch (InstantiationException e) {
 			e.printStackTrace();
