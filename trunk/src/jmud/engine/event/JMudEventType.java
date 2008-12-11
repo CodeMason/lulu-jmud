@@ -19,7 +19,8 @@ public enum JMudEventType {
             return parameters;
         }
     },
-    Attack, Attacked;
+    Attack, Attacked,
+    Test, Tested;
 
     /**
      * Specify what data objects are required in the event's data map

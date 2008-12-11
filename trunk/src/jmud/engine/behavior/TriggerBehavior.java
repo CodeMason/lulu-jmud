@@ -6,59 +6,59 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- * 
- * 
+ *
+ *
  * @author Dave Loman
  * @date December 4, 2008
  */
 
 public class TriggerBehavior extends Behavior {
 
-	private JMudEventParticipantRole roleMonitor;
-	private JMudObject objMonitor;
-	private JMudEventParticipantRole responseTarget;
+	private JMudEventParticipantRole triggerEventRole;
+	private JMudObject triggerEventObject;
+	private JMudEventParticipantRole responseEventTarget;
 	private JMudObject responseObject;
-	private JMudEventType responseType;
+	private JMudEventType responseEventType;
 
-	public TriggerBehavior(JMudObject owner, JMudEventType typeTrigger, JMudEventParticipantRole roleMonitor,
-			JMudObject objMonitor, JMudEventParticipantRole responseTarget, JMudEventType responseType) {
+	public TriggerBehavior(JMudObject owner, JMudEventType triggerEventType, JMudEventParticipantRole triggerEventRole,
+			JMudObject triggerEventObject, JMudEventParticipantRole responseEventTarget, JMudEventType responseEventType) {
 		super(owner);
-		this.eventTypesHandled.add(typeTrigger);
-		this.roleMonitor = roleMonitor;
-		this.objMonitor = objMonitor;
-		this.responseTarget = responseTarget;
-		this.responseType = responseType;
+		this.eventTypesHandled.add(triggerEventType);
+		this.triggerEventRole = triggerEventRole;
+		this.triggerEventObject = triggerEventObject;
+		this.responseEventTarget = responseEventTarget;
+		this.responseEventType = responseEventType;
 	}
 
-	public TriggerBehavior(JMudObject owner, JMudEventType typeTrigger, JMudEventParticipantRole roleMonitor,
-			JMudObject objMonitor, JMudObject responseObject, JMudEventType responseType) {
+	public TriggerBehavior(JMudObject owner, JMudEventType typeTrigger, JMudEventParticipantRole triggerEventRole,
+			JMudObject triggerEventObject, JMudObject responseObject, JMudEventType responseEventType) {
 		super(owner);
 		this.eventTypesHandled.add(typeTrigger);
-		this.roleMonitor = roleMonitor;
-		this.objMonitor = objMonitor;
+		this.triggerEventRole = triggerEventRole;
+		this.triggerEventObject = triggerEventObject;
 		this.responseObject = responseObject;
-		this.responseType = responseType;
+		this.responseEventType = responseEventType;
 	}
 
 	@Override
 	protected boolean ccBehavior() {
 
-		// check to see if the roleMonitor matches the objMonitor
+		// check to see if the triggerEventRole matches the triggerEventObject
 		JMudObject obj = null;
 
 		// find out which JMudObject in the JMudEvent we are to check against.
-		if (this.roleMonitor == JMudEventParticipantRole.SOURCE) {
+		if (this.triggerEventRole == JMudEventParticipantRole.SOURCE) {
 			obj = this.event.getSource();
-		} else if (this.roleMonitor == JMudEventParticipantRole.TARGET) {
+		} else if (this.triggerEventRole == JMudEventParticipantRole.TARGET) {
 			obj = this.event.getTarget();
 		} else {
 			// Now this *SHOULDNT* have happened.
-			System.err.println("roleMonitor is niether Source nor Target in TriggerBehavior!");
+			System.err.println("triggerEventRole is niether Source nor Target in TriggerBehavior!");
 			return false;
 		}
 
-		// check vs objMonitor
-		if (this.objMonitor.getUuid() != obj.getUuid()) {
+		// check vs triggerEventObject
+		if (this.triggerEventObject.getUuid() != obj.getUuid()) {
 			// Nope this isn't the object that will trip the trigger
 			return false;
 		}
@@ -68,7 +68,7 @@ public class TriggerBehavior extends Behavior {
 		 */
 
 		// find out which JMudObject we are supposed to send our new event to
-		if (this.responseObject == null && this.responseTarget == null) {
+		if (this.responseObject == null && this.responseEventTarget == null) {
 			// We have no way of determining a target.... this bad!
 			System.err.println("Object and Participant are null in TriggerBehavior!");
 			return false;
@@ -79,13 +79,13 @@ public class TriggerBehavior extends Behavior {
 		if (this.responseObject == null) {
 			// If we supplied a Participant but not a JMudObject....
 
-			if (this.responseTarget == JMudEventParticipantRole.SOURCE) {
+			if (this.responseEventTarget == JMudEventParticipantRole.SOURCE) {
 				tgt = this.event.getSource();
-			} else if (this.responseTarget == JMudEventParticipantRole.TARGET) {
+			} else if (this.responseEventTarget == JMudEventParticipantRole.TARGET) {
 				tgt = this.event.getTarget();
 			} else {
 				// Now this *SHOULDNT* have happened.
-				System.err.println("responseTarget is niether Source nor Target in TriggerBehavior!");
+				System.err.println("responseEventTarget is niether Source nor Target in TriggerBehavior!");
 				return false;
 			}
 		} else {
@@ -93,7 +93,7 @@ public class TriggerBehavior extends Behavior {
 			tgt = this.responseObject;
 		}
 
-		JMudEvent jme = new JMudEvent(this.responseType, src, tgt);
+		JMudEvent jme = new JMudEvent(this.responseEventType, src, tgt);
 		jme.submitSelf();
 
 		return true;
@@ -113,11 +113,11 @@ public class TriggerBehavior extends Behavior {
 	public Behavior clone() {
 
 		if (this.responseObject == null) {
-			return new TriggerBehavior(this.owner, this.eventTypesHandled.get(0), this.roleMonitor, this.objMonitor,
-					this.responseTarget, this.responseType);
+			return new TriggerBehavior(this.owner, this.eventTypesHandled.get(0), this.triggerEventRole, this.triggerEventObject,
+					this.responseEventTarget, this.responseEventType);
 		} else {
-			return new TriggerBehavior(this.owner, this.eventTypesHandled.get(0), this.roleMonitor, this.objMonitor,
-					this.responseObject, this.responseType);		
+			return new TriggerBehavior(this.owner, this.eventTypesHandled.get(0), this.triggerEventRole, this.triggerEventObject,
+					this.responseObject, this.responseEventType);
 		}
 	}
 
