@@ -5,7 +5,7 @@ import jmud.engine.object.JMudObject;
 import java.util.Collection;
 
 public class CommonTestMethods {
-	public static JMudObject buildTestJMudObjectTree() {
+	public static JMudObject buildSimpleJMudObjectTree() {
 		JMudObject root = new JMudObject("root");
 		JMudObject room = new JMudObject("room");
 		JMudObject pcSteve = new JMudObject("pcSteve");
@@ -33,17 +33,23 @@ public class CommonTestMethods {
 		return root;
 	}
 
-	public static void printTreeRecursor(final Collection<JMudObject> jmo) {
+    public static void printJMudObjectTree(JMudObject root, String debugMessage){
+        System.out.println("\n\n" + debugMessage);
+        CommonTestMethods.printJMudObjectTree(root);
+        System.out.println("\n\n");
+    }
+
+    public static void printJMudObjectTree(final Collection<JMudObject> jmo) {
 		for (JMudObject j : jmo) {
-			CommonTestMethods.printTreeRecursor(j, 0);
+			CommonTestMethods.printJMudObjectTree(j, 0);
 		}
 	}
 
-	public static void printTreeRecursor(final JMudObject jmo) {
-		CommonTestMethods.printTreeRecursor(jmo, 0);
+	public static void printJMudObjectTree(final JMudObject jmo) {
+		CommonTestMethods.printJMudObjectTree(jmo, 0);
 	}
 
-	public static void printTreeRecursor(final JMudObject jmo, final int lvl) {
+	public static void printJMudObjectTree(final JMudObject jmo, final int lvl) {
 		// Declare output string
 		StringBuilder s = new StringBuilder();
 		// Build tabs
@@ -59,10 +65,10 @@ public class CommonTestMethods {
 
 		// recurse on all children
 		for (JMudObject j : jmo.childrenGetAll().values()) {
-			CommonTestMethods.printTreeRecursor(j, lvl + 1);
+			CommonTestMethods.printJMudObjectTree(j, lvl + 1);
 		}
 
-        // CM: is this just a style thing? 
+        // CM: is this just a style thing?
         return;
 	}
 

@@ -2,77 +2,50 @@ package jmud.test.object;
 
 import jmud.engine.object.JMudObject;
 import jmud.test.CommonTestMethods;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class JMudObjectTreeTest01 {
+    private JMudObject bag;
+    private JMudObject pcSteve;
+    private JMudObject orc0;
 
-   public static void main(final String[] args) {
-      JMudObject root = CommonTestMethods.buildTestJMudObjectTree();
+    @Before
+    public void setup(){
+        getTestJMudObjects(CommonTestMethods.buildSimpleJMudObjectTree());
+    }
 
-      // yes this seems a bit bass-ackwards, but is shows the ability
-      // to look things up by name ;)
-      JMudObject chair = root.childrenGet("room").childrenGet("chair");
-      JMudObject bag = root.childrenGet("room").childrenGet("bag");
-      JMudObject pcSteve = root.childrenGet("room").childrenGet("pcSteve");
-      JMudObject orc0 = root.childrenGet("room").childrenGet("orc0");
+    @Test
+    public void testChangeJMudObjectParent() {
+        bag.changeParent(pcSteve);
+        Assert.assertEquals("JMudObject \"bag\" was not transferred to JMudObject \"pcSteve\"", bag.getParent(), pcSteve);
+    }
 
-      // Printout the tree.
-      System.out.println("\n\nOriginal Tree");
-      CommonTestMethods.printTreeRecursor(root);
+    @Test
+    public void testRemoveJMudObjectParent(){
+        bag.changeParent(null);
+        Assert.assertNull("JMudObject \"bag\" was not removed from JMudObject \"pcSteve\"", bag.getParent());
+    }
 
-      /*
-       * Now I want to see JUST Chair's siblings:
-       */
-      System.out.println("\n\nChair:");
-      CommonTestMethods.printTreeRecursor(chair);
+    @Test
+    public void testAddJMudObjectParent(){
+        bag.changeParent(null);
+        bag.changeParent(orc0);
+        Assert.assertEquals("JMudObject \"bag\" was not transferred to JMudObject \"orc0\"", bag.getParent(), orc0);
+    }
 
-      // Printout the tree.
-      System.out.println("\n\nChair's siblings");
-      CommonTestMethods.printTreeRecursor(chair.getSiblings().values());
+    @Test
+    public void testDropJMudObjectToParent(){
+        bag.changeParent(pcSteve);
+        bag.changeParent(pcSteve.getParent());
+        Assert.assertEquals("JMudObject \"bag\" was not \"dropped\" to JMudObject \"room\" from JMudObject \"pcSteve\"", bag.getParent(), pcSteve.getParent());
+    }
 
-      /*
-       * Re-arrange
-       */
-      bag.changeParent(pcSteve);
-
-      // Printout the tree.
-      System.out
-            .println("\n\nMoved Bag from the Room to pcSteve using JMudObject.changeParent(bag, pcSteve)");
-      CommonTestMethods.printTreeRecursor(root);
-
-      /*
-       * Drop parent
-       */
-      bag.changeParent(null);
-
-      // Printout the tree.
-      System.out
-            .println("\n\nRemoved Bag from pcSteve using .changeParent(null)");
-      CommonTestMethods.printTreeRecursor(root);
-
-      /*
-       * Reattach to Orc.0
-       */
-      bag.changeParent(orc0);
-
-      // Printout the tree.
-      System.out.println("\n\nAttached Bag to ocr0 using .changeParent(orc0)");
-      CommonTestMethods.printTreeRecursor(root);
-
-      /*
-       * Orc.0 'drops' bag
-       */
-      bag.changeParent(orc0.getParent());
-
-      // Printout the tree.
-      System.out
-            .println("\n\nSimulated orc0 'drop' Bag using .changeParent(orc0.getParent())");
-      CommonTestMethods.printTreeRecursor(root);
-      
-      
-      
-      
-      System.out.println("\n\nTest complete.");
-      
-   }
+    private void getTestJMudObjects(JMudObject root){
+        bag = root.childrenGet("room").childrenGet("bag");
+        pcSteve = root.childrenGet("room").childrenGet("pcSteve");
+        orc0 = root.childrenGet("room").childrenGet("orc0");
+    }
 
 }

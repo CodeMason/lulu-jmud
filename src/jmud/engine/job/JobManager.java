@@ -1,11 +1,11 @@
 package jmud.engine.job;
 
+import jmud.engine.job.definitions.AbstractJob;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-
-import jmud.engine.job.definitions.AbstractJob;
 
 /**
  * Singleton patterned class manages all AbstractJobs in a queue. Controls all
@@ -15,30 +15,14 @@ import jmud.engine.job.definitions.AbstractJob;
  */
 
 public class JobManager {
-   /**
-    * <code>JobManagerHolder</code> is loaded on the first execution of
-    * <code>JobManager.getInstance()</code> or the first access to
-    * <code>JobManagerHolder.INSTANCE</code>, not before.
-    */
-   private static final class JobManagerHolder {
-      /**
-       * The singleton instance.
-       */
-      private static final JobManager INSTANCE = new JobManager();
-
-      /**
-       * <code>JobManagerHolder</code> is a utility class. Disallowing
-       * public/default constructor.
-       */
-      private JobManagerHolder() {
-      }
+    
+   private static final class LazyInstanceLoader{
+      private static final JobManager LAZY_LOADED_INSTANCE = new JobManager();
+      private LazyInstanceLoader() { }
    }
 
-   /**
-    * @return the singleton instance
-    */
-   public static JobManager getInstance() {
-      return JobManagerHolder.INSTANCE;
+   public static JobManager getLazyLoadedInstance() {
+      return LazyInstanceLoader.LAZY_LOADED_INSTANCE;
    }
 
    private final Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();

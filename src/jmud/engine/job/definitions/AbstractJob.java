@@ -19,7 +19,7 @@ public abstract class AbstractJob {
    }
 
     /**
-     * What does the return tell us? 
+     * What does the return tell us?
      * @return
      */
    public abstract boolean doJob();
@@ -29,6 +29,6 @@ public abstract class AbstractJob {
    }
 
    public final void submitSelf() {
-      JobManager.getInstance().pushJobToQueue(this);
+      JobManager.getLazyLoadedInstance().pushJobToQueue(this);
    }
 }
