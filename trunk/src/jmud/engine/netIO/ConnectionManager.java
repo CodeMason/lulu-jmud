@@ -16,11 +16,11 @@ import java.util.*;
  * Connections. ConnectionManager contains a single NIO selector and all
  * routines for: -Accepting new connections -Handling IO for existing
  * connections -Disconnecting connections.
- * 
+ *
  * We are opting for a single thread/single selector solution for many reasons,
  * all of which can be summed up here:
  * http://rox-xmlrpc.sourceforge.net/niotut/index.html
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -135,7 +135,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by Key object.
-	 * 
+	 *
 	 * @param key
 	 *            the key to disconnect
 	 * @return true if the disconnect succeeded
@@ -151,7 +151,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by SocketChannel.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to disconnect
 	 * @return true if the disconnect succeeded
@@ -183,7 +183,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Disconnect by Connection object.
-	 * 
+	 *
 	 * @param c
 	 *            The connection to disconnect
 	 * @return true if the disconnection succeeded
@@ -210,7 +210,7 @@ public class ConnectionManager implements Runnable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the ConnectionManager's main loop run command
 	 */
 	public final boolean getRunCmd() {
@@ -218,7 +218,7 @@ public class ConnectionManager implements Runnable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the ConnectionManager's main loop run status
 	 */
 	public final boolean getRunStatus() {
@@ -226,7 +226,7 @@ public class ConnectionManager implements Runnable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the Thread this ConnectionManager's is running in.
 	 */
 	public final Thread getThread() {
@@ -235,7 +235,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Initialize the ConnectionManager to these values:
-	 * 
+	 *
 	 * @param hostAddress
 	 * @param port
 	 * @throws IOException
@@ -260,7 +260,7 @@ public class ConnectionManager implements Runnable {
 
 	/**
 	 * Read all data present on key.
-	 * 
+	 *
 	 * @param key
 	 */
 	private void readIncoming(final SelectionKey key) {
@@ -392,7 +392,7 @@ public class ConnectionManager implements Runnable {
 				System.err.println("Exception: " + key.toString());
 			}
 		}
-		// End the main run loop.
+		// End the testChangeJMudObjectParent run loop.
 		System.out.println("ConnectionManager: Shutting down...");
 
 		// SHutdown stuff:
@@ -420,7 +420,7 @@ public class ConnectionManager implements Runnable {
 	 * This method is called externally, passing in the SocketChannel to be
 	 * written to and the data to be written. This method simply converts a
 	 * String to a Byte[] and sends the data on.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to be written to
 	 * @param String
@@ -434,7 +434,7 @@ public class ConnectionManager implements Runnable {
 	 * This method is called externally, passing in the SocketChannel to be
 	 * written to and the data to be written. This method sets up a ConnEvent to
 	 * be processed by the selector prior to sending the data.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to be written to
 	 * @param data
@@ -469,7 +469,7 @@ public class ConnectionManager implements Runnable {
 	/**
 	 * This method sets up the thread to run, loads in the ConnectionManager,
 	 * sets the ThreadRun Command to true and starts the thread.
-	 * 
+	 *
 	 */
 	public final void start() {
 		System.out.println("ConnectionManager: Received Startup Command.");
@@ -494,7 +494,7 @@ public class ConnectionManager implements Runnable {
 	 * SocketChannel. Also, the associated Key is set back to OP_READ so we
 	 * don't waste CPU cycles while it waits for more data to write when there
 	 * isn't any coming!
-	 * 
+	 *
 	 * @param key
 	 *            the key whose SocketChannel we're writing to
 	 * @throws IOException

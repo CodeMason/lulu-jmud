@@ -42,7 +42,7 @@ public class JMudEvent extends AbstractJob {
 		ccObjs.addAll(this.target.getParent().childrenValues());
 
 		// Get anything registered
-		ccObjs.addAll(JMudEventRegistrar.getInstance().getTargetJMudObjectBySourceAndEvent(this.target,
+		ccObjs.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetJMudObjectBySourceAndEvent(this.target,
 				this.getEventType()));
 
 		// Set success flag
@@ -98,7 +98,7 @@ public class JMudEvent extends AbstractJob {
 
 	/**
 	 * The object on which the Event initially occurred.
-	 * 
+	 *
 	 * @return The object on which the Event initially occurred.
 	 */
 	public final JMudObject getSource() {
@@ -107,7 +107,7 @@ public class JMudEvent extends AbstractJob {
 
 	/**
 	 * The objects on which the Event is targeted.
-	 * 
+	 *
 	 * @return The object on which the Event initially occurred.
 	 */
 	public final JMudObject getTarget() {

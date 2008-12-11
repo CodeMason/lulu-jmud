@@ -1,16 +1,18 @@
 package jmud.engine.job.definitions;
 
-import java.util.Map;
 import jmud.engine.character.Character;
+import jmud.engine.core.JMudStatics;
 import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 import jmud.engine.netIO.LoginState;
 
+import java.util.Map;
+
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
  * samples to draw from.
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -34,7 +36,7 @@ public class CharacterSelectJob extends AbstractJob {
 	public final boolean doJob() {
 		//Map of character names to the Character object refs
 		Map<String, Character> chars = MysqlConnection.getCharactersByAccountID(this.c.getAccountID());
-		
+
 		synchronized (this.c) {
 
 			if (this.data.length() == 0) {
@@ -74,12 +76,12 @@ public class CharacterSelectJob extends AbstractJob {
 						this.c.sendTextLn("Entering game...");
 						this.c.sendCRLFs(2);
 						this.c.setConnState(ConnectionState.LoggedInToGameServer);
-						
+
 						//Get the character object & pass it a reference to its associated Connection object
-						Character ch = chars.get(data);						
+						Character ch = chars.get(data);
 						ch.setConnection(this.c);
-						
-						ch.getConnection().sendText("WOOT");
+
+						ch.getConnection().sendText(JMudStatics.PROMPT);
 					} else {
 						// otherwise, show them the list again.
 						this.c.sendTextLn("'" + data + "' is not a valid character selection. Try again.");

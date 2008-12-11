@@ -14,44 +14,33 @@ import java.util.*;
  */
 
 public class JMudEventRegistrar {
-	/**
-	 * Holder is loaded on the first execution of
-	 * EventRegistrar.getInstance() or the first access to
-	 * Holder.INSTANCE, not before.
-	 */
-	private static class Holder {
-		private static final JMudEventRegistrar INSTANCE = new JMudEventRegistrar();
+
+	private static class LazyLoader{
+		private static final JMudEventRegistrar LAZY_LOADED_INSTANCE = new JMudEventRegistrar();
 	}
 
-	public static JMudEventRegistrar getInstance() {
-		return Holder.INSTANCE;
+	public static JMudEventRegistrar getLazyLoadedInstance() {
+		return LazyLoader.LAZY_LOADED_INSTANCE;
 	}
 
-	private final Map<UUID, JMudEventSubscription> uuidMap = Collections
-			.synchronizedMap(new HashMap<UUID, JMudEventSubscription>());
+	private final Map<UUID, JMudEventSubscription> uuidMap = Collections.synchronizedMap(new HashMap<UUID, JMudEventSubscription>());
 
 	/*
 	 * Concrete Class Implementation
 	 */
 
-	private final Map<JMudObject, List<JMudEventSubscription>> sourceMap = Collections
-			.synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
+	private final Map<JMudObject, List<JMudEventSubscription>> sourceMap = Collections.synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
 
 	private final Map<JMudEventType, List<JMudEventSubscription>> eventTypeMap = Collections.synchronizedMap(new EnumMap<JMudEventType, List<JMudEventSubscription>>(JMudEventType.class));
 
 	private final Map<JMudObject, List<JMudEventSubscription>> ccTargetMap = Collections.synchronizedMap(new HashMap<JMudObject, List<JMudEventSubscription>>());
 
-	/*
-	 * Singleton Implementation
-	 */
-	/**
-	 * Protected constructor is sufficient to suppress unauthorized calls to the
-	 * constructor
-	 */
+    /** singleton */
 	protected JMudEventRegistrar() {
 	}
 
-	public void init() {
+    // ToDo: I think this could use a more descriptive name
+    public void init() {
 
 	}
 

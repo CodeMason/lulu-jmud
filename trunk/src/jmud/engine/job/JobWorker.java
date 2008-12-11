@@ -36,7 +36,7 @@ public class JobWorker implements Runnable {
 		while (this.runCmd) {
 
 			// Access to Queue is synchronized internal to JobManager
-			AbstractJob job = JobManager.getInstance().popJobFromQueue();
+			AbstractJob job = JobManager.getLazyLoadedInstance().popJobFromQueue();
 
 			if (job != null) {
 

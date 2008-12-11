@@ -9,8 +9,8 @@ public class JMudStatics {
 	public static final int dbPort = 3306;
 
 
+    //ToDo CM: this should be configurable per user (e.g. [CurrHP]:[MaxHP]/[CurrMana]:[MaxMana] etc.)
 	public static final String PROMPT = "jmud> ";
-
 
 	// These are only temporary.
     public static final String hardcodeUName = "admin";
@@ -24,7 +24,7 @@ public class JMudStatics {
 
 	public static final String CRLF = "\r\n";
 
-	public static final String SplashScreen = JMudStatics.CRLF +
+    public static final String SplashScreen = JMudStatics.CRLF +
 				"_________ _______           ______  " + JMudStatics.CRLF +
 				"\\__    _/(       )|\\     /|(  __  \\ " + JMudStatics.CRLF +
 				"   )  (  | () () || )   ( || (  \\  )" + JMudStatics.CRLF +
