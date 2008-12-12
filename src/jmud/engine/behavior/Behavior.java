@@ -77,7 +77,9 @@ public abstract class Behavior extends AbstractJob {
 	 *
 	 * @return true if behavior completes successfully
 	 */
-	protected abstract boolean targetBehavior();
+	protected boolean targetBehavior(){
+        return true;
+    }
 
 
 	/**
@@ -86,7 +88,9 @@ public abstract class Behavior extends AbstractJob {
 	 *
 	 * @return true if behavior completes successfully
 	 */
-	protected abstract boolean sourceBehavior();
+	protected boolean sourceBehavior(){
+        return true;
+    }
 
 	/**
 	 * perform this <code>Behavior's</code> behavior if this behavior belongs to a
@@ -94,16 +98,9 @@ public abstract class Behavior extends AbstractJob {
 	 *
 	 * @return true if behavior completes successfully
 	 */
-	protected abstract boolean ccBehavior();
-
-	/**
-	 * Typical clone implementation.
-	 *
-	 * @see java.lang.Object#clone()
-	 * @return a cloned <code>Behavior</code>
-	 */
-	@Override
-	public abstract Behavior clone();
+	protected boolean ccBehavior(){
+        return true;
+    }
 
 	/**
 	 * @see jmud.engine.job.definitions.AbstractJob#doJob()
@@ -137,7 +134,9 @@ public abstract class Behavior extends AbstractJob {
 		this.event = inEvent;
 	}
 
-	@Override
+    public abstract Behavior clone();
+
+    @Override
 	public String toString() {
 		StringBuilder out = new StringBuilder("BehaviorID:  " + this.getID());
 

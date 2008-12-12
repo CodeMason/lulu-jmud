@@ -36,7 +36,7 @@ public class EventBehaviorTest{
 
       submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, pcSteve, bag));
 
-      Assert.assertEquals("GetEvent: JMudObject \"bag\" was not transferred from JMudObject \"room\" to JMudObject \"pcSteve\"", bag.getParent(), pcSteve);
+      Assert.assertEquals("GetEvent: JMudObject \"bag\" was not transferred from JMudObject \"room\" to JMudObject \"pcSteve\"", bag.getParentObject(), pcSteve);
    }
 
    @Test
@@ -44,9 +44,9 @@ public class EventBehaviorTest{
        JMudObject triggerTargetObject = bag;
        JMudObject eventTargetObject = bag;
 
-       TriggerBehavior tb0 = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
-       orc0.addEventBehavior(tb0);
-       pcSteve.addEventBehavior(new TestBehavior(pcSteve));
+       TriggerBehavior triggerBehavior = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
+       orc0.registerBehaviorForEventTypesHandled(triggerBehavior);
+       pcSteve.registerBehaviorForEventTypesHandled(new TestBehavior(pcSteve));
 
        submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, pcSteve, eventTargetObject));
 
@@ -58,9 +58,9 @@ public class EventBehaviorTest{
         JMudObject triggerTargetObject = bag;
         JMudObject eventTargetObject = orc0;
 
-        TriggerBehavior tb0 = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
-        orc0.addEventBehavior(tb0);
-        pcSteve.addEventBehavior(new TestBehavior(pcSteve));
+        TriggerBehavior triggerBehavior = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
+        orc0.registerBehaviorForEventTypesHandled(triggerBehavior);
+        pcSteve.registerBehaviorForEventTypesHandled(new TestBehavior(pcSteve));
 
         submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, pcSteve, eventTargetObject));
 
@@ -72,9 +72,9 @@ public class EventBehaviorTest{
         JMudObject triggerSourceObject = pcSteve;
         JMudObject eventSourceObject = pcSteve;
 
-        TriggerBehavior tb0 = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.SOURCE, triggerSourceObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
-        orc0.addEventBehavior(tb0);
-        pcSteve.addEventBehavior(new TestBehavior(eventSourceObject));
+        TriggerBehavior triggerBehavior = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.SOURCE, triggerSourceObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
+        orc0.registerBehaviorForEventTypesHandled(triggerBehavior);
+        pcSteve.registerBehaviorForEventTypesHandled(new TestBehavior(eventSourceObject));
 
         submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, eventSourceObject, bag));
 
@@ -86,9 +86,9 @@ public class EventBehaviorTest{
         JMudObject triggerSourceObject = pcSteve;
         JMudObject eventSourceObject = orc1;
 
-        TriggerBehavior tb0 = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.SOURCE, triggerSourceObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
-        orc0.addEventBehavior(tb0);
-        pcSteve.addEventBehavior(new TestBehavior(pcSteve));
+        TriggerBehavior triggerBehavior = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.SOURCE, triggerSourceObject, JMudEventParticipantRole.SOURCE, JMudEventType.Test);
+        orc0.registerBehaviorForEventTypesHandled(triggerBehavior);
+        pcSteve.registerBehaviorForEventTypesHandled(new TestBehavior(pcSteve));
 
         submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, eventSourceObject, bag));
 
@@ -100,9 +100,9 @@ public class EventBehaviorTest{
         JMudObject triggerTargetObject = bag;
         JMudObject eventTargetObject = bag;
 
-        TriggerBehavior tb0 = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.TARGET, JMudEventType.Test);
-        orc0.addEventBehavior(tb0);
-        pcSteve.addEventBehavior(new TestBehavior(triggerTargetObject));
+        TriggerBehavior triggerBehavior = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.TARGET, JMudEventType.Test);
+        orc0.registerBehaviorForEventTypesHandled(triggerBehavior);
+        pcSteve.registerBehaviorForEventTypesHandled(new TestBehavior(triggerTargetObject));
 
         submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, pcSteve, eventTargetObject));
 
@@ -114,9 +114,9 @@ public class EventBehaviorTest{
         JMudObject triggerTargetObject = bag;
         JMudObject eventTargetObject = bag;
 
-        TriggerBehavior tb0 = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.TARGET, JMudEventType.Test);
-        orc0.addEventBehavior(tb0);
-        pcSteve.addEventBehavior(new TestBehavior(pcSteve));
+        TriggerBehavior triggerBehavior = new TriggerBehavior(orc0, JMudEventType.Get, JMudEventParticipantRole.TARGET, triggerTargetObject, JMudEventParticipantRole.TARGET, JMudEventType.Test);
+        orc0.registerBehaviorForEventTypesHandled(triggerBehavior);
+        pcSteve.registerBehaviorForEventTypesHandled(new TestBehavior(pcSteve));
 
         submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, pcSteve, eventTargetObject));
 
@@ -136,31 +136,31 @@ public class EventBehaviorTest{
    }
 
     private void loadTestJMudObjects(JMudObject root){
-        orc0 = root.childrenGet("room").childrenGet("orc0");
-        orc1 = root.childrenGet("room").childrenGet("orc1");
-        bag = root.childrenGet("room").childrenGet("bag");
-        pcSteve = root.childrenGet("room").childrenGet("pcSteve");
+        orc0 = root.getChildObject("room").getChildObject("orc0");
+        orc1 = root.getChildObject("room").getChildObject("orc1");
+        bag = root.getChildObject("room").getChildObject("bag");
+        pcSteve = root.getChildObject("room").getChildObject("pcSteve");
     }
 
     private void addBehaviorsToJMudObjects(){
-        orc0.addEventBehavior(new GetBehavior(orc0));
-        orc1.addEventBehavior(new GetBehavior(orc1));
-        bag.addEventBehavior(new GetBehavior(bag));
-        pcSteve.addEventBehavior(new GetBehavior(pcSteve));
+        orc0.registerBehaviorForEventTypesHandled(new GetBehavior(orc0));
+        orc1.registerBehaviorForEventTypesHandled(new GetBehavior(orc1));
+        bag.registerBehaviorForEventTypesHandled(new GetBehavior(bag));
+        pcSteve.registerBehaviorForEventTypesHandled(new GetBehavior(pcSteve));
 
-        orc0.addEventBehavior(new GotBehavior(orc0));
-        orc1.addEventBehavior(new GotBehavior(orc1));
-        bag.addEventBehavior(new GotBehavior(bag));
-        pcSteve.addEventBehavior(new GotBehavior(pcSteve));
+        orc0.registerBehaviorForEventTypesHandled(new GotBehavior(orc0));
+        orc1.registerBehaviorForEventTypesHandled(new GotBehavior(orc1));
+        bag.registerBehaviorForEventTypesHandled(new GotBehavior(bag));
+        pcSteve.registerBehaviorForEventTypesHandled(new GotBehavior(pcSteve));
 
-        orc0.addEventBehavior(new AttackBehavior(orc0));
-        orc1.addEventBehavior(new AttackBehavior(orc1));
-        bag.addEventBehavior(new AttackBehavior(bag));
-        pcSteve.addEventBehavior(new AttackBehavior(pcSteve));
+        orc0.registerBehaviorForEventTypesHandled(new AttackBehavior(orc0));
+        orc1.registerBehaviorForEventTypesHandled(new AttackBehavior(orc1));
+        bag.registerBehaviorForEventTypesHandled(new AttackBehavior(bag));
+        pcSteve.registerBehaviorForEventTypesHandled(new AttackBehavior(pcSteve));
 
-        orc0.addEventBehavior(new AttackedBehavior(orc0));
-        orc1.addEventBehavior(new AttackedBehavior(orc1));
-        bag.addEventBehavior(new AttackedBehavior(bag));
-        pcSteve.addEventBehavior(new AttackedBehavior(pcSteve));
+        orc0.registerBehaviorForEventTypesHandled(new AttackedBehavior(orc0));
+        orc1.registerBehaviorForEventTypesHandled(new AttackedBehavior(orc1));
+        bag.registerBehaviorForEventTypesHandled(new AttackedBehavior(bag));
+        pcSteve.registerBehaviorForEventTypesHandled(new AttackedBehavior(pcSteve));
     }
 }

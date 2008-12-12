@@ -30,7 +30,7 @@ public class GotBehavior extends Behavior {
 	public final boolean targetBehavior() {
 		// What the owner sees
 
-		String txt = "You get the " + this.event.getSource().getName();
+		String txt = "You get the " + this.event.getSource().getHumanReadableName();
 		this.event.getTarget().sendToConsole(txt);
 
 		return true;
@@ -43,7 +43,7 @@ public class GotBehavior extends Behavior {
     @Override
 	protected boolean ccBehavior() {
 		// What anyone else sees.
-	   	String txt = this.event.getTarget().getName() + " gets the " + this.event.getSource().getName();
+	   	String txt = this.event.getTarget().getHumanReadableName() + " gets the " + this.event.getSource().getHumanReadableName();
 		this.owner.sendToConsole(txt);
 
 		return true;
@@ -57,7 +57,7 @@ public class GotBehavior extends Behavior {
 	protected boolean sourceBehavior() {
 		// What You see.
 
-    	String txt = this.event.getTarget().getName() + " picks YOU up!!";
+    	String txt = this.event.getTarget().getHumanReadableName() + " picks YOU up!!";
 		this.event.getSource().sendToConsole(txt);
 
 

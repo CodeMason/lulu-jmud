@@ -29,6 +29,7 @@ public class JMudEvent extends AbstractJob {
 
 	@Override
 	public boolean doJob() {
+        Behavior newB;
 		synchronized (System.out) {
 			System.out.println("Running a JMudEvent::" + this.targetEventType);
 		}
@@ -38,8 +39,8 @@ public class JMudEvent extends AbstractJob {
 		// Get all the siblings
 		// QQQ CM: including self?
 		// AAA DL:Yuppers! that's where 'pcSteve picks YOU up' comes from!
-		ccObjs.addAll(this.source.getParent().childrenValues());
-		ccObjs.addAll(this.target.getParent().childrenValues());
+		ccObjs.addAll(this.source.getParentObject().childrenValues());
+		ccObjs.addAll(this.target.getParentObject().childrenValues());
 
 		// Get anything registered
 		ccObjs.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetObjects(this.target,
@@ -68,8 +69,8 @@ public class JMudEvent extends AbstractJob {
 
 			if (!behs.isEmpty()) {
 				for (Behavior b : behs) {
-					Behavior newB = b.clone();
-					newB.setEvent(this);
+                    newB = b.clone();
+                    newB.setEvent(this);
 
 					// synchronized (System.out) {
 					// System.out.println("(" + this.getID() +

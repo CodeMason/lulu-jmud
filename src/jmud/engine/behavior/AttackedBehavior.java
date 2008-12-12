@@ -4,7 +4,7 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- * 
+ *
  * @author Dave Loman
  */
 public class AttackedBehavior extends Behavior {
@@ -19,21 +19,21 @@ public class AttackedBehavior extends Behavior {
 
 	/**
 	 * Just print out that we got here for now
-	 * 
+	 *
 	 * @see Behavior#behave()
 	 * @return true
 	 */
 	@Override
 	public final boolean targetBehavior() {
 
-		String text = "YOU attack " + this.event.getSource().getName() + "!!\n";
+		String text = "YOU attack " + this.event.getSource().getHumanReadableName() + "!!\n";
 		this.event.getTarget().sendToConsole(text);
 		return true;
 	}
 
 	@Override
 	protected boolean ccBehavior() {
-		String text = this.event.getTarget().getName() + " attacks " + this.event.getSource().getName() + "!!";
+		String text = this.event.getTarget().getHumanReadableName() + " attacks " + this.event.getSource().getHumanReadableName() + "!!";
 		this.owner.sendToConsole(text);
 		return true;
 	}
@@ -41,7 +41,7 @@ public class AttackedBehavior extends Behavior {
 	@Override
 	protected boolean sourceBehavior() {
 
-		String text = this.event.getTarget().getName() + " attacks YOU!!!1!11!!!!";
+		String text = this.event.getTarget().getHumanReadableName() + " attacks YOU!!!1!11!!!!";
 		this.event.getSource().sendToConsole(text);
 
 		return true;

@@ -19,16 +19,16 @@ public class CommonTestMethods {
 		JMudObject mapOfDungeon = new JMudObject("mapOfDungeon");
 		JMudObject door = new JMudObject("door");
 
-		root.childrenAdd(room);
-		room.childrenAdd(pcSteve);
-		room.childrenAdd(orc0);
-		room.childrenAdd(orc1);
-		room.childrenAdd(chair);
-		room.childrenAdd(bag);
-		room.childrenAdd(door);
+		root.addChildObject(room);
+		room.addChildObject(pcSteve);
+		room.addChildObject(orc0);
+		room.addChildObject(orc1);
+		room.addChildObject(chair);
+		room.addChildObject(bag);
+		room.addChildObject(door);
 
-		bag.childrenAdd(goldcoins);
-		bag.childrenAdd(mapOfDungeon);
+		bag.addChildObject(goldcoins);
+		bag.addChildObject(mapOfDungeon);
 
 		return root;
 	}
@@ -64,7 +64,7 @@ public class CommonTestMethods {
 		System.out.println(s.toString());
 
 		// recurse on all children
-		for (JMudObject j : jmo.childrenGetAll().values()) {
+		for (JMudObject j : jmo.getChildObjects().values()) {
 			CommonTestMethods.printJMudObjectTree(j, lvl + 1);
 		}
 
