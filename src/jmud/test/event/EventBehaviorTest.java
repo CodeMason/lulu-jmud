@@ -26,13 +26,13 @@ public class EventBehaviorTest{
     @Before
    public void setup(){
        JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
-       JMudEventRegistrar.getLazyLoadedInstance().init();
+       JMudEventRegistrar.getLazyLoadedInstance();
        loadTestJMudObjects(CommonTestMethods.buildSimpleJMudObjectTree());
        addBehaviorsToJMudObjects();
    }
 
    @Test
-   public void testGetEvent() {
+   public void testGetEventChangesJMudObjectParent() {
 
       submitTimeBufferedEvent(new JMudEvent(JMudEventType.Get, pcSteve, bag));
 
