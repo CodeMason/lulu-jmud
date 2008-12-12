@@ -6,9 +6,7 @@ import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
 
 /**
- *
- *
- * @author david.h.loman
+ * A Behavior class that flags itself as having been called
  */
 public class TestBehavior extends Behavior {
     private static boolean hasBehaviorBeenCalled;
@@ -27,7 +25,6 @@ public class TestBehavior extends Behavior {
 	 * @see jmud.engine.behavior.Behavior#behave()
 	 * @return true
 	 */
-
 	@Override
 	public final boolean targetBehavior() {
 		JMudObject source = this.event.getSource();
@@ -41,26 +38,18 @@ public class TestBehavior extends Behavior {
 		return true;
 	}
 
-	@Override
-	protected boolean ccBehavior() {
-		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
-		return true;
-	}
-
-	@Override
-	protected boolean sourceBehavior() {
-		// loop back to ccBehavior()
-		return this.ccBehavior();
-	}
-
 	/**
 	 * @see jmud.engine.behavior.Behavior#clone()
 	 * @return a new <code>GetBeHavior</code>
 	 */
 	@Override
-	public final Behavior clone() {
-		return new TestBehavior(this.owner);
+	public final TestBehavior clone(){
+        return new TestBehavior(this.owner);
 	}
+
+    private void setOwner(JMudObject owner){
+        this.owner = owner;
+    }
 
     private void clearBehaviorHasBeenCalledFlag(){
         hasBehaviorBeenCalled = false;

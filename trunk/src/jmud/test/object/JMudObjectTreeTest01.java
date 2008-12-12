@@ -19,33 +19,33 @@ public class JMudObjectTreeTest01 {
     @Test
     public void testChangeJMudObjectParent() {
         bag.changeParent(pcSteve);
-        Assert.assertEquals("JMudObject \"bag\" was not transferred to JMudObject \"pcSteve\"", bag.getParent(), pcSteve);
+        Assert.assertEquals("JMudObject \"bag\" was not transferred to JMudObject \"pcSteve\"", bag.getParentObject(), pcSteve);
     }
 
     @Test
     public void testRemoveJMudObjectParent(){
         bag.changeParent(null);
-        Assert.assertNull("JMudObject \"bag\" was not removed from JMudObject \"pcSteve\"", bag.getParent());
+        Assert.assertNull("JMudObject \"bag\" was not removed from JMudObject \"pcSteve\"", bag.getParentObject());
     }
 
     @Test
     public void testAddJMudObjectParent(){
         bag.changeParent(null);
         bag.changeParent(orc0);
-        Assert.assertEquals("JMudObject \"bag\" was not transferred to JMudObject \"orc0\"", bag.getParent(), orc0);
+        Assert.assertEquals("JMudObject \"bag\" was not transferred to JMudObject \"orc0\"", bag.getParentObject(), orc0);
     }
 
     @Test
     public void testDropJMudObjectToParent(){
         bag.changeParent(pcSteve);
-        bag.changeParent(pcSteve.getParent());
-        Assert.assertEquals("JMudObject \"bag\" was not \"dropped\" to JMudObject \"room\" from JMudObject \"pcSteve\"", bag.getParent(), pcSteve.getParent());
+        bag.changeParent(pcSteve.getParentObject());
+        Assert.assertEquals("JMudObject \"bag\" was not \"dropped\" to JMudObject \"room\" from JMudObject \"pcSteve\"", bag.getParentObject(), pcSteve.getParentObject());
     }
 
     private void getTestJMudObjects(JMudObject root){
-        bag = root.childrenGet("room").childrenGet("bag");
-        pcSteve = root.childrenGet("room").childrenGet("pcSteve");
-        orc0 = root.childrenGet("room").childrenGet("orc0");
+        bag = root.getChildObject("room").getChildObject("bag");
+        pcSteve = root.getChildObject("room").getChildObject("pcSteve");
+        orc0 = root.getChildObject("room").getChildObject("orc0");
     }
 
 }

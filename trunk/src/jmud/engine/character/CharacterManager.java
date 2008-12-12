@@ -50,7 +50,7 @@ public class CharacterManager {
     *           the character to add
     */
    public final void addCharacter(final Character c) {
-      this.nameMap.put(c.getName(), c);
+      this.nameMap.put(c.getHumanReadableName(), c);
 
    }
 
@@ -70,7 +70,7 @@ public class CharacterManager {
     *           the character to remove
     */
    public final void remCharacter(final Character c) {
-      this.nameMap.remove(c.getName());
+      this.nameMap.remove(c.getHumanReadableName());
    }
-  
+
 }

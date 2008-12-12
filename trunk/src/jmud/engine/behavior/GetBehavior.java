@@ -33,7 +33,7 @@ public class GetBehavior extends Behavior {
 
         // ToDo CM: I don't think I could be trusted to do this on my own every time :)
         target.orphan();
-		source.childrenAdd(target);
+		source.addChildObject(target);
 
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);

@@ -9,211 +9,179 @@ import jmud.engine.event.JMudEventType;
 import java.util.*;
 
 /**
- * @author David Loman
+ * Represents any "thing" in the mud
  */
 public class JMudObject {
+    private static final JMudObject ROOT_PARENT = null;
+    private static final List<Class> DEFAULT_BEHAVIOR_CLASSES = Arrays.asList((Class)SendToConsoleBehavior.class);
 
-	/**
-	 * UUID for 99.99999% assured ability to differentiate between any/all
-	 * JMudObjects.
-	 *
-	 * CM: isn't there a more accurate implementation? I mean, why settle for
-	 * 2nd best right?
-	 */
-	// Always initialize non-final's, even if its to null;
-	private UUID uuid = null;
-
-	/**
-	 * Name just for the sake of Human readability. Not required to be
-	 * implemented anywhere. Works well for testing though!
-	 */
-	private String name = "";
-
-	/**
-	 * Reference to this object's parent JMudObject object. A null parent
-	 * indicates the ROOT JMudObject of the tree.
-	 */
-	private JMudObject parent = null;
-
-	/**
-	 * A HashMap that maps a JMudObject object's UUID to the reference to the
-	 * JMudObject.
-	 */
-	private final Map<UUID, JMudObject> children = Collections.synchronizedMap(new HashMap<UUID, JMudObject>());
-
-	/**
-	 * A HashMap that maps an Attribute object's string name to the reference to
-	 * the Attribute object.
-	 */
-	private final Map<String, Attribute> attr = Collections.synchronizedMap(new HashMap<String, Attribute>());
-	/**
-	 * Create a map of events to lists of Behaviors that handle the event With
-	 * so many possibilities for object behavior, making unique event handlers
-	 * for each JMudObject will become tedious; by having a list of discrete,
-	 * atomic behaviors, we can re-use them, e.g. Unlock, Open, Wait, Close,
-	 * Lock, etc.
-	 */
-	private final Map<JMudEventType, List<Behavior>> behaviors = Collections
-			.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
-
-	/*                         */
-	/*                         */
-	/* Constructors */
-	/*                         */
-	/*                         */
+    private UUID uuid = null;
+	private String humanReadableName = "";
+	private JMudObject parentObject = ROOT_PARENT;
+	private final Map<UUID, JMudObject> childObjects = Collections.synchronizedMap(new HashMap<UUID, JMudObject>());
+	private final Map<String, Attribute> attributesByName = Collections.synchronizedMap(new HashMap<String, Attribute>());
+	private final Map<JMudEventType, List<Behavior>> eventTypeBehaviors = Collections.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
 
 	/**
 	 * Default constructor.
 	 */
 	public JMudObject() {
-		this(UUID.randomUUID(), "", null);
+		this(UUID.randomUUID(), "", ROOT_PARENT);
 	}
 
-	public JMudObject(final JMudObject inParent) {
-		this(UUID.randomUUID(), "", inParent);
+	public JMudObject(JMudObject parentObject) {
+		this(UUID.randomUUID(), "", parentObject);
 	}
 
-	public JMudObject(final String inName) {
-		this(UUID.randomUUID(), inName, null);
+	public JMudObject(String humanReadableName) {
+		this(UUID.randomUUID(), humanReadableName, null);
 	}
 
-	public JMudObject(final String inName, final JMudObject inParent) {
-		this(UUID.randomUUID(), inName, inParent);
+	public JMudObject(String humanReadableName, JMudObject parentObject) {
+		this(UUID.randomUUID(), humanReadableName, parentObject);
 	}
 
-	private JMudObject(final UUID inUuid, final String inName, final JMudObject inParent) {
-		this.parent = inParent;
-		this.name = inName;
-		this.uuid = inUuid;
+	private JMudObject(UUID uuid, String humanReadableName, final JMudObject parentObject) {
+		this.parentObject = parentObject;
+		this.humanReadableName = humanReadableName;
+		this.uuid = uuid;
+        registerDefaultBehaviorsForEventTypesHandled();
+    }
 
-		// Default behaviors ALL JMudObjects will have.
-		this.addEventBehavior(new SendToConsoleBehavior(this));
-	}
+    private void registerDefaultBehaviorsForEventTypesHandled(){
+        this.registerBehaviorsForEventTypesHandled(getInstancesOfDefaultBehaviorClasses());
+    }
 
-	/*                         */
-	/*                         */
-	/* Behavior Tools */
-	/*                         */
-	/*                         */
+    private List<Behavior> getInstancesOfDefaultBehaviorClasses(){
+        List<Behavior> defaultBehaviors = new ArrayList<Behavior>();
+        Behavior defaultBehavior;
 
-	/**
+        for(Class behaviorClass : DEFAULT_BEHAVIOR_CLASSES){
+            if(Behavior.class.isAssignableFrom(behaviorClass)){
+                defaultBehavior = getBehaviorInstance(behaviorClass);
+                if(defaultBehavior != null){
+                    defaultBehaviors.add(defaultBehavior);
+                }
+            }
+        }
+
+        return defaultBehaviors;
+    }
+
+    private Behavior getBehaviorInstance(Class behaviorClass){
+        Behavior defaultBehavior;
+        try{
+            defaultBehavior = (Behavior) behaviorClass.getConstructor(JMudObject.class).newInstance(this);
+        }catch(Exception e){
+            System.out.println("Could not instantiate instance of default Behavior " + behaviorClass.getName() + " from " + this.toStringShort() + "\n" + e);
+            defaultBehavior = null;
+        }
+        return defaultBehavior;
+    }
+
+    private void registerBehaviorsForEventTypesHandled(List<Behavior> behaviorsToRegister){
+        for(Behavior behaviorToRegister : behaviorsToRegister){
+            registerBehaviorForEventTypesHandled(behaviorToRegister);
+        }
+    }
+
+    /**
 	 * Register a behaviors with an event class.
 	 *
-	 * @param b
-	 *            Behavior to mapped to Behavior.getEventTypesHandled();
+	 * @param behavior Behavior to mapped to Behavior.getEventTypesHandled();
 	 */
-	public final void addEventBehavior(final Behavior b) {
-		List<JMudEventType> ets = b.getEventTypesHandled();
-
-		for (JMudEventType e : ets) {
-
-			List<Behavior> behs = this.behaviors.get(e);
-
-			if (behs == null) {
-				// There was no mapping for EventType e, so make a new one
-				behs = new ArrayList<Behavior>();
-				behs.add(b);
-				this.behaviors.put(e, behs);
-			} else {
-				// There was a mapping for EventType e
-				behs.add(b);
-			}
+	public void registerBehaviorForEventTypesHandled(Behavior behavior) {
+		for (JMudEventType eventType : behavior.getEventTypesHandled()) {
+			List<Behavior> eventBehaviors = getBehaviors(eventType);
+            eventBehaviors.add(behavior);
+			this.eventTypeBehaviors.put(eventType, eventBehaviors);
 		}
 	}
 
 	/**
 	 * For any event, return the list of applicable behaviors
 	 *
-	 * @param event
-	 *            the event to find behaviors for
+	 * @param event the event to find behaviors for
 	 * @return the behaviors that match the event
 	 */
-	public final List<Behavior> getBehaviors(final JMudEvent event) {
+	public List<Behavior> getBehaviors(JMudEvent event) {
 		return this.getBehaviors(event.getEventType());
 	}
 
-	public final List<Behavior> getBehaviors(final JMudEventType et) {
-		return behaviors.get(et);
+	public List<Behavior> getBehaviors(JMudEventType eventType) {
+        List<Behavior> existingEventBehaviors = eventTypeBehaviors.get(eventType);
+        return Collections.synchronizedList(existingEventBehaviors != null ? existingEventBehaviors : new ArrayList<Behavior>());
 	}
 
-	/*
-	 * Children HashMap Delegates
-	 */
-
-	public final JMudObject childrenAdd(final JMudObject jmo) {
-		jmo.setParent(this);
-		return this.children.put(jmo.getUuid(), jmo);
+	public JMudObject addChildObject(JMudObject object) {
+		object.setParentObject(this);
+		return this.childObjects.put(object.getUuid(), object);
 	}
 
-	public final void childrenClear() {
-		children.clear();
+	public void clearChildObjects() {
+		childObjects.clear();
 	}
 
-	public final boolean childrenContainsKey(final UUID uuid) {
-		return children.containsKey(uuid);
+	public boolean hasChildObject(UUID uuid) {
+		return childObjects.containsKey(uuid);
 	}
 
-	public final boolean childrenContainsValue(final JMudObject jmo) {
-		return children.containsValue(jmo);
+	public boolean hasChildObject(JMudObject object) {
+		return childObjects.containsValue(object);
 	}
 
-	// TODO CM: we may want to look at optimizing this (maybe name -> uuid
-	// hash?)
-	public final JMudObject childrenGet(final String name) {
-		for (JMudObject jmo : this.children.values()) {
-			if (jmo.getName().equals(name)) {
-				return jmo;
+	// TODO CM: we may want to look at optimizing this (maybe name -> uuid hash?)
+	public JMudObject getChildObject(String objectName) {
+		for (JMudObject childObject : this.childObjects.values()) {
+			if (childObject.getHumanReadableName().equals(objectName)) {
+				return childObject;
 			}
 		}
 		return null;
 	}
 
-	public final JMudObject childrenGet(final UUID uuid) {
-		return children.get(uuid);
+	public JMudObject getChild(final UUID uuid) {
+		return childObjects.get(uuid);
 	}
 
-	public final Map<UUID, JMudObject> childrenGetAll() {
-		return this.children;
+	public Map<UUID, JMudObject> getChildObjects() {
+		return this.childObjects;
 	}
 
-	public final Set<UUID> childrenKeySet() {
-		return children.keySet();
+	public Set<UUID> getChildObjectKeys() {
+		return childObjects.keySet();
 	}
 
-	public final JMudObject childrenRemove(final JMudObject jmo) {
+	public JMudObject childrenRemove(final JMudObject jmo) {
 		this.childrenRemove(jmo.getUuid());
 		return jmo;
 	}
 
-	public final JMudObject childrenRemove(final UUID uuid) {
-		JMudObject jmo = this.children.remove(uuid);
+	public JMudObject childrenRemove(final UUID uuid) {
+		JMudObject jmo = this.childObjects.remove(uuid);
 		if (jmo != null) {
-			jmo.setParent(null);
+			jmo.setParentObject(null);
 		}
 		return jmo;
 	}
 
-	public final int childrenSize() {
-		return this.children.size();
+	public int childrenSize() {
+		return this.childObjects.size();
 	}
 
-	public final Collection<JMudObject> childrenValues() {
-		return this.children.values();
+	public Collection<JMudObject> childrenValues() {
+		return this.childObjects.values();
 	}
 
-	/*
-	 * Getter/Setters
-	 */
-
-	public final String getName() {
-		return this.name;
+	public String getHumanReadableName() {
+		return this.humanReadableName;
 	}
 
-	public final void setName(final String n) {
-		this.name = n;
+	public void setHumanReadableName(String objectName) {
+		this.humanReadableName = objectName;
 	}
 
-	public final UUID getUuid() {
+	public UUID getUuid() {
 		return this.uuid;
 	}
 
@@ -222,8 +190,8 @@ public class JMudObject {
 	 *
 	 * @return
 	 */
-	public Map<String, Attribute> getAttr() {
-		return attr;
+	public Map<String, Attribute> getAttributesByName() {
+		return attributesByName;
 	}
 
 	/*                         */
@@ -237,16 +205,16 @@ public class JMudObject {
 		Map<UUID, JMudObject> map = null;
 
 		// the ONLY way you should ever have Zero siblings is if you are ROOT
-		// QQQ CM You mean the only way you won't have a parent? (I could be the
+		// QQQ CM You mean the only way you won't have a parentObject? (I could be the
 		// only thing in a room, the only thing in a bag, the only brain cell in
 		// Dave's head (KIDDING!), etc.)
 		// AAA DHL: Root, by definition will have no siblings nor will it have a
-		// parent. (ignores the brain cell thing :P)
+		// parentObject. (ignores the brain cell thing :P)
         // QQQ CM: It's just that below, you're not referring to siblings, you're
-        // referring to the parent. :)
+        // referring to the parentObject. :)
 
-        if (this.parent != null) {
-			map = this.parent.childrenGetAll();
+        if (this.parentObject != null) {
+			map = this.parentObject.getChildObjects();
 			// filter out the calling object
 			map.remove(this.getUuid());
 		}
@@ -256,14 +224,14 @@ public class JMudObject {
 	public final void orphan() {
 		// System.err.println("\nOrphaning " + this.toStringShort() + "\n");
 
-		JMudObject parent = this.getParent();
+		JMudObject parent = this.getParentObject();
 
 		if (parent != null) {
-			// first, remove the parent's reference to the child
+			// first, remove the parentObject's reference to the child
 			parent.childrenRemove(this);
 		}
-		// then remove the child's reference to the parent
-		this.setParent(null);
+		// then remove the child's reference to the parentObject
+		this.setParentObject(null);
 
 	}
 
@@ -274,7 +242,7 @@ public class JMudObject {
 
 		// establish newParent's reference to this
 		if (newParent != null) {
-			newParent.childrenAdd(this);
+			newParent.addChildObject(this);
 		}
 	}
 
@@ -285,12 +253,12 @@ public class JMudObject {
 	 *            the new parent of this JMudObject
 	 */
 
-	private void setParent(final JMudObject newParent) {
-		this.parent = newParent;
+	private void setParentObject(final JMudObject newParent) {
+		this.parentObject = newParent;
 	}
 
-	public final JMudObject getParent() {
-		return this.parent;
+	public final JMudObject getParentObject() {
+		return this.parentObject;
 	}
 
 	/*                         */
@@ -306,24 +274,24 @@ public class JMudObject {
         // the String work might be optimized out by the compiler, but still ...
         StringBuilder out = new StringBuilder(this.toStringShort());
 
-		if (this.parent != null) {
+		if (this.parentObject != null) {
 			out.append("\t hasParent:TRUE");
 		} else {
 			out.append("\t hasParent:FALSE");
 		}
 
 		out.append("\t childrenCount:").append(this.childrenSize()).append("\t attrCount:").append(
-				this.getAttr().size()).append("\t behaviorCount:").append(this.behaviors.size());
+				this.getAttributesByName().size()).append("\t behaviorCount:").append(this.eventTypeBehaviors.size());
 
 		return out.toString();
 	}
 
 	public final String toStringShort() {
-		return "JMudObject: " + this.name + "(" + this.uuid.toString() + ")";
+		return "JMudObject: " + this.humanReadableName + "(" + this.uuid.toString() + ")";
 	}
 
 	public void sendToConsole(String text) {
-		System.out.println("\n" + this.name + "'s console: " + text);
+		System.out.println("\n" + this.humanReadableName + "'s console: " + text);
 	}
 
 	public void saveToDB() {
