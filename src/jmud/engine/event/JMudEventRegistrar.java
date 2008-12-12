@@ -141,10 +141,12 @@ public class JMudEventRegistrar {
         return existingSubscriptions == null || existingSubscriptions.remove(subscription);
 	}
 
+    // ToDo CM: unit test
 	private boolean unregisterSubscriptionBySourceObject(final JMudEventSubscription subscription) {
 		return this.unregisterSubscriptionByObject(subscription, this.eventSubscriptionsBySourceObject);
 	}
 
+    // ToDo CM: unit test
 	private boolean unregisterSubscriptionByCCObject(final JMudEventSubscription jmes) {
 		return this.unregisterSubscriptionByObject(jmes, this.eventSubscriptionsByCCObject);
 	}

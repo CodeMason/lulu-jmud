@@ -1,10 +1,7 @@
 package jmud.test.event;
 
 import jmud.engine.behavior.*;
-import jmud.engine.event.JMudEvent;
-import jmud.engine.event.JMudEventRegistrar;
-import jmud.engine.event.JMudEventType;
-import jmud.engine.event.JMudEventParticipantRole;
+import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
 import jmud.test.CommonTestMethods;
@@ -123,17 +120,18 @@ public class EventBehaviorTest{
         Assert.assertFalse("Event fired trigger event at wrong target", TestBehavior.hasBehaviorBeenCalled());
     }
 
-    private void submitTimeBufferedEvent(JMudEvent getEvent){
-        CommonTestMethods.pause(MILLIS_TO_ALLOW_WORKER_WAKEUP);
-        getEvent.submitSelf();
-        CommonTestMethods.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
-    }
-
     @After
    public void tearDown(){
        CommonTestMethods.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
        JobManager.getLazyLoadedInstance().stopAllWorkers();
    }
+
+
+    private void submitTimeBufferedEvent(JMudEvent getEvent){
+        CommonTestMethods.pause(MILLIS_TO_ALLOW_WORKER_WAKEUP);
+        getEvent.submitSelf();
+        CommonTestMethods.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+    }
 
     private void loadTestJMudObjects(JMudObject root){
         orc0 = root.getChildObject("room").getChildObject("orc0");

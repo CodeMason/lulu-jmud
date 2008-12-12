@@ -16,17 +16,17 @@ public class TriggerBehavior extends Behavior {
 
 	private JMudEventParticipantRole triggerEventRole;
 	private JMudObject triggerEventObject;
-	private JMudEventParticipantRole responseEventTarget;
+	private JMudEventParticipantRole sourceEventRoleForResponseEventTarget;
 	private JMudObject responseObject;
 	private JMudEventType responseEventType;
 
 	public TriggerBehavior(JMudObject owner, JMudEventType triggerEventType, JMudEventParticipantRole triggerEventRole,
-			JMudObject triggerEventObject, JMudEventParticipantRole responseEventTarget, JMudEventType responseEventType) {
+			JMudObject triggerEventObject, JMudEventParticipantRole sourceEventRoleForResponseEventTarget, JMudEventType responseEventType) {
 		super(owner);
 		this.eventTypesHandled.add(triggerEventType);
 		this.triggerEventRole = triggerEventRole;
 		this.triggerEventObject = triggerEventObject;
-		this.responseEventTarget = responseEventTarget;
+		this.sourceEventRoleForResponseEventTarget = sourceEventRoleForResponseEventTarget;
 		this.responseEventType = responseEventType;
 	}
 
@@ -68,7 +68,7 @@ public class TriggerBehavior extends Behavior {
 		 */
 
 		// find out which JMudObject we are supposed to send our new event to
-		if (this.responseObject == null && this.responseEventTarget == null) {
+		if (this.responseObject == null && this.sourceEventRoleForResponseEventTarget == null) {
 			// We have no way of determining a target.... this bad!
 			System.err.println("Object and Participant are null in TriggerBehavior!");
 			return false;
@@ -79,13 +79,13 @@ public class TriggerBehavior extends Behavior {
 		if (this.responseObject == null) {
 			// If we supplied a Participant but not a JMudObject....
 
-			if (this.responseEventTarget == JMudEventParticipantRole.SOURCE) {
+			if (this.sourceEventRoleForResponseEventTarget == JMudEventParticipantRole.SOURCE) {
 				tgt = this.event.getSource();
-			} else if (this.responseEventTarget == JMudEventParticipantRole.TARGET) {
+			} else if (this.sourceEventRoleForResponseEventTarget == JMudEventParticipantRole.TARGET) {
 				tgt = this.event.getTarget();
 			} else {
 				// Now this *SHOULDNT* have happened.
-				System.err.println("responseEventTarget is niether Source nor Target in TriggerBehavior!");
+				System.err.println("sourceEventRoleForResponseEventTarget is niether Source nor Target in TriggerBehavior!");
 				return false;
 			}
 		} else {
@@ -114,7 +114,7 @@ public class TriggerBehavior extends Behavior {
 
 		if (this.responseObject == null) {
 			return new TriggerBehavior(this.owner, this.eventTypesHandled.get(0), this.triggerEventRole, this.triggerEventObject,
-					this.responseEventTarget, this.responseEventType);
+					this.sourceEventRoleForResponseEventTarget, this.responseEventType);
 		} else {
 			return new TriggerBehavior(this.owner, this.eventTypesHandled.get(0), this.triggerEventRole, this.triggerEventObject,
 					this.responseObject, this.responseEventType);
