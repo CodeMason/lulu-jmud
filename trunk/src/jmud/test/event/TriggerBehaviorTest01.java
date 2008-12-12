@@ -37,7 +37,7 @@ public class TriggerBehaviorTest01{
 
       JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
 
-      JMudEventRegistrar.getLazyLoadedInstance().init();
+      JMudEventRegistrar.getLazyLoadedInstance();
 
       JMudObject root = CommonTestMethods.buildSimpleJMudObjectTree();
 

@@ -42,7 +42,7 @@ public class JMudEvent extends AbstractJob {
 		ccObjs.addAll(this.target.getParent().childrenValues());
 
 		// Get anything registered
-		ccObjs.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetJMudObjectBySourceAndEvent(this.target,
+		ccObjs.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetObjects(this.target,
 				this.getEventType()));
 
 		// Set success flag
