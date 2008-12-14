@@ -24,7 +24,7 @@ public class JMudObjectTreeTest01 {
 
     @Test
     public void testRemoveJMudObjectParent(){
-        bag.changeParent(null);
+        bag.orphan();
         Assert.assertNull("JMudObject \"bag\" was not removed from JMudObject \"pcSteve\"", bag.getParentObject());
     }
 

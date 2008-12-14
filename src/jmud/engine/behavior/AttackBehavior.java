@@ -22,8 +22,6 @@ public class AttackBehavior extends Behavior {
 	}
 
 	/**
-     * Just print out that we got here for now
-     *
 	 * @see Behavior#behave()
 	 * @return true
 	 */
@@ -36,18 +34,6 @@ public class AttackBehavior extends Behavior {
 
 		return true;
 	}
-
-	@Override
-	protected boolean ccBehavior() {
-		// If I get a AttackEvent, and I am not the target... I dont care! Ignore!
-		return true;
-	}
-
-	@Override
-	protected boolean sourceBehavior() {
-		// If I get a AttackEvent, and I am not the target... I dont care! Ignore!
-        return true;
-    }
 
 	/**
 	 * @see Behavior#clone()
