@@ -2,6 +2,7 @@ package jmud.engine.object;
 
 import jmud.engine.attribute.Attribute;
 import jmud.engine.behavior.Behavior;
+import jmud.engine.behavior.BehaviorFactory;
 import jmud.engine.behavior.SendToConsoleBehavior;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
@@ -26,58 +27,28 @@ public class JMudObject {
 	 * Default constructor.
 	 */
 	public JMudObject() {
-		this(UUID.randomUUID(), "", ROOT_PARENT);
+		this("", ROOT_PARENT);
 	}
 
 	public JMudObject(JMudObject parentObject) {
-		this(UUID.randomUUID(), "", parentObject);
+		this("", parentObject);
 	}
 
 	public JMudObject(String humanReadableName) {
-		this(UUID.randomUUID(), humanReadableName, null);
+		this(humanReadableName, ROOT_PARENT);
 	}
 
-	public JMudObject(String humanReadableName, JMudObject parentObject) {
-		this(UUID.randomUUID(), humanReadableName, parentObject);
-	}
-
-	private JMudObject(UUID uuid, String humanReadableName, final JMudObject parentObject) {
+	private JMudObject(String humanReadableName, final JMudObject parentObject) {
 		this.parentObject = parentObject;
 		this.humanReadableName = humanReadableName;
-		this.uuid = uuid;
+		this.uuid = UUID.randomUUID();
         registerDefaultBehaviorsForEventTypesHandled();
     }
 
     private void registerDefaultBehaviorsForEventTypesHandled(){
-        this.registerBehaviorsForEventTypesHandled(getInstancesOfDefaultBehaviorClasses());
+        this.registerBehaviorsForEventTypesHandled(BehaviorFactory.createBehaviors(DEFAULT_BEHAVIOR_CLASSES, this));
     }
 
-    private List<Behavior> getInstancesOfDefaultBehaviorClasses(){
-        List<Behavior> defaultBehaviors = new ArrayList<Behavior>();
-        Behavior defaultBehavior;
-
-        for(Class behaviorClass : DEFAULT_BEHAVIOR_CLASSES){
-            if(Behavior.class.isAssignableFrom(behaviorClass)){
-                defaultBehavior = getBehaviorInstance(behaviorClass);
-                if(defaultBehavior != null){
-                    defaultBehaviors.add(defaultBehavior);
-                }
-            }
-        }
-
-        return defaultBehaviors;
-    }
-
-    private Behavior getBehaviorInstance(Class behaviorClass){
-        Behavior defaultBehavior;
-        try{
-            defaultBehavior = (Behavior) behaviorClass.getConstructor(JMudObject.class).newInstance(this);
-        }catch(Exception e){
-            System.out.println("Could not instantiate instance of default Behavior " + behaviorClass.getName() + " from " + this.toStringShort() + "\n" + e);
-            defaultBehavior = null;
-        }
-        return defaultBehavior;
-    }
 
     private void registerBehaviorsForEventTypesHandled(List<Behavior> behaviorsToRegister){
         for(Behavior behaviorToRegister : behaviorsToRegister){
@@ -148,6 +119,10 @@ public class JMudObject {
 		return this.childObjects;
 	}
 
+    public int childrenSize(){
+        return this.childObjects.size();
+    }
+
 	public Set<UUID> getChildObjectKeys() {
 		return childObjects.keySet();
 	}
@@ -165,14 +140,6 @@ public class JMudObject {
 		return jmo;
 	}
 
-	public int childrenSize() {
-		return this.childObjects.size();
-	}
-
-	public Collection<JMudObject> childrenValues() {
-		return this.childObjects.values();
-	}
-
 	public String getHumanReadableName() {
 		return this.humanReadableName;
 	}
@@ -186,7 +153,7 @@ public class JMudObject {
 	}
 
 	/**
-	 * Get a handle on the Attribute Map
+	 * Get the Attribute Map
 	 *
 	 * @return
 	 */
@@ -194,66 +161,50 @@ public class JMudObject {
 		return attributesByName;
 	}
 
-	/*                         */
-	/*                         */
-	/* Hierarchy Tools */
-	/*                         */
-	/*                         */
-
 	public final Map<UUID, JMudObject> getSiblings() {
 
 		Map<UUID, JMudObject> map = null;
 
-		// the ONLY way you should ever have Zero siblings is if you are ROOT
-		// QQQ CM You mean the only way you won't have a parentObject? (I could be the
-		// only thing in a room, the only thing in a bag, the only brain cell in
-		// Dave's head (KIDDING!), etc.)
-		// AAA DHL: Root, by definition will have no siblings nor will it have a
-		// parentObject. (ignores the brain cell thing :P)
-        // QQQ CM: It's just that below, you're not referring to siblings, you're
-        // referring to the parentObject. :)
-
         if (this.parentObject != null) {
 			map = this.parentObject.getChildObjects();
-			// filter out the calling object
-			map.remove(this.getUuid());
-		}
+            removeCurrentObject(map);
+        }
 		return map;
 	}
 
-	public final void orphan() {
-		// System.err.println("\nOrphaning " + this.toStringShort() + "\n");
+    private void removeCurrentObject(Map<UUID, JMudObject> map){
+        map.remove(this.getUuid());
+    }
 
-		JMudObject parent = this.getParentObject();
-
-		if (parent != null) {
-			// first, remove the parentObject's reference to the child
-			parent.childrenRemove(this);
-		}
-		// then remove the child's reference to the parentObject
+    public final void orphan() {
+        removeFromParent();
 		this.setParentObject(null);
 
 	}
 
-	public final void changeParent(final JMudObject newParent) {
+    private void removeFromParent(){
+        JMudObject parent = this.getParentObject();
 
-		// remove ties to old parent
-		this.orphan();
+        if (parent != null) {
+            parent.childrenRemove(this);
+        }
+    }
 
-		// establish newParent's reference to this
+    public final void changeParent(JMudObject newParent) {
 		if (newParent != null) {
+            this.orphan();
 			newParent.addChildObject(this);
-		}
+            this.setParentObject(newParent);
+        }
 	}
 
 	/**
-	 * Directly sets this object's parent JMudObject object reference. *
+	 * Directly sets this object's parent JMudObject object reference.
 	 *
 	 * @param newParent
 	 *            the new parent of this JMudObject
 	 */
-
-	private void setParentObject(final JMudObject newParent) {
+	private void setParentObject(JMudObject newParent) {
 		this.parentObject = newParent;
 	}
 
@@ -261,17 +212,8 @@ public class JMudObject {
 		return this.parentObject;
 	}
 
-	/*                         */
-	/*                         */
-	/* Information Tools */
-	/*                         */
-	/*                         */
-
 	@Override
 	public final String toString() {
-		// QQQ DL: Why StringBuilder over string?
-        // AAA CM: Faster: Strings are immutable, adding to one creates another one;
-        // the String work might be optimized out by the compiler, but still ...
         StringBuilder out = new StringBuilder(this.toStringShort());
 
 		if (this.parentObject != null) {
@@ -293,13 +235,4 @@ public class JMudObject {
 	public void sendToConsole(String text) {
 		System.out.println("\n" + this.humanReadableName + "'s console: " + text);
 	}
-
-	public void saveToDB() {
-		// TODO stubbed the JMudObject db save here.
-	}
-
-	public void deleteFromDB() {
-		// TODO stubbed the JMudObject db delete here.
-	}
-
 }

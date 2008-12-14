@@ -14,15 +14,10 @@ import java.util.List;
  * discrete portion of logic that can be associated with a
  * <code>JMudObject</code> and called in response to a <code>JMudEvent</code>.
  *
- * Each <code>Behavior</code> will return any resulting events which will
- * facilitate event-chaining (think Rube Goldberg).
- *
  * <code>Behaviors</code> should check that they are handling the right event. Each
  * <code>Behavior</code> might list a top level event class that it handles.
  * ToDo: How will a <code>Behavior</code> get what objects it needs to work on?
  * Should we always pass in the source event and target object?
- *
- * @author david.h.loman
  */
 public abstract class Behavior extends AbstractJob {
 
@@ -50,14 +45,7 @@ public abstract class Behavior extends AbstractJob {
 	 * @return true if behavior completes successfully
 	 */
 	protected boolean behave() {
-		if (this.event == null) {
-			// cannot run the behavior if there is no event to respond to!
-			return false;
-		}
-
-		if (!this.eventTypesHandled.contains(this.event.getEventType())) {
-			// If the event's type isn't on this Behaviors eventTypesHandledlist...
-			// then return false.
+		if (!canHandleEvent(event)) {
 			return false;
 		}
 
@@ -68,10 +56,13 @@ public abstract class Behavior extends AbstractJob {
 		} else  {
 			return this.ccBehavior();
 		}
-
 	}
 
-	/**
+    protected boolean canHandleEvent(JMudEvent event){
+        return event != null && this.eventTypesHandled.contains(this.event.getEventType());
+    }
+
+    /**
 	 * perform this <code>Behavior's</code> behavior if this behavior belongs to the
 	 * event's target object
 	 *
@@ -127,8 +118,7 @@ public abstract class Behavior extends AbstractJob {
 	}
 
 	/**
-	 * @param inEvent
-	 *            the set event
+	 * @param inEvent the set event
 	 */
 	public final void setEvent(final JMudEvent inEvent) {
 		this.event = inEvent;

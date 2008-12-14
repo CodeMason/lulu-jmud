@@ -12,19 +12,14 @@ public class JMudEvent extends AbstractJob {
 	private final transient JMudObject source;
 	private final transient JMudObject target;
 
-	/**
-	 * Generic map to handle any/all String named data that needs to accompany
-	 * the Event.
-	 */
-	// Always initialize non-final's, even if its to null;
-	private Map<String, Object> dataMap = null;
+	private Map<String, Object> namedEventParameters = null;
 
 	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
 		this.targetEventType = eventType;
 		this.source = source;
 		this.target = target;
 
-		this.dataMap = Collections.synchronizedMap(new HashMap<String, Object>());
+		this.namedEventParameters = Collections.synchronizedMap(new HashMap<String, Object>());
 	}
 
 	@Override
@@ -33,64 +28,39 @@ public class JMudEvent extends AbstractJob {
 		synchronized (System.out) {
 			System.out.println("Running a JMudEvent::" + this.targetEventType);
 		}
-		// Build objects to send Event to List:
-		Set<JMudObject> ccObjs = new HashSet<JMudObject>();
 
-		// Get all the siblings
-		// QQQ CM: including self?
-		// AAA DL:Yuppers! that's where 'pcSteve picks YOU up' comes from!
-		ccObjs.addAll(this.source.getParentObject().childrenValues());
-		ccObjs.addAll(this.target.getParentObject().childrenValues());
-
-		// Get anything registered
-		ccObjs.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetObjects(this.target,
-				this.getEventType()));
+        Set<JMudObject> objectsToNotify = new HashSet<JMudObject>();
+		objectsToNotify.addAll(this.source.getParentObject().getChildObjects().values());
+		objectsToNotify.addAll(this.target.getParentObject().getChildObjects().values());
+		objectsToNotify.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetObjects(this.target, this.getEventType()));
 
 		// Set success flag
-		boolean allFinishedTrue = true;
+		boolean hasCompletedSuccessfully = true;
 
-		// Iterate over the list:
-		for (JMudObject jmo : ccObjs) {
+		for (JMudObject ccObject : objectsToNotify) {
 
-			// Now Handle the Target
-			List<Behavior> behs = jmo.getBehaviors(this.getEventType());
+			List<Behavior> ccObjectBehaviors = ccObject.getBehaviors(this.getEventType());
 
-			if (behs == null) {
-				behs = new ArrayList<Behavior>();
+			if (ccObjectBehaviors == null) {
+				ccObjectBehaviors = new ArrayList<Behavior>();
 			}
 
-			// synchronized (System.out) {
-			// System.out.println("(" + this.getID() +
-			// ") JMudEvent.doJob(): Found " + behs.size() +
-			// " behaviors of type "
-			// + this.getEventType() + " from " + jmo.toStringShort() +
-			// " to run.");
-			// }
-
-			if (!behs.isEmpty()) {
-				for (Behavior b : behs) {
+			if (!ccObjectBehaviors.isEmpty()) {
+				for (Behavior b : ccObjectBehaviors) {
                     newB = b.clone();
                     newB.setEvent(this);
-
-					// synchronized (System.out) {
-					// System.out.println("(" + this.getID() +
-					// ") Behavior Cloning: " + b.toString()
-					// + " was cloned into: " + newB.toString());
-					// }
 					newB.submitSelf();
 				}
 
 			} else {
-				// Set flag to false to show that this event did NOT evoke
-				// behavior from every object.
-				allFinishedTrue = false;
+				hasCompletedSuccessfully = false;
 			}
 		}
-		return allFinishedTrue;
+		return hasCompletedSuccessfully;
 	}
 
-	public final Map<String, Object> getDataMap() {
-		return dataMap;
+	public final Map<String, Object> getNamedEventParameters() {
+		return namedEventParameters;
 	}
 
 	public final JMudEventType getEventType() {

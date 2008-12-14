@@ -24,21 +24,9 @@ public class SendToConsoleBehavior extends Behavior {
 	 */
 	@Override
 	public boolean targetBehavior() {
-		//Get the info off the event's dataMap
-		String text = String.valueOf(this.event.getDataMap().get("textToConsole")).concat("");
+		String text = String.valueOf(this.event.getNamedEventParameters().get("textToConsole")).concat("");
 		this.event.getTarget().sendToConsole(text);
 		return true;
-	}
-
-	@Override
-	protected boolean ccBehavior() {
-		return true;
-	}
-
-	@Override
-	protected boolean sourceBehavior() {
-		// loop back to ccBehavior()
-		return this.ccBehavior();
 	}
 
 	/**

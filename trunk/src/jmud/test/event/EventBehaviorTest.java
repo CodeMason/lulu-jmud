@@ -1,7 +1,10 @@
 package jmud.test.event;
 
 import jmud.engine.behavior.*;
-import jmud.engine.event.*;
+import jmud.engine.event.JMudEvent;
+import jmud.engine.event.JMudEventParticipantRole;
+import jmud.engine.event.JMudEventRegistrar;
+import jmud.engine.event.JMudEventType;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
 import jmud.test.CommonTestMethods;
@@ -9,6 +12,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class EventBehaviorTest{
     private static final int NUM_JOB_WORKERS = 1;
@@ -141,24 +147,13 @@ public class EventBehaviorTest{
     }
 
     private void addBehaviorsToJMudObjects(){
-        orc0.registerBehaviorForEventTypesHandled(new GetBehavior(orc0));
-        orc1.registerBehaviorForEventTypesHandled(new GetBehavior(orc1));
-        bag.registerBehaviorForEventTypesHandled(new GetBehavior(bag));
-        pcSteve.registerBehaviorForEventTypesHandled(new GetBehavior(pcSteve));
+        List<JMudObject> objectsNeedingBehaviors = Arrays.asList(orc0, orc1, bag, pcSteve);
+        List<Class> behaviorClassesToAdd = Arrays.asList((Class) GetBehavior.class, GotBehavior.class, AttackBehavior.class, AttackedBehavior.class);
 
-        orc0.registerBehaviorForEventTypesHandled(new GotBehavior(orc0));
-        orc1.registerBehaviorForEventTypesHandled(new GotBehavior(orc1));
-        bag.registerBehaviorForEventTypesHandled(new GotBehavior(bag));
-        pcSteve.registerBehaviorForEventTypesHandled(new GotBehavior(pcSteve));
-
-        orc0.registerBehaviorForEventTypesHandled(new AttackBehavior(orc0));
-        orc1.registerBehaviorForEventTypesHandled(new AttackBehavior(orc1));
-        bag.registerBehaviorForEventTypesHandled(new AttackBehavior(bag));
-        pcSteve.registerBehaviorForEventTypesHandled(new AttackBehavior(pcSteve));
-
-        orc0.registerBehaviorForEventTypesHandled(new AttackedBehavior(orc0));
-        orc1.registerBehaviorForEventTypesHandled(new AttackedBehavior(orc1));
-        bag.registerBehaviorForEventTypesHandled(new AttackedBehavior(bag));
-        pcSteve.registerBehaviorForEventTypesHandled(new AttackedBehavior(pcSteve));
+        for(JMudObject objectNeedingBehavior : objectsNeedingBehaviors){
+            for(Behavior behavior : BehaviorFactory.createBehaviors(behaviorClassesToAdd, objectNeedingBehavior)){
+                objectNeedingBehavior.registerBehaviorForEventTypesHandled(behavior);
+            }
+        }
     }
 }
