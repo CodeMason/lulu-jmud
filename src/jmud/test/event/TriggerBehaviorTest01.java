@@ -8,7 +8,7 @@ import jmud.engine.behavior.TriggerBehavior;
 import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
-import jmud.test.CommonTestMethods;
+import jmud.test.TestUtil;
 
 /**
  *
@@ -39,7 +39,7 @@ public class TriggerBehaviorTest01{
 
       JMudEventRegistrar.getLazyLoadedInstance();
 
-      JMudObject root = CommonTestMethods.buildSimpleJMudObjectTree();
+      JMudObject root = TestUtil.buildSimpleJMudObjectTree();
 
       createTestJMudObjects(root);
       addNewJMudObjectTestBehaviors();
@@ -54,7 +54,7 @@ public class TriggerBehaviorTest01{
 
       // Printout the tree.
       System.out.println("\n\nOriginal Tree");
-      CommonTestMethods.printJMudObjectTree(root);
+      TestUtil.printJMudObjectTree(root);
       System.out.println("\n\n");
 
       // make the JMudEvent that will cause pcSteve to get the bag
@@ -66,11 +66,11 @@ public class TriggerBehaviorTest01{
 
 
       // another sleep to ensure all events are processed
-      CommonTestMethods.pause(1000);
+      TestUtil.pause(1000);
 
       // Printout the tree.
       System.out.println("\n\nModified Tree");
-      CommonTestMethods.printJMudObjectTree(root);
+      TestUtil.printJMudObjectTree(root);
       System.out.println("\n\n");
 
       JobManager.getLazyLoadedInstance().stopAllWorkers();

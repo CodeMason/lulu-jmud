@@ -4,7 +4,7 @@ import jmud.engine.behavior.*;
 import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
-import jmud.test.CommonTestMethods;
+import jmud.test.TestUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class EventRegistrationTest{
    public void setup(){
        JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
        eventRegistrar= JMudEventRegistrar.getLazyLoadedInstance();
-       loadTestJMudObjects(CommonTestMethods.buildSimpleJMudObjectTree());
+       loadTestJMudObjects(TestUtil.buildSimpleJMudObjectTree());
        addBehaviorsToJMudObjects();
    }
 
@@ -47,7 +47,7 @@ public class EventRegistrationTest{
 
     @After
    public void tearDown(){
-       CommonTestMethods.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+       TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
        JobManager.getLazyLoadedInstance().stopAllWorkers();
    }
 
