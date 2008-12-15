@@ -2,7 +2,7 @@ package jmud.test.netIO;
 
 import jmud.engine.job.JobManager;
 import jmud.engine.netIO.ConnectionManager;
-import jmud.test.CommonTestMethods;
+import jmud.test.TestUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -31,7 +31,7 @@ public class ConnectionManagerTest01 {
 		ConnectionManager.getInstance().init(InetAddress.getLocalHost(), 54321);
 		ConnectionManager.getInstance().start();
 
-		CommonTestMethods.pause(stayAlive);
+		TestUtil.pause(stayAlive);
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
 		ConnectionManager.getInstance().stop();

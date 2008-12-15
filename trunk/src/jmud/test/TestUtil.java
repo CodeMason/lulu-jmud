@@ -1,11 +1,16 @@
 package jmud.test;
 
 import jmud.engine.object.JMudObject;
+import jmud.engine.behavior.*;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Arrays;
 
-public class CommonTestMethods {
-	public static JMudObject buildSimpleJMudObjectTree() {
+public class TestUtil{
+    private static final List<String> STANDARD_GEAR_NAMES = Arrays.asList("Sword", "Shield", "Helmet");
+
+    public static JMudObject buildSimpleJMudObjectTree() {
 		JMudObject root = new JMudObject("root");
 		JMudObject room = new JMudObject("room");
 		JMudObject pcSteve = new JMudObject("pcSteve");
@@ -33,20 +38,58 @@ public class CommonTestMethods {
 		return root;
 	}
 
+    public static JMudObject buildObjectTree(int numberOfParentObjects){
+
+        JMudObject root = new JMudObject("root");
+        JMudObject room = new JMudObject("room");
+        root.addChildObject(room);
+
+        for(int i = 0; i < numberOfParentObjects; i++){
+            room.addChildObject(createOrcWithGearAndBehaviors());
+        }
+
+        return root;
+    }
+
+    private static JMudObject createOrcWithGearAndBehaviors(){
+        JMudObject orc = new JMudObject("Orc");
+        addBehaviorsToObject(orc, Arrays.asList((Class) GetBehavior.class, GotBehavior.class, AttackBehavior.class, AttackedBehavior.class));
+        addGearObjectsWithBehaviors(orc, STANDARD_GEAR_NAMES);
+        return orc;
+    }
+
+    private static void addGearObjectsWithBehaviors(JMudObject parentObject, List<String> gearNames){
+        for(String gearName : gearNames){
+            parentObject.addChildObject(createGearObjectWithBehaviors(gearName));
+        }
+    }
+
+    private static JMudObject createGearObjectWithBehaviors(String childObjectName){
+        JMudObject newObject = new JMudObject(childObjectName);
+        addBehaviorsToObject(newObject, Arrays.asList((Class) GetBehavior.class, GotBehavior.class));
+        return newObject;
+    }
+
+    private static void addBehaviorsToObject(JMudObject object, List<Class> behaviorClassesToAdd){
+        for(Behavior behavior : BehaviorFactory.createBehaviors(behaviorClassesToAdd, object)){
+            object.registerBehaviorForEventTypesHandled(behavior);
+        }
+    }
+
     public static void printJMudObjectTree(JMudObject root, String debugMessage){
         System.out.println("\n\n" + debugMessage);
-        CommonTestMethods.printJMudObjectTree(root);
+        TestUtil.printJMudObjectTree(root);
         System.out.println("\n\n");
     }
 
     public static void printJMudObjectTree(final Collection<JMudObject> jmo) {
 		for (JMudObject j : jmo) {
-			CommonTestMethods.printJMudObjectTree(j, 0);
+			TestUtil.printJMudObjectTree(j, 0);
 		}
 	}
 
 	public static void printJMudObjectTree(final JMudObject jmo) {
-		CommonTestMethods.printJMudObjectTree(jmo, 0);
+		TestUtil.printJMudObjectTree(jmo, 0);
 	}
 
 	public static void printJMudObjectTree(final JMudObject jmo, final int lvl) {
@@ -65,7 +108,7 @@ public class CommonTestMethods {
 
 		// recurse on all children
 		for (JMudObject j : jmo.getChildObjects().values()) {
-			CommonTestMethods.printJMudObjectTree(j, lvl + 1);
+			TestUtil.printJMudObjectTree(j, lvl + 1);
 		}
 
         // CM: is this just a style thing?

@@ -1,7 +1,7 @@
 package jmud.test.object;
 
 import jmud.engine.object.JMudObject;
-import jmud.test.CommonTestMethods;
+import jmud.test.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class JMudObjectTreeTest01 {
 
     @Before
     public void setup(){
-        getTestJMudObjects(CommonTestMethods.buildSimpleJMudObjectTree());
+        getTestJMudObjects(TestUtil.buildSimpleJMudObjectTree());
     }
 
     @Test

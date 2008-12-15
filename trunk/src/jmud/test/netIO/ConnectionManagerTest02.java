@@ -8,7 +8,7 @@ import jmud.engine.commands.CommandRegistrar;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
 import jmud.engine.netIO.ConnectionManager;
-import jmud.test.CommonTestMethods;
+import jmud.test.TestUtil;
 
 public class ConnectionManagerTest02 {
 
@@ -43,7 +43,7 @@ public class ConnectionManagerTest02 {
 
 
 
-		CommonTestMethods.pause(stayAlive);
+		TestUtil.pause(stayAlive);
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
 		ConnectionManager.getInstance().stop();
