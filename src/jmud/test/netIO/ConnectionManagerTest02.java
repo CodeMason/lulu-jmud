@@ -29,8 +29,8 @@ public class ConnectionManagerTest02 {
 		JobManager.getLazyLoadedInstance().init(1);
 
 		//initialize ConnMan
-		ConnectionManager.getInstance().init(InetAddress.getLocalHost(), 54321);
-		ConnectionManager.getInstance().start();
+		ConnectionManager.getLazyLoadedInstance().init(InetAddress.getLocalHost(), 54321);
+		ConnectionManager.getLazyLoadedInstance().start();
 
 		//initialize CommandRegistrar
 		CommandRegistrar.getInstance().init();
@@ -46,7 +46,7 @@ public class ConnectionManagerTest02 {
 		TestUtil.pause(stayAlive);
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
-		ConnectionManager.getInstance().stop();
+		ConnectionManager.getLazyLoadedInstance().stop();
 		JobManager.getLazyLoadedInstance().stopAllWorkers();
 	}
 
