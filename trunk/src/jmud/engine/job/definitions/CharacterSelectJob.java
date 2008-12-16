@@ -51,7 +51,7 @@ public class CharacterSelectJob extends AbstractJob {
 					this.c.sendTextLn("- " + s);
 				}
 				this.c.sendTextLn("-----~--------------~-----");
-				this.c.sendText("Please type the name of the character you wish to use, "
+				this.c.sendText("Please connectionType the name of the character you wish to use, "
 						+ "'New Character' to make a new character, " + "or 'Quit': ");
 			} else {
 				// Differentiate between character select, quit or new character

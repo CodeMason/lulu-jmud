@@ -1,5 +1,5 @@
 package jmud.engine.netIO;
 
-public enum ConnectionState {
-	NotConnected, ConnectedButNotLoggedIn, LoggedInToCharacterSelect, LoggedInToNewCharacter, LoggedInToGameServer
+public enum ConnectionState{
+    NotConnected, ConnectedButNotLoggedIn, LoggedInToCharacterSelect, LoggedInToNewCharacter, LoggedInToGameServer
 }

@@ -41,4 +41,11 @@ public class Attribute {
 		return value;
 	}
 
+    public enum AttributeType{
+        OBJECT_BULK,
+        CONTAINING_BULK,
+        OBJECT_SLOT_TYPE,
+        CONTAINING_SLOT_TYPE
+    }
+
 }

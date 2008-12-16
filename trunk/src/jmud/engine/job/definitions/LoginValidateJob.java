@@ -22,7 +22,7 @@ public class LoginValidateJob extends AbstractJob {
 	public LoginValidateJob(Connection c, String data) {
 		super();
 		this.c = c;
-		this.data = (data == null ? "" : data); 
+		this.data = (data == null ? "" : data);
 	}
 	public LoginValidateJob(Connection c) {
 		this(c, "");
@@ -54,9 +54,9 @@ public class LoginValidateJob extends AbstractJob {
 					this.c.setUName("");
 					this.c.setPassWd("");
 					this.c.setLoginstate(LoginState.Neither);
-					this.c.incrLogAttempts();
+					this.c.incrementLoginAttempts();
 
-					if (this.c.getLogAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
+					if (this.c.getLoginAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
 						this.c.sendTextLn("Number of tries exceeded.  Goodbye!");
 						this.c.sendCRLFs(2);
 						this.c.disconnect();

@@ -1,264 +1,250 @@
 package jmud.engine.netIO;
 
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import jmud.engine.core.JMudStatics;
+import jmud.engine.job.definitions.SplashScreenJob;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 
 /**
  * The Connection class represents a single connection to/from a user. The
  * Connection class is the single, high level point of access for sending data
  * to a user. This abstraction of functionality away from the ConnectionManager
  * simplifies use of the netIO package.
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
-public class Connection {
+public class Connection{
+    private int accountID = 0;
+    private String uName = "";
+    private String passWd = "";
+    private int loginAttempts = 0;
+    private LoginState loginstate = LoginState.Neither;
+    private final String name;
+    private final SocketChannel socketChannel;
+    private ByteBuffer readBuffer = ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
+    private StringBuilder receivedText;
+    private ConnectionState connState = ConnectionState.NotConnected;
 
-	/**
-	 * The AccountID associated with this Connection
-	 */
-	private int accountID = 0;
+    /**
+     * Explicit constructor.
+     *
+     * @param inSc SocketChannel used for communications
+     * @param name Name to identify this object by.
+     */
+    public Connection(final SocketChannel inSc, final String name){
+        this.socketChannel = inSc;
+        this.connState = ConnectionState.NotConnected;
+        this.name = name;
+        this.receivedText = new StringBuilder();
+    }
 
-	/**
-	 * The username associated with this Connection
-	 */
-	private String uName = "";
+    /**
+     * @return the AccountID associated with this Connection.
+     */
+    public int getAccountID(){
+        return accountID;
+    }
 
-	/**
-	 * The password associated with this Connection
-	 */
-	private String passWd = "";
+    /**
+     * Set the AccountID associated with this Connection
+     *
+     * @param accountID
+     */
+    public void setAccountID(int accountID){
+        this.accountID = accountID;
+    }
 
-	/**
-	 * Number of login Attempts
-	 */
-	private int logAttempts = 0;
+    /**
+     * @return the Connection State associated with this Connection
+     */
+    public ConnectionState getConnState(){
+        return connState;
+    }
 
-	/**
-	 * The current Login State associated with this Connection
-	 */
-	private LoginState loginstate = LoginState.Neither;
+    /**
+     * Set this Connection object's Connection State.
+     *
+     * @param connState
+     */
+    public void setConnState(ConnectionState connState){
+        this.connState = connState;
+    }
 
-	/**
-	 * The name associated with this Connection.  This is not to be confused with
-	 * the username.
-	 */
-	private final String name;
+    /**
+     * @return this Connection object's name.
+     */
+    public String getName(){
+        return name;
+    }
 
-	/**
-	 * Supplies the data that is read into the buffer.
-	 */
-	private final SocketChannel sc;
+    /**
+     * @return the username associated with this Connection.
+     */
+    public String getUName(){
+        return uName;
+    }
 
-	/**
-	 * The buffer into which we'll read incoming data when it's available.
-	 */
-	private ByteBuffer readBuffer = ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
+    /**
+     * Set the username associated with this Connection.
+     *
+     * @param uName
+     */
+    public void setUName(String uName){
+        this.uName = uName;
+    }
 
-	/**
-	 * This Connection object's Connection State
-	 */
-	private ConnectionState connState = ConnectionState.NotConnected;
+    /**
+     * @return the password associated with this Connection.
+     */
+    public String getPassWd(){
+        return passWd;
+    }
 
-	/**
-	 * Explicit constructor.
-	 * 
-	 * @param inSc SocketChannel used for communications
-	 * @param name Name to identify this object by.
-	 */
-	public Connection(final SocketChannel inSc, final String name) {
-		this.sc = inSc;
-		this.connState = ConnectionState.NotConnected;
-		this.name = name;
-	}
+    /**
+     * Set the password associated with this Connection
+     *
+     * @param passWd
+     */
+    public void setPassWd(String passWd){
+        this.passWd = passWd;
+    }
 
-	/*                                                   */
-	/*                                                   */
-	/* Getter's n' Setters */
-	/*                                                   */
-	/*                                                   */
+    /**
+     * @return the number of Login attempts for this connection.
+     */
+    public int getLoginAttempts(){
+        return loginAttempts;
+    }
 
-	/**
-	 * @return this connection object's read buffer
-	 */
-	public final ByteBuffer getReadBuffer() {
-		return readBuffer;
-	}
+    /**
+     * Reset this Connection object's logAttempts;
+     */
+    public void resetLoginAttempts(){
+        this.loginAttempts = 0;
+    }
 
-	/**
-	 * @return this Connection object's data socket
-	 */
-	public final SocketChannel getSc() {
-		return sc;
-	}
-/**
- * @return the AccountID associated with this Connection.
- */
-	public int getAccountID() {
-		return accountID;
-	}
+    /**
+     * Increment this Connection object's logAttempts;
+     */
+    public void incrementLoginAttempts(){
+        ++this.loginAttempts;
+    }
 
-/**
- * Set the AccountID associated with this Connection
- * @param accountID
- */
-	public void setAccountID(int accountID) {
-		this.accountID = accountID;
-	}
+    /**
+     * @return the Login State associated with this Connection
+     */
+    public LoginState getLoginstate(){
+        return loginstate;
+    }
 
-	/**
-	 * @return the Connection State associated with this Connection
-	 */
-	public ConnectionState getConnState() {
-		return connState;
-	}
+    /**
+     * Set this Connection object's Login State
+     *
+     * @param loginstate
+     */
+    public void setLoginstate(LoginState loginstate){
+        this.loginstate = loginstate;
+    }
 
-	/**
-	 * Set this Connection object's Connection State.
-	 * 
-	 * @param connState
-	 */
-	public void setConnState(ConnectionState connState) {
-		this.connState = connState;
-	}
+    /**
+     * Send the text, with a CRLF, to the client.
+     *
+     * @param textToSend
+     */
+    public void sendTextLn(String textToSend){
+        // Attach the SocketChannel and send the text on its way!
+        this.sendText(textToSend + JMudStatics.CRLF);
+    }
 
-	/**
-	 * @return this Connection object's name.
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Send multiple CRLFs to the client.
+     */
+    public void sendCRLFs(int numberOfCRLFs){
+        StringBuilder crlfs = new StringBuilder();
+        for(int i = 0; i < numberOfCRLFs; ++i){
+            crlfs.append(JMudStatics.CRLF);
+        }
+        this.sendText(crlfs.toString());
+    }
 
-	/**
-	 * @return the username associated with this Connection.
-	 */
-	public String getUName() {
-		return uName;
-	}
+    /**
+     * Send a CRLF to the client.
+     */
+    public void sendCRLF(){
+        this.sendText(JMudStatics.CRLF);
+    }
 
-	/**
-	 * Set the username associated with this Connection.
-	 * 
-	 * @param uName
-	 */
-	public void setUName(String uName) {
-		this.uName = uName;
-	}
+    /**
+     * Send the text, without a CRLF, to the client.
+     *
+     * @param text
+     */
+    public void sendText(String text){
+        // Attach the SocketChannel and send the text on its way!
+        ConnectionManager.getLazyLoadedInstance().send(this.socketChannel, text);
+    }
 
-	/**
-	 * @return the password associated with this Connection.
-	 */
-	public String getPassWd() {
-		return passWd;
-	}
+    public void sendSplashScreen(){
+        SplashScreenJob job = new SplashScreenJob(this);
+        job.submitSelf();
+    }
 
-	/**
-	 * Set the password associated with this Connection
-	 * 
-	 * @param passWd
-	 */
-	public void setPassWd(String passWd) {
-		this.passWd = passWd;
-	}
+    public boolean isConnectionLost() throws IOException{
+        return socketChannel.read(readBuffer) < 0;
+    }
 
-	/**
-	 * @return the number of Login attempts for this connection.
-	 */
-	public int getLogAttempts() {
-		return logAttempts;
-	}
+    public boolean isCommandComplete(){
+        storeAndClearReadBuffer();
+        return receivedText.toString().contains(JMudStatics.CRLF);
+    }
 
-	/**
-	 * Set this Connection object's logAttempts;
-	 * 
-	 * @param logAttempts
-	 */
-	public void setLogAttempts(int logAttempts) {
-		this.logAttempts = logAttempts;
-	}
+    public String getAndClearCommand(){
+        String data;
+        storeAndClearReadBuffer();
+        data = receivedText.toString().replace(JMudStatics.CRLF, "");
+        receivedText = new StringBuilder();
+        return data;
+    }
 
-	/**
-	 * Increment this Connection object's logAttempts;
-	 * 
-	 * @param logAttempts
-	 */
-	public void incrLogAttempts() {
-		++this.logAttempts;
-	}
+    private void storeAndClearReadBuffer(){
+        Charset cs = Charset.forName("ISO-8859-1");
+        CharsetDecoder dec = cs.newDecoder();
 
-	/**
-	 * @return the Login State associated with this Connection
-	 */
-	public LoginState getLoginstate() {
-		return loginstate;
-	}
-
-	/**
-	 * Set this Connection object's Login State
-	 * 
-	 * @param loginstate
-	 */
-	public void setLoginstate(LoginState loginstate) {
-		this.loginstate = loginstate;
-	}
-
-	/*
-	 * Data IO
-	 */
-
-	/**
-	 * Force this connection to close.
-	 */
-	public void disconnect() {
-		ConnectionManager.getInstance().disconnectFrom(this);
-	}
-
-	/**
-	 * Send the text, without a CRLF, to the client.
-	 * @param text
-	 */
-	public void sendText(String text) {
-		// Attach the SocketChannel and send the text on its way!
-		ConnectionManager.getInstance().send(this.sc, text);
-	}
-
-	/**
-	 * Send the text, with a CRLF, to the client.
-	 * @param text
-	 */
-	public void sendTextLn(String text) {
-		// Attach the SocketChannel and send the text on its way!
-		this.sendText(text + JMudStatics.CRLF);
-	}
-
-	/**
-	 * Send a CRLF to the client.
-	 * @param text
-	 */
-	public void sendCRLF() {
-		this.sendText(JMudStatics.CRLF);
-	}
-
-	/**
-	 * Send multiple CRLFs to the client.
-	 * @param text
-	 */
-	public void sendCRLFs(int numberOfCRLFs) {
-		String out = "";
-		for (int i = 0; i < numberOfCRLFs; ++i) {
-			out += JMudStatics.CRLF;
-		}
-		this.sendText(out);
-	}
-	
-	/**
-	 * Send the mud prompt to the client.
-	 * @param text
-	 */
-	public void sendPrompt() {
-		this.sendText(JMudStatics.PROMPT);
-	}
+        try{
+            readBuffer.flip();
+            CharBuffer cb = dec.decode(readBuffer);
+            receivedText.append(cb.toString());
+        } catch(CharacterCodingException e){
+            System.err.println("Connection: CharacterCodingException in ByteBuffer of: " + socketChannel.socket().getInetAddress().toString());
+            e.printStackTrace();
+        } catch(Exception e){
+            System.err.println("Connection: Exception in ByteBuffer of: " + socketChannel.socket().getInetAddress().toString());
+            e.printStackTrace();
+        }
+    }
 
 
+    /**
+     * Disconnect
+     *
+     * @return true if the disconnect succeeded
+     * @throws java.io.IOException
+     */
+    public boolean disconnect(){
+        ConnectionManager.getLazyLoadedInstance().disconnectFrom(this);
+        try{
+            socketChannel.close();
+        } catch(IOException e){
+            System.err.println("ConnectionManager.disconnect(SocketChannel): Failed to close socket connection.");
+            e.printStackTrace();
+        }
+        return socketChannel.isConnected();
+    }
 }
