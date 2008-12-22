@@ -4,6 +4,7 @@ import java.sql.Connection;
 
 import jmud.engine.dbio.MysqlConnection;
 
+// ToDo CM: tables should be created based on the class structure if we're using a persistence technology (e.g. Hibernate)
 public class MakeDBTables {
 
 	/**
