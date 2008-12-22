@@ -7,6 +7,7 @@ public class JMudStatics {
 	public static final String dbUName = "root";
 	public static final String dbPassWd = "jmud";
 	public static final int dbPort = 3306;
+    public static final String log4jConfigFile = "log4j.lcf";
 
 
     //ToDo CM: this should be configurable per user (e.g. [CurrHP]:[MaxHP]/[CurrMana]:[MaxMana] etc.)

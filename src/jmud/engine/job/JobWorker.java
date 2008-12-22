@@ -68,11 +68,10 @@ public class JobWorker implements Runnable {
 	}
 
 	public final void stop() {
-		System.out.println("JobWorker ID:" + this.workerId + ": Received Shutdown Command.");
+		System.out.println("JobWorker ID:" + this.workerId + ": Received stop Command.");
 		this.runCmd = false;
 		synchronized (this) {
 			this.notify();
 		}
-
-	}
+    }
 }

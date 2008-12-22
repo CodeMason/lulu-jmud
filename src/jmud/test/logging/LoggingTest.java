@@ -16,32 +16,33 @@
  */
 package jmud.test.logging;
 
+import jmud.engine.core.JMudStatics;
+import jmud.logging.LoggingUtil;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class LoggingTest {
     private static Logger LOGGER = Logger.getLogger(LoggingTest.class);
-    private static final String TEST_LOG_FILE_NAME = "testLog4j.log";
     private static final String TEST_LOG_MESSAGE = "Test Log Message";
-    private static final String TEST_LOG_PREFIX = "test: ";
-    private static final String TEST_LOG_PATTERN = TEST_LOG_PREFIX + "%m%n";
+    private static final String TEST_LOG_FILE_NAME = "testLog4j.log";
 
     @Before
     public void setup() {
-        PropertyConfigurator.configure(createLog4jProperties());
+
     }
 
     @Test
-    public void testAbleToLog() {
+    public void testFileConfigurationLogging() {
+        LoggingUtil.resetConfiguration();
+        LoggingUtil.configureLogging(JMudStatics.log4jConfigFile);
+
         List<String> logFileLines = new ArrayList<String>();
         LOGGER.info(TEST_LOG_MESSAGE);
 
@@ -53,8 +54,26 @@ public class LoggingTest {
 
         Assert.assertNotNull("Failed to read log file", logFileLines);
         Assert.assertEquals("Incorrect number of log file lines read; expected 1, read " + logFileLines.size(), 1, logFileLines.size());
-        Assert.assertEquals("Incorrect text read; expected " + TEST_LOG_PREFIX + TEST_LOG_MESSAGE, TEST_LOG_PREFIX + TEST_LOG_MESSAGE, logFileLines.get(0));
+        Assert.assertTrue("Expected text not found; expected " + TEST_LOG_MESSAGE, logFileLines.get(0).contains(TEST_LOG_MESSAGE));
+    }
 
+    @Test
+    public void testDefaultConfigurationLogging() {
+        LoggingUtil.resetConfiguration();
+        LoggingUtil.configureLogging();
+
+        List<String> logFileLines = new ArrayList<String>();
+        LOGGER.info(TEST_LOG_MESSAGE);
+
+        try{
+            logFileLines = readLogFileByLines();
+        }catch(IOException e){
+            Assert.fail("Failed to read log file: " + e.getMessage());
+        }
+
+        Assert.assertNotNull("Failed to read log file", logFileLines);
+        Assert.assertEquals("Incorrect number of log file lines read; expected 1, read " + logFileLines.size(), 1, logFileLines.size());
+        Assert.assertTrue("Expected text not found; expected " + TEST_LOG_MESSAGE, logFileLines.get(0).contains(TEST_LOG_MESSAGE));
     }
 
     @After
@@ -67,18 +86,6 @@ public class LoggingTest {
         }catch(IOException e){
             System.out.println("Could not clear test log file: " + e.getMessage());
         }
-    }
-
-    private Properties createLog4jProperties() {
-        Properties properties = new Properties();
-        properties.put("log4j.rootLogger", "DEBUG, rollingFileAppender");
-        properties.put("log4j.appender.rollingFileAppender", "org.apache.log4j.RollingFileAppender");
-        properties.put("log4j.appender.rollingFileAppender.File", TEST_LOG_FILE_NAME);
-        properties.put("log4j.appender.rollingFileAppender.MaxFileSize", "100KB");
-        properties.put("log4j.appender.rollingFileAppender.MaxBackupIndex", "1");
-        properties.put("log4j.appender.rollingFileAppender.layout", "org.apache.log4j.PatternLayout");
-        properties.put("log4j.appender.rollingFileAppender.layout.ConversionPattern", TEST_LOG_PATTERN);
-        return properties;
     }
 
     private List<String> readLogFileByLines() throws IOException{
