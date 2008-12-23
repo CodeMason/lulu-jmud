@@ -3,11 +3,9 @@ package jmud.engine.core;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * @author Chris Maguire
- */
-@java.lang.annotation.Target( { ElementType.FIELD })
+@Target( { ElementType.FIELD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Flag {
    String[] aliases() default {};

@@ -17,7 +17,7 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.commands.AbstractCommand;
-import jmud.engine.commands.CommandRegistrar;
+import jmud.engine.commands.CommandFactory;
 import jmud.engine.netIO.Connection;
 
 /**
@@ -29,11 +29,10 @@ import jmud.engine.netIO.Connection;
  */
 
 public class BuildCmdFromStringJob extends AbstractJob {
-
 	private final Connection connection;
 	private String cmd = "";
 
-	public BuildCmdFromStringJob(final Connection connection, final String cmd) {
+    public BuildCmdFromStringJob(final Connection connection, final String cmd) {
 		this.connection = connection;
 		this.cmd = cmd;
 	}
@@ -44,10 +43,10 @@ public class BuildCmdFromStringJob extends AbstractJob {
 
 		String[] ca = this.cmd.split(" ");
 
-		AbstractCommand ac = CommandRegistrar.getInstance().getAbstractCommand(ca[0]);
+		AbstractCommand ac = CommandFactory.getLazyLoadedInstance().getAbstractCommand(ca[0]);
 		if (ac != null) {
 			AbstractCommand nac = ac.clone(connection, ca);
-			nac.submitSelf();
+			submitJob(nac);
             
             this.connection.sendCRLF();
 
@@ -64,8 +63,7 @@ public class BuildCmdFromStringJob extends AbstractJob {
 	}
 
     private void sendCharacterPrompt(){
-        SendCharacterPromptJob sendCharacterPromptJob = new SendCharacterPromptJob(this.connection);
-        sendCharacterPromptJob.submitSelf();
+        submitJob(new SendCharacterPromptJob(this.connection));
     }
 
     public Connection getConnection() {

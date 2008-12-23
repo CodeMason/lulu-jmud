@@ -38,7 +38,7 @@ public class GetBehavior extends Behavior {
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);
 
-		jme.submitSelf();
+		jme.submit();
 
 		return true;
 	}

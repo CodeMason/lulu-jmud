@@ -16,6 +16,34 @@
  */
 package jmud.engine.netIO;
 
+import jmud.engine.job.definitions.*;
+
 public enum ConnectionState{
-    NotConnected, ConnectedButNotLoggedIn, LoggedInToCharacterSelect, LoggedInToNewCharacter, LoggedInToGameServer
+    DISCONNECTED{
+        public AbstractJob createCommandFromString(Connection connection, String command){
+            throw new RuntimeException("An attempt was made to processIncoming() while ConnectionState == DISCONNECTED");
+        }
+    },
+    LOGGED_OUT{
+        public AbstractJob createCommandFromString(Connection connection, String command){
+            return new LoginValidateJob(connection, command);
+        }
+    },
+    SELECTING_CHARACTER{
+        public AbstractJob createCommandFromString(Connection connection, String command){
+            return new CharacterSelectJob(connection, command);
+        }
+    },
+    CREATING_CHARACTER{
+        public AbstractJob createCommandFromString(Connection connection, String command){
+            return new NewCharacterJob(connection, command);
+        }
+    },
+    LOGGED_IN{
+        public AbstractJob createCommandFromString(Connection connection, String command){
+            return new BuildCmdFromStringJob(connection, command);
+        }
+    };
+
+    public abstract AbstractJob createCommandFromString(Connection connection, String command);
 }

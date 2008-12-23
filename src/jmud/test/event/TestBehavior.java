@@ -49,7 +49,7 @@ public class TestBehavior extends Behavior {
         hasBehaviorBeenCalled = true;
 
 		JMudEvent responseEvent = new JMudEvent(JMudEventType.Tested, target, source);
-		responseEvent.submitSelf();
+		responseEvent.submit();
 
 		return true;
 	}

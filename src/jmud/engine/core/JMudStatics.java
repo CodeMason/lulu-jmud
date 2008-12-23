@@ -1,5 +1,7 @@
 package jmud.engine.core;
 
+import jmud.engine.job.JobManager;
+
 public class JMudStatics {
 
 	//TODO ultimately, these values will be read in from a config file.
@@ -36,5 +38,10 @@ public class JMudStatics {
 				"(____/   |/     \\|(_______)(______/ " + JMudStatics.CRLF + JMudStatics.CRLF +
 				"The Java Mud Framework." +		JMudStatics.CRLF + JMudStatics.CRLF +
 				"Username: ";
+
+     public static JobManager getDefaultJobManager(){
+         // ToDo CM: load from config so that a different default JobManager can be specified
+        return JobManager.getLazyLoadedInstance();
+    }
 
 }

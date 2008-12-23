@@ -16,6 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
+import jmud.engine.core.JMudStatics;
 import jmud.engine.job.JobManager;
 
 import java.util.UUID;
@@ -27,6 +28,7 @@ import java.util.UUID;
  */
 public abstract class AbstractJob {
 
+   private JobManager jobManager = JMudStatics.getDefaultJobManager();
    private UUID ID = null;
 
    public AbstractJob() {
@@ -44,7 +46,15 @@ public abstract class AbstractJob {
       return ID;
    }
 
-   public final void submitSelf() {
-      JobManager.getLazyLoadedInstance().pushJobToQueue(this);
-   }
+    public void setJobManager(JobManager jobManager){
+        this.jobManager = jobManager;
+    }
+
+    public void submitJob(AbstractJob jobToSubmit){
+        jobManager.pushJobToQueue(jobToSubmit);
+    }
+
+    public void submit(){
+        jobManager.pushJobToQueue(this);
+    }
 }

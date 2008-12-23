@@ -16,6 +16,7 @@
  */
 package jmud.engine.netIO;
 
+import jmud.engine.core.JMudStatics;
 import jmud.engine.job.definitions.ProcessIncomingDataJob;
 
 import java.io.IOException;
@@ -94,7 +95,7 @@ public class ConnectionManager implements Runnable{
         System.out.println("ConnectionManager: New Connection.  Name: " + s);
 
         Connection connection = new Connection(socketChannel, s);
-        connection.setConnState(ConnectionState.ConnectedButNotLoggedIn);
+        connection.setConnState(ConnectionState.LOGGED_OUT);
         connection.sendSplashScreen();
         return connection;
     }
@@ -255,8 +256,7 @@ public class ConnectionManager implements Runnable{
     }
 
     private void processIncomingData(Connection c){
-        ProcessIncomingDataJob pidj = new ProcessIncomingDataJob(c);
-        pidj.submitSelf();
+        JMudStatics.getDefaultJobManager().pushJobToQueue(new ProcessIncomingDataJob(c));
     }
 
     /**

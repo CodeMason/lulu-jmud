@@ -1,9 +1,9 @@
 package jmud.engine.commands;
 
-import java.util.ArrayList;
-
 import jmud.engine.job.definitions.AbstractJob;
 import jmud.engine.netIO.Connection;
+
+import java.util.ArrayList;
 
 /**
  * @author david.h.loman
@@ -34,7 +34,7 @@ public abstract class AbstractCommand extends AbstractJob {
 	}
 
 	public final void selfRegister() {
-		CommandRegistrar.getInstance().addAbstractCommand(this);
+		CommandFactory.getLazyLoadedInstance().addAbstractCommand(this);
 	}
 
 	public Connection getConn() {
