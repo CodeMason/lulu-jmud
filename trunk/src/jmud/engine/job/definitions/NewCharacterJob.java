@@ -51,9 +51,8 @@ public class NewCharacterJob extends AbstractJob {
 		this.c.sendCRLF();
 		this.c.sendTextLn("New Character creation is currently unfinished."  );
 		this.c.sendCRLFs(2);
-		this.c.setConnState(ConnectionState.LoggedInToCharacterSelect);
-		CharacterSelectJob csj = new CharacterSelectJob(this.c, "");
-		csj.submitSelf();
+		this.c.setConnState(ConnectionState.SELECTING_CHARACTER);
+		submitJob(new CharacterSelectJob(this.c, ""));
 
 		
 		synchronized (this.c) {

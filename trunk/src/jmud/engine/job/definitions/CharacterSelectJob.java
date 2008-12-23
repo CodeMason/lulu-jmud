@@ -72,16 +72,14 @@ public class CharacterSelectJob extends AbstractJob {
 			} else {
 				// Differentiate between character select, quit or new character
 				if (data.toLowerCase().equals("new character")) {
-					this.c.setConnState(ConnectionState.LoggedInToNewCharacter);
-					NewCharacterJob ncj = new NewCharacterJob(this.c, data);
-					ncj.submitSelf();
+					this.c.setConnState(ConnectionState.CREATING_CHARACTER);
+					submitJob(new NewCharacterJob(this.c, data));
 
 				} else if (data.toLowerCase().equals("quit")) {
-					this.c.setConnState(ConnectionState.ConnectedButNotLoggedIn);
+					this.c.setConnState(ConnectionState.LOGGED_OUT);
 					this.c.setLoginstate(LoginState.Neither);
 					this.c.sendCRLFs(2);
-					LoginValidateJob hlj = new LoginValidateJob(this.c);
-					hlj.submitSelf();
+					submitJob(new LoginValidateJob(this.c));
 
 				} else {
 					// Check to see if the character list has the character they
@@ -91,7 +89,7 @@ public class CharacterSelectJob extends AbstractJob {
 						this.c.sendTextLn("You selected: " + data);
 						this.c.sendTextLn("Entering game...");
 						this.c.sendCRLFs(2);
-						this.c.setConnState(ConnectionState.LoggedInToGameServer);
+						this.c.setConnState(ConnectionState.LOGGED_IN);
 
 						//Get the character object & pass it a reference to its associated Connection object
 						Character ch = chars.get(data);
@@ -101,8 +99,7 @@ public class CharacterSelectJob extends AbstractJob {
 					} else {
 						// otherwise, show them the list again.
 						this.c.sendTextLn("'" + data + "' is not a valid character selection. Try again.");
-						CharacterSelectJob csj = new CharacterSelectJob(this.c);
-						csj.submitSelf();
+						submitJob(new CharacterSelectJob(this.c));
 
 					}
 				}

@@ -34,8 +34,6 @@ import java.util.List;
 
 public class EventBehaviorTest{
     private static final int NUM_JOB_WORKERS = 1;
-    private static final int MILLIS_TO_ALLOW_WORKER_WAKEUP = 250;
-    private static final int MILLIS_TO_ALLOW_EVENT_COMPLETION = 1000;
 
     private JMudObject orc0;
     private JMudObject orc1;
@@ -144,15 +142,15 @@ public class EventBehaviorTest{
 
     @After
    public void tearDown(){
-       TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+       TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
        JobManager.getLazyLoadedInstance().stopAllWorkers();
    }
 
 
     private void submitTimeBufferedEvent(JMudEvent getEvent){
-        TestUtil.pause(MILLIS_TO_ALLOW_WORKER_WAKEUP);
-        getEvent.submitSelf();
-        TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_WORKER_WAKEUP);
+        getEvent.submitJob(getEvent);
+        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
     }
 
     private void loadTestJMudObjects(JMudObject root){

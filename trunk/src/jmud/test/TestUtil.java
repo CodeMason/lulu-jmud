@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Arrays;
 
 public class TestUtil{
+    public static final int MILLIS_TO_ALLOW_EVENT_COMPLETION = 100;
+    public static final int MILLIS_TO_ALLOW_WORKER_WAKEUP = 250;
     private static final List<String> STANDARD_GEAR_NAMES = Arrays.asList("Sword", "Shield", "Helmet");
 
     public static JMudObject buildSimpleJMudObjectTree() {

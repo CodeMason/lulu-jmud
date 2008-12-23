@@ -30,8 +30,6 @@ import org.junit.Test;
 public class EventBehaviorPerformanceTest{
     private static final int NUM_JOB_WORKERS = 10;
     private static final int NUM_PARENT_OBJECTS = 25;
-    private static final int MILLIS_TO_ALLOW_WORKER_WAKEUP = 250;
-    private static final int MILLIS_TO_ALLOW_EVENT_COMPLETION = 1000;
 
     private JMudObject root;
 
@@ -66,13 +64,13 @@ public class EventBehaviorPerformanceTest{
 
    @After
    public void tearDown(){
-       TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+       TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
        JobManager.getLazyLoadedInstance().stopAllWorkers();
    }
 
     private void submitTimeBufferedEvent(JMudEvent getEvent){
-        TestUtil.pause(MILLIS_TO_ALLOW_WORKER_WAKEUP);
-        getEvent.submitSelf();
-        TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_WORKER_WAKEUP);
+        getEvent.submit();
+        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
     }
 }

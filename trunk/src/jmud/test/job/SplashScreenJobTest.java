@@ -28,7 +28,6 @@ import org.junit.After;
 
 public class SplashScreenJobTest {
     private static final int NUM_JOB_WORKERS = 1;
-    private static final int MILLIS_TO_ALLOW_EVENT_COMPLETION = 250;
 
     @Before
     public void startJobManager() {
@@ -46,14 +45,14 @@ public class SplashScreenJobTest {
 
     @After
     public void stopAllWorkers() {
-        TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
         JobManager.getLazyLoadedInstance().stopAllWorkers();
     }
 
     private void submitSplashScreenJobAndWait(FakeConnection fakeConnection) {
         SplashScreenJob splashScreenJob = new SplashScreenJob(fakeConnection);
-        splashScreenJob.submitSelf();
-        TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+        splashScreenJob.submit();
+        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
     }
 
     private class FakeConnection extends Connection {

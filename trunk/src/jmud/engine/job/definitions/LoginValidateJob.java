@@ -59,11 +59,10 @@ public class LoginValidateJob extends AbstractJob {
 
 				if (retVal != -1) {
 					this.c.sendTextLn("Validated.");
-					this.c.setConnState(ConnectionState.LoggedInToCharacterSelect);
+					this.c.setConnState(ConnectionState.SELECTING_CHARACTER);
 					this.c.setLoginstate(LoginState.uNameAndPassword);
 					this.c.setAccountID(retVal);
-					CharacterSelectJob csj = new CharacterSelectJob(this.c);
-					csj.submitSelf();
+					submitJob(new CharacterSelectJob(this.c));
 				} else {
 					this.c.sendTextLn("Username and password do not match.");
 					this.c.sendCRLFs(2);

@@ -40,38 +40,12 @@ public class ProcessIncomingDataJob extends AbstractJob {
 
             data = connection.getAndClearCommand();
 
-            return createAndRegisterAppropriateCommand(connectionState, data);
+            return createAndSubmitAppropriateCommand(connectionState, data);
 		}
 	}
 
-    private boolean createAndRegisterAppropriateCommand(ConnectionState connectionState, String data){
-        if (connectionState == ConnectionState.NotConnected) {
-            // Shouldn't be here!
-            System.err.println("An attempt was made to processIncoming() while ConnectionState == NotConnected");
-            return false;
-
-        } else if (connectionState == ConnectionState.ConnectedButNotLoggedIn) {
-            LoginValidateJob hlj = new LoginValidateJob(this.connection, data);
-            hlj.submitSelf();
-
-        } else if (connectionState == ConnectionState.LoggedInToCharacterSelect) {
-            CharacterSelectJob csj = new CharacterSelectJob(this.connection, data);
-            csj.submitSelf();
-
-        } else if (connectionState == ConnectionState.LoggedInToNewCharacter) {
-            NewCharacterJob ncj = new NewCharacterJob(this.connection, data);
-            ncj.submitSelf();
-
-        } else if (connectionState == ConnectionState.LoggedInToGameServer) {
-
-            BuildCmdFromStringJob job = new BuildCmdFromStringJob(this.connection, data);
-            job.submitSelf();
-
-        } else {
-            // Shouldn't be here!
-            System.err .println("An attempt was made to processIncoming() while ConnectionState was in an unknown state.");
-            return false;
-        }
+    private boolean createAndSubmitAppropriateCommand(ConnectionState connectionState, String data){
+        submitJob(connectionState.createCommandFromString(this.connection, data));
         return true;
     }
 }

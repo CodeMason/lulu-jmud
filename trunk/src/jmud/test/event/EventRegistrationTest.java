@@ -28,8 +28,6 @@ import org.junit.Test;
 
 public class EventRegistrationTest{
     private static final int NUM_JOB_WORKERS = 1;
-    private static final int MILLIS_TO_ALLOW_WORKER_WAKEUP = 250;
-    private static final int MILLIS_TO_ALLOW_EVENT_COMPLETION = 1000;
 
     private JMudEventRegistrar eventRegistrar;
     private JMudObject orc0;
@@ -63,7 +61,7 @@ public class EventRegistrationTest{
 
     @After
    public void tearDown(){
-       TestUtil.pause(MILLIS_TO_ALLOW_EVENT_COMPLETION);
+       TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
        JobManager.getLazyLoadedInstance().stopAllWorkers();
    }
 

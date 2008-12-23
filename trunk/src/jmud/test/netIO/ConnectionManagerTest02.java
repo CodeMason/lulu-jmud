@@ -16,7 +16,6 @@
  */
 package jmud.test.netIO;
 
-import jmud.engine.commands.CommandRegistrar;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
 import jmud.engine.netIO.ConnectionManager;
@@ -47,10 +46,6 @@ public class ConnectionManagerTest02 {
 		//initialize ConnMan
 		ConnectionManager.getLazyLoadedInstance().init(InetAddress.getLocalHost(), 54321);
 		ConnectionManager.getLazyLoadedInstance().start();
-
-		//initialize CommandRegistrar
-		CommandRegistrar.getInstance().init();
-
 
 		//Lets get that Quit command in there.
 		QuitCommand qc = new QuitCommand(); //use the null null constructor

@@ -46,7 +46,7 @@ public class Connection{
     private final SocketChannel socketChannel;
     private ByteBuffer readBuffer = ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
     private StringBuilder receivedText;
-    private ConnectionState connState = ConnectionState.NotConnected;
+    private ConnectionState connState = ConnectionState.DISCONNECTED;
 
     /**
      * Explicit constructor.
@@ -56,7 +56,7 @@ public class Connection{
      */
     public Connection(final SocketChannel inSc, final String name){
         this.socketChannel = inSc;
-        this.connState = ConnectionState.NotConnected;
+        this.connState = ConnectionState.DISCONNECTED;
         this.name = name;
         this.receivedText = new StringBuilder();
     }
@@ -208,8 +208,7 @@ public class Connection{
     }
 
     public void sendSplashScreen(){
-        SplashScreenJob job = new SplashScreenJob(this);
-        job.submitSelf();
+        JMudStatics.getDefaultJobManager().pushJobToQueue(new SplashScreenJob(this));
     }
 
     public boolean isConnectionLost() throws IOException{

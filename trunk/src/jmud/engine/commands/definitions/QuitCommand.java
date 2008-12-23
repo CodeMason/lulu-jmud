@@ -6,7 +6,7 @@ import jmud.engine.netIO.Connection;
 public class QuitCommand extends AbstractCommand {
 
 	//Use this constructor to initialize the object that will be stored
-	//in the CommandRegistrar
+	//in the CommandFactory
 	public QuitCommand() {
 		this(null,null);
 	}

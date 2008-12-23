@@ -49,7 +49,7 @@ public class JMudEvent extends AbstractJob {
 				for (Behavior b : ccObjectBehaviors) {
                     newB = b.clone();
                     newB.setEvent(this);
-					newB.submitSelf();
+					newB.submit();
 				}
 
 			} else {
