@@ -44,6 +44,6 @@ public class SplashScreenJob extends AbstractJob {
 	}
 
 	public void sendLoginPrompt() {
-		this.c.sendText(JMudStatics.SplashScreen);
+		this.c.sendText(JMudStatics.getSplashScreen());
 	}
 }
