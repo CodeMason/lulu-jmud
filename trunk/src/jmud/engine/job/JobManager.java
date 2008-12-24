@@ -77,7 +77,7 @@ public class JobManager {
      *
      * @return the next unused worker number
      */
-    public int createNewWorker() {
+    private int createNewWorker() {
         int num = 0;
 
         // find the first unused number

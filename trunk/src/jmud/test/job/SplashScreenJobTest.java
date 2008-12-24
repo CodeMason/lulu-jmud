@@ -17,14 +17,14 @@
 package jmud.test.job;
 
 import jmud.engine.core.JMudStatics;
-import jmud.engine.job.definitions.SplashScreenJob;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.Connection;
+import jmud.engine.job.definitions.SplashScreenJob;
+import jmud.test.FakeConnection;
 import jmud.test.TestUtil;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
 
 public class SplashScreenJobTest {
     private static final int NUM_JOB_WORKERS = 1;
@@ -39,8 +39,8 @@ public class SplashScreenJobTest {
         FakeConnection fakeConnection = new FakeConnection();
         submitSplashScreenJobAndWait(fakeConnection);
 
-        Assert.assertNotNull("Splash screen not sent", fakeConnection.lastSentText);
-        Assert.assertEquals("Splash screen not sent correctly", fakeConnection.lastSentText, JMudStatics.SplashScreen);
+        Assert.assertNotNull("Splash screen not sent", fakeConnection.getLastSentText());
+        Assert.assertEquals("Splash screen not sent correctly", fakeConnection.getLastSentText(), JMudStatics.SplashScreen);
     }
 
     @After
@@ -53,17 +53,5 @@ public class SplashScreenJobTest {
         SplashScreenJob splashScreenJob = new SplashScreenJob(fakeConnection);
         splashScreenJob.submit();
         TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
-    }
-
-    private class FakeConnection extends Connection {
-        String lastSentText;
-
-        public FakeConnection() {
-            super(null, null);
-        }
-
-        public void sendText(String textToSend) {
-            lastSentText = textToSend;
-        }
     }
 }

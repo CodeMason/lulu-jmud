@@ -26,9 +26,8 @@ import jmud.engine.netIO.ConnectionState;
  * @version 0.1
  */
 
-public class NewCharacterJob extends AbstractJob {
+public class NewCharacterJob extends AbstractDataJob {
 
-	private String data = "";
 	private Connection c = null;
 
 	public NewCharacterJob(Connection c, String data) {
@@ -67,4 +66,7 @@ public class NewCharacterJob extends AbstractJob {
 		return true;
 	}
 
+    public String getData(){
+        return data;
+    }
 }

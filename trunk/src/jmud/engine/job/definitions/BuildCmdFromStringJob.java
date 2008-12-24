@@ -28,20 +28,19 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class BuildCmdFromStringJob extends AbstractJob {
+public class BuildCmdFromStringJob extends AbstractDataJob {
 	private final Connection connection;
-	private String cmd = "";
 
-    public BuildCmdFromStringJob(final Connection connection, final String cmd) {
+    public BuildCmdFromStringJob(Connection connection, String data) {
 		this.connection = connection;
-		this.cmd = cmd;
+		this.data = data;
 	}
 
 	@Override
 	public final boolean doJob() {
-		this.connection.sendTextLn("Recieved a command: " + this.cmd);
+		this.connection.sendTextLn("Recieved a command: " + this.data);
 
-		String[] ca = this.cmd.split(" ");
+		String[] ca = this.data.split(" ");
 
 		AbstractCommand ac = CommandFactory.getLazyLoadedInstance().getAbstractCommand(ca[0]);
 		if (ac != null) {
@@ -69,9 +68,4 @@ public class BuildCmdFromStringJob extends AbstractJob {
     public Connection getConnection() {
 		return connection;
 	}
-
-	public String getCmd() {
-		return cmd;
-	}
-
 }
