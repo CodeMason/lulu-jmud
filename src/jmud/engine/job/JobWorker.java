@@ -16,6 +16,7 @@
  */
 package jmud.engine.job;
 
+import jmud.engine.core.JMudStatics;
 import jmud.engine.job.definitions.AbstractJob;
 
 /**
@@ -52,7 +53,7 @@ public class JobWorker implements Runnable {
 		while (this.runCmd) {
 
 			// Access to Queue is synchronized internal to JobManager
-			AbstractJob job = JobManager.getLazyLoadedInstance().popJobFromQueue();
+			AbstractJob job = JMudStatics.getDefaultJobManager().popJobFromQueue();
 
 			if (job != null) {
 

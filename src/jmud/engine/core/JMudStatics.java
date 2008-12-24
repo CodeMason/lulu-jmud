@@ -10,6 +10,8 @@ public class JMudStatics {
 	public static final String dbPassWd = "jmud";
 	public static final int dbPort = 3306;
     public static final String log4jConfigFile = "log4j.lcf";
+    // ToDo CM: load from config so that a different default JobManager can be specified
+    public static JobManager defaultJobManager = JobManager.getLazyLoadedInstance();
 
 
     //ToDo CM: this should be configurable per user (e.g. [CurrHP]:[MaxHP]/[CurrMana]:[MaxMana] etc.)
@@ -40,8 +42,10 @@ public class JMudStatics {
 				"Username: ";
 
      public static JobManager getDefaultJobManager(){
-         // ToDo CM: load from config so that a different default JobManager can be specified
-        return JobManager.getLazyLoadedInstance();
+        return defaultJobManager;
     }
 
+    public static void setDefaultJobManager(JobManager jobManager) {
+        defaultJobManager = jobManager;
+    }
 }

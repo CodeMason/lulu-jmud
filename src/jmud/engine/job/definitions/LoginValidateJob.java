@@ -30,9 +30,8 @@ import jmud.engine.netIO.LoginState;
  * @version 0.1
  */
 
-public class LoginValidateJob extends AbstractJob {
+public class LoginValidateJob extends AbstractDataJob {
 
-	private String data = "";
 	private Connection c = null;
 
 	public LoginValidateJob(Connection c, String data) {
@@ -87,4 +86,8 @@ public class LoginValidateJob extends AbstractJob {
 	public void sendLoginPrompt() {
 		this.c.sendText(JMudStatics.SplashScreen);
 	}
+
+    public String getData(){
+        return data;
+    }
 }

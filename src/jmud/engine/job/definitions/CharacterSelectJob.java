@@ -33,9 +33,8 @@ import java.util.Map;
  * @version 0.1
  */
 
-public class CharacterSelectJob extends AbstractJob {
+public class CharacterSelectJob extends AbstractDataJob {
 
-	private String data = "";
 	private Connection c = null;
 
 	public CharacterSelectJob(Connection c, String data) {
@@ -100,7 +99,6 @@ public class CharacterSelectJob extends AbstractJob {
 						// otherwise, show them the list again.
 						this.c.sendTextLn("'" + data + "' is not a valid character selection. Try again.");
 						submitJob(new CharacterSelectJob(this.c));
-
 					}
 				}
 			}
@@ -108,5 +106,9 @@ public class CharacterSelectJob extends AbstractJob {
 		}
 		return false;
 	}
+
+    public String getData(){
+        return data;
+    }
 
 }
