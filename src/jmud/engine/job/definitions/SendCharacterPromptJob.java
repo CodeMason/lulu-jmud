@@ -24,7 +24,7 @@ import jmud.engine.netIO.Connection;
  */
 public class SendCharacterPromptJob extends AbstractJob {
 
-    private Connection connection = null;
+    private final Connection connection;
 
 	public SendCharacterPromptJob(Connection connection) {
 		super();
@@ -40,6 +40,6 @@ public class SendCharacterPromptJob extends AbstractJob {
 	}
 
 	public void sendLoginPrompt() {
-		connection.sendText(JMudStatics.SplashScreen);
+		connection.sendText(JMudStatics.getSplashScreen());
 	}
 }

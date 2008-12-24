@@ -84,7 +84,7 @@ public class LoginValidateJob extends AbstractDataJob {
 	}
 
 	public void sendLoginPrompt() {
-		this.c.sendText(JMudStatics.SplashScreen);
+		this.c.sendText(JMudStatics.getSplashScreen());
 	}
 
     public String getData(){

@@ -40,7 +40,7 @@ public class SplashScreenJobTest {
         submitSplashScreenJobAndWait(fakeConnection);
 
         Assert.assertNotNull("Splash screen not sent", fakeConnection.getLastSentText());
-        Assert.assertEquals("Splash screen not sent correctly", fakeConnection.getLastSentText(), JMudStatics.SplashScreen);
+        Assert.assertEquals("Splash screen not sent correctly", fakeConnection.getLastSentText(), JMudStatics.getSplashScreen());
     }
 
     @After
