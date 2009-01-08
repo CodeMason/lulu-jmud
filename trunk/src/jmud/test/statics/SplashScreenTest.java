@@ -32,13 +32,13 @@ public class SplashScreenTest{
     private static final String TEST_SPLASH_SCREEN = "Test\nsplash\nscreen\n_";
 
     @Test
-    public void testDefaultSplashScreenExists(){
+   public final void testDefaultSplashScreenExists(){
         reloadSplashScreenFromFile(NON_EXISTANT_SPLASH_SCREEN_FILE);
         Assert.assertNotNull("No default splash screen found.", JMudStatics.getSplashScreen());
     }
 
     @Test
-    public void testSplashScreenFromFile(){
+   public final void testSplashScreenFromFile(){
         String splashScreen;
         try{
             writeSplashScreenFile();
@@ -52,7 +52,7 @@ public class SplashScreenTest{
         Assert.assertEquals("Expected splash screen not found; expected " + TEST_SPLASH_SCREEN + ", found " + splashScreen, TEST_SPLASH_SCREEN, splashScreen);
     }
 
-    private void reloadSplashScreenFromFile(String fileName) {
+    private void reloadSplashScreenFromFile(final String fileName) {
         JMudStatics.reloadSplashScreenFromFile(fileName);
     }
 
