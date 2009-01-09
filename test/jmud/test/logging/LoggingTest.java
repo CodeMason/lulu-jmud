@@ -16,130 +16,149 @@
  */
 package jmud.test.logging;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import jmud.engine.core.JMudStatics;
 import jmud.logging.LoggingUtil;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class LoggingTest {
-    private static Logger LOGGER = Logger.getLogger(LoggingTest.class);
-    private static final String TEST_LOG_MESSAGE = "Test Log Message";
-    private static final String TEST_LOG_FILE_NAME = "testLog4j.log";
+   private static Logger LOGGER = Logger.getLogger(LoggingTest.class);
+   private static final String TEST_LOG_MESSAGE = "Test Log Message";
+   private static final String TEST_LOG_FILE_NAME = "testLog4j.log";
 
-    @Before
-    public void setup() {
+   private void clearLogFile() throws IOException {
+      BufferedWriter bufferedWriter = null;
 
-    }
+      try {
+         bufferedWriter = new BufferedWriter(new FileWriter(TEST_LOG_FILE_NAME));
+         bufferedWriter.write(new char[] {});
+      } finally {
+         if (bufferedWriter != null) {
+            bufferedWriter.close();
+         }
+      }
+   }
 
-    @Test
-    public void testFileConfigurationLogging() {
-        LoggingUtil.resetConfiguration();
-        LoggingUtil.configureLogging(JMudStatics.log4jConfigFile);
+   // ToDo CM: Anyone know how to fix this? It's not actually deleting the file.
+   // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4041126
+   private void deleteLogFile() {
+      File testLogFile = new File(TEST_LOG_FILE_NAME);
 
-        List<String> logFileLines = new ArrayList<String>();
-        LOGGER.info(TEST_LOG_MESSAGE);
+      System.out
+            .println("Current directory: " + System.getProperty("user.dir"));
+      System.out.println("Test log file name: " + testLogFile.getName());
+      System.out
+            .println("Test log file path: " + testLogFile.getAbsolutePath());
+      System.out.println("Test log file exists: " + testLogFile.exists());
+      System.out.println("Test log file writable: " + testLogFile.canWrite());
 
-        try{
-            logFileLines = readLogFileByLines();
-        }catch(IOException e){
-            Assert.fail("Failed to read log file: " + e.getMessage());
-        }
+      if (!testLogFile.canWrite()) {
+         throw new RuntimeException(
+               "Test log file could not be deleted, write protected: "
+                     + TEST_LOG_FILE_NAME);
+      }
 
-        Assert.assertNotNull("Failed to read log file", logFileLines);
-        Assert.assertEquals("Incorrect number of log file lines read; expected 1, read " + logFileLines.size(), 1, logFileLines.size());
-        Assert.assertTrue("Expected text not found; expected " + TEST_LOG_MESSAGE, logFileLines.get(0).contains(TEST_LOG_MESSAGE));
-    }
+      if (!testLogFile.delete()) {
+         throw new RuntimeException("Test log file not deleted");
+      }
 
-    @Test
-    public void testDefaultConfigurationLogging() {
-        LoggingUtil.resetConfiguration();
-        LoggingUtil.configureLogging();
+   }
 
-        List<String> logFileLines = new ArrayList<String>();
-        LOGGER.info(TEST_LOG_MESSAGE);
+   private List<String> readLogFileByLines() throws IOException {
 
-        try{
-            logFileLines = readLogFileByLines();
-        }catch(IOException e){
-            Assert.fail("Failed to read log file: " + e.getMessage());
-        }
+      List<String> linesFromFile = new ArrayList<String>();
+      BufferedReader bufferedReader = null;
 
-        Assert.assertNotNull("Failed to read log file", logFileLines);
-        Assert.assertEquals("Incorrect number of log file lines read; expected 1, read " + logFileLines.size(), 1, logFileLines.size());
-        Assert.assertTrue("Expected text not found; expected " + TEST_LOG_MESSAGE, logFileLines.get(0).contains(TEST_LOG_MESSAGE));
-    }
+      try {
+         bufferedReader = new BufferedReader(new FileReader(TEST_LOG_FILE_NAME));
 
-    @After
-    public void tearDown() {
-        // files in Windows XP just won't seem to delete: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4041126
-        //deleteLogFile();
+         String lineFromFile;
+         while ((lineFromFile = bufferedReader.readLine()) != null) {
+            linesFromFile.add(lineFromFile);
+         }
+      } finally {
+         if (bufferedReader != null) {
+            bufferedReader.close();
+         }
+      }
 
-        try{
-            clearLogFile();
-        }catch(IOException e){
-            System.out.println("Could not clear test log file: " + e.getMessage());
-        }
-    }
+      return linesFromFile;
+   }
 
-    private List<String> readLogFileByLines() throws IOException{
+   @Before
+   public void setup() {
 
-        List<String> linesFromFile = new ArrayList<String>();
-        BufferedReader bufferedReader = null;
+   }
 
-        try {
-            bufferedReader = new BufferedReader(new FileReader(TEST_LOG_FILE_NAME));
+   @After
+   public void tearDown() {
+      // files in Windows XP just won't seem to delete:
+      // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4041126
+      // deleteLogFile();
 
-            String lineFromFile;
-            while ((lineFromFile = bufferedReader.readLine()) != null) {
-                linesFromFile.add(lineFromFile);
-            }
-        } finally {
-            if (bufferedReader != null) {
-                bufferedReader.close();
-            }
-        }
+      try {
+         clearLogFile();
+      } catch (IOException e) {
+         System.out.println("Could not clear test log file: " + e.getMessage());
+      }
+   }
 
-        return linesFromFile;
-    }
+   @Test
+   public void testDefaultConfigurationLogging() {
+      LoggingUtil.resetConfiguration();
+      LoggingUtil.configureLogging();
 
-    private void clearLogFile() throws IOException{
-        BufferedWriter bufferedWriter = null;
+      List<String> logFileLines = new ArrayList<String>();
+      LOGGER.info(TEST_LOG_MESSAGE);
 
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(TEST_LOG_FILE_NAME));
-            bufferedWriter.write(new char[]{});
-        } finally {
-            if (bufferedWriter != null) {
-                bufferedWriter.close();
-            }
-        }
-    }
+      try {
+         logFileLines = readLogFileByLines();
+      } catch (IOException e) {
+         Assert.fail("Failed to read log file: " + e.getMessage());
+      }
 
-    // ToDo CM: Anyone know how to fix this? It's not actually deleting the file.
-    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4041126
-    private void deleteLogFile(){
-        File testLogFile = new File(TEST_LOG_FILE_NAME);
+      Assert.assertNotNull("Failed to read log file", logFileLines);
+      Assert.assertEquals(
+            "Incorrect number of log file lines read; expected 1, read "
+                  + logFileLines.size(), 1, logFileLines.size());
+      Assert.assertTrue(
+            "Expected text not found; expected " + TEST_LOG_MESSAGE,
+            logFileLines.get(0).contains(TEST_LOG_MESSAGE));
+   }
 
-        System.out.println("Current directory: " + System.getProperty("user.dir"));
-        System.out.println("Test log file name: " + testLogFile.getName());
-        System.out.println("Test log file path: " + testLogFile.getAbsolutePath());
-        System.out.println("Test log file exists: " + testLogFile.exists());
-        System.out.println("Test log file writable: " + testLogFile.canWrite());
+   @Test
+   public void testFileConfigurationLogging() {
+      LoggingUtil.resetConfiguration();
+      LoggingUtil.configureLogging(JMudStatics.log4jConfigFile);
 
-        if (!testLogFile.canWrite()){
-            throw new RuntimeException("Test log file could not be deleted, write protected: " + TEST_LOG_FILE_NAME);
-        }
+      List<String> logFileLines = new ArrayList<String>();
+      LOGGER.info(TEST_LOG_MESSAGE);
 
-        if(!testLogFile.delete()){
-            throw new RuntimeException("Test log file not deleted");
-        }
+      try {
+         logFileLines = readLogFileByLines();
+      } catch (IOException e) {
+         Assert.fail("Failed to read log file: " + e.getMessage());
+      }
 
-    }
+      Assert.assertNotNull("Failed to read log file", logFileLines);
+      Assert.assertEquals(
+            "Incorrect number of log file lines read; expected 1, read "
+                  + logFileLines.size(), 1, logFileLines.size());
+      Assert.assertTrue(
+            "Expected text not found; expected " + TEST_LOG_MESSAGE,
+            logFileLines.get(0).contains(TEST_LOG_MESSAGE));
+   }
 }
