@@ -49,7 +49,7 @@ public class JMudEvent extends AbstractJob {
 				for (Behavior b : ccObjectBehaviors) {
                     newB = b.clone();
                     newB.setEvent(this);
-					newB.submit();
+					newB.selfSubmit();
 				}
 
 			} else {
@@ -87,7 +87,7 @@ public class JMudEvent extends AbstractJob {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append("EventID: ").append(this.getID()).append("\t EventType: ").append(
+		return new StringBuilder().append("EventID: ").append(this.getUUID()).append("\t EventType: ").append(
 				this.targetEventType).append("\t Source: (").append(this.source.toStringShort()).append(")").append(
 				"\t Target: (").append(this.target.toStringShort()).append(")").toString();
 	}

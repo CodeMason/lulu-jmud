@@ -21,7 +21,6 @@ import jmud.engine.netIO.ConnectionManager;
 import jmud.test.TestUtil;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class ConnectionManagerTest01 {
@@ -38,19 +37,20 @@ public class ConnectionManagerTest01 {
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException {
 
-		final int stayAlive = 1000 * 120;
+		final long stayAlive = 1000 * 180L;
+		System.out.println("Test started with a autostop timer = " + (stayAlive / 1000) + " sec(s).");
 
 		//initialize JobManager with only 1 worker
 		JobManager.getLazyLoadedInstance().init(1);
 
-
-		ConnectionManager.getLazyLoadedInstance().init(InetAddress.getLocalHost(), 54321);
-		ConnectionManager.getLazyLoadedInstance().start();
+	      // initialize and start ConnMan
+		ConnectionManager cm = new ConnectionManager(54321);
+		cm.start();
 
 		TestUtil.pause(stayAlive);
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
-		ConnectionManager.getLazyLoadedInstance().stop();
+		cm.stop();
 		JobManager.getLazyLoadedInstance().stopAllWorkers();
 	}
 

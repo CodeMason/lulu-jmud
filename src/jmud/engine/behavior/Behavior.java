@@ -128,7 +128,7 @@ public abstract class Behavior extends AbstractJob {
 
     @Override
 	public String toString() {
-		StringBuilder out = new StringBuilder("BehaviorID:  " + this.getID());
+		StringBuilder out = new StringBuilder("BehaviorID:  " + this.getUUID());
 
 		if (this.event != null) {
             out.append("\t (")

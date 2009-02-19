@@ -33,7 +33,7 @@ public class ConnectionEvent{
         this.ops = inOps;
     }
 
-    public static enum EventType{
+    public static enum EventType {
         REGISTER,
         CHANGEOPS
     }

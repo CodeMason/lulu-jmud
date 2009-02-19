@@ -94,7 +94,7 @@ public class TriggerBehavior extends Behavior {
 		}
 
 		JMudEvent jme = new JMudEvent(this.responseEventType, src, tgt);
-		jme.submit();
+		jme.selfSubmit();
 
 		return true;
 	}

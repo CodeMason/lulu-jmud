@@ -18,28 +18,43 @@ package jmud.engine.job.definitions;
 
 import jmud.engine.core.JMudStatics;
 import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.ConnectionState;
 
 /**
+ * Just a template. Can be deleted once the Job Repository has sufficient
+ * samples to draw from.
  * 
+ * @author David Loman
+ * @version 0.1
  */
-public class SendCharacterPromptJob extends AbstractJob {
 
-    private final Connection connection;
+public class LogoutJob extends AbstractJob {
+	private Connection c = null;
 
-	public SendCharacterPromptJob(Connection connection) {
+	public LogoutJob(Connection c) {
 		super();
-		this.connection = connection;
+		this.c = c;
 	}
 
 	@Override
 	public final boolean doJob() {
-		synchronized (connection) {
-           
+		synchronized (this.c) {
+
+			// Check for a valid command
+			if (this.c.getCmdBuffer().hasNextCommand() == false) {
+				return false;
+			}
+
+			this.c.sendCRLF();
+			this.c.setUName("");
+			this.c.setPassWd("");
+			this.c.setConnState(ConnectionState.CONNECTED);
 		}
-		return false;
+		return true;
 	}
 
 	public void sendLoginPrompt() {
-		connection.sendText(JMudStatics.getSplashScreen());
+		this.c.sendText(JMudStatics.getSplashScreen());
 	}
+
 }

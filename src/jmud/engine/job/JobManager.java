@@ -140,7 +140,7 @@ public class JobManager {
         synchronized (this.jobQ) {
             this.jobQ.addLast(aj);
         }
-
+System.out.println("newjobtoQ");
         // wake up a worker
         this.wakeWorkers();
     }

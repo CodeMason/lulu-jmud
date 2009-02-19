@@ -78,7 +78,7 @@ public class TriggerBehaviorTest01{
       System.out.println("GetEvent eventID is: " + ge.getID());
 
       // Submit the event
-      ge.submit();
+      ge.selfSubmit();
 
 
       // another sleep to ensure all events are processed
