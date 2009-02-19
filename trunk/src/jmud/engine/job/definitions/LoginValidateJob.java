@@ -20,74 +20,85 @@ import jmud.engine.core.JMudStatics;
 import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
-import jmud.engine.netIO.LoginState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
  * samples to draw from.
- *
+ * 
  * @author David Loman
  * @version 0.1
  */
 
-public class LoginValidateJob extends AbstractDataJob {
-
+public class LoginValidateJob extends AbstractJob {
 	private Connection c = null;
 
-	public LoginValidateJob(Connection c, String data) {
+	public LoginValidateJob(Connection c) {
 		super();
 		this.c = c;
-		this.data = (data == null ? "" : data);
-	}
-	public LoginValidateJob(Connection c) {
-		this(c, "");
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
-            if (this.c.getLoginstate() == LoginState.Neither) {
-				// just received the uName
+
+			// Check for a valid command
+			if (this.c.getCmdBuffer().hasNextCommand() == false) {
+				return false;
+			}
+
+			// data is either uname or passwd
+			String data = this.c.getCmdBuffer().getNextCommand();
+
+			if (this.c.getConnState() == ConnectionState.GETUNAME) {
+				// We are validating the uName
 				this.c.setUName(data);
 				this.c.sendText("Password: ");
-				this.c.setLoginstate(LoginState.uName);
-			} else if (this.c.getLoginstate() == LoginState.uName) {
-				this.c.setPassWd(data);
-				// Here we are... validate password.
-				int retVal = MysqlConnection.verifyLogin(this.c.getUName(), this.c.getPassWd());
+				this.c.setConnState(ConnectionState.GETPASSWD);
+				return true;
+			} else if (this.c.getConnState() == ConnectionState.GETPASSWD) {
+				// We are validating the Passwd
 
-				if (retVal != -1) {
-					this.c.sendTextLn("Validated.");
-					this.c.setConnState(ConnectionState.SELECTING_CHARACTER);
-					this.c.setLoginstate(LoginState.uNameAndPassword);
-					this.c.setAccountID(retVal);
-					submitJob(new CharacterSelectJob(this.c));
+				this.c.setPassWd(data);
+				int accntID = MysqlConnection.verifyLogin(this.c.getUName(), this.c.getPassWd());
+
+				if (accntID >= 0) {
+					this.c.sendTextLn("Validated. (" + Integer.toString(accntID) + ")");
+					this.c.setAccountID(accntID);
+					this.c.setConnState(ConnectionState.LOGGEDIN);
+
+					// Fire off the next Job:
+					(new DisplayCharactersJob(this.c)).selfSubmit();
+
 				} else {
-					this.c.sendTextLn("Username and password do not match.");
-					this.c.sendCRLFs(2);
+					this.c.sendCRLF();
 					this.c.setUName("");
 					this.c.setPassWd("");
-					this.c.setLoginstate(LoginState.Neither);
+					this.c.setConnState(ConnectionState.CONNECTED);
 					this.c.incrementLoginAttempts();
 
+					this.c.sendTextLn("Username and password do not match ("
+							+ (JMudStatics.MAX_LOGIN_ATTEMPTS - this.c.getLoginAttempts()) + " tries left.)");
+
 					if (this.c.getLoginAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
-						this.c.sendTextLn("Number of tries exceeded.  Goodbye!");
+						this.c.sendTextLn("\n\nNumber of tries exceeded.  Goodbye!\n\n");
 						this.c.sendCRLFs(2);
 						this.c.disconnect();
 					} else {
 						this.sendLoginPrompt();
 					}
 				}
+
+				return true;
+			} else {
+				// Something *very* bad happened...
+				System.err.println("Bad ConnectionState for a LoginValidateJob.");
+				return false;
 			}
 		}
-		return false;
 	}
 
 	public void sendLoginPrompt() {
 		this.c.sendText(JMudStatics.getSplashScreen());
 	}
 
-    public String getData(){
-        return data;
-    }
 }

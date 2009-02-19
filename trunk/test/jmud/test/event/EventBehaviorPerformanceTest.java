@@ -70,7 +70,7 @@ public class EventBehaviorPerformanceTest{
 
     private void submitTimeBufferedEvent(JMudEvent getEvent){
         TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_WORKER_WAKEUP);
-        getEvent.submit();
+        getEvent.selfSubmit();
         TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
     }
 }

@@ -21,94 +21,57 @@ import jmud.engine.core.JMudStatics;
 import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
-import jmud.engine.netIO.LoginState;
 
 import java.util.Map;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
  * samples to draw from.
- *
+ * 
  * @author David Loman
  * @version 0.1
  */
 
-public class CharacterSelectJob extends AbstractDataJob {
+public class CharacterSelectJob extends AbstractJob {
 
-	private Connection c = null;
+	private Connection conn = null;
+	private String character;
 
-	public CharacterSelectJob(Connection c, String data) {
+	public CharacterSelectJob(Connection c, String character) {
 		super();
-		this.c = c;
-		this.data = data + "";
-	}
-
-	public CharacterSelectJob(Connection c) {
-		this(c, "");
+		this.conn = c;
+		this.character = character;
 	}
 
 	@Override
 	public final boolean doJob() {
-		//Map of character names to the Character object refs
-		Map<String, Character> chars = MysqlConnection.getCharactersByAccountID(this.c.getAccountID());
+		// Map of character names to the Character object refs
 
-		synchronized (this.c) {
+		synchronized (this.conn) {
+			Map<String, Character> chars = MysqlConnection.getCharactersByAccountID(this.conn.getAccountID());
 
-			if (this.data.length() == 0) {
-				// must be newly sent to the Character Select Screen
+			// Check to see if the character list has the character they
+			// want
+			if (chars.keySet().contains(this.character)) {
+				// show selection and enter game
+				this.conn.sendTextLn("You selected: " + this.character);
+				this.conn.sendTextLn("Entering game...");
+				this.conn.sendCRLFs(2);
+				this.conn.setConnState(ConnectionState.INGAME);
 
-				this.c.sendCRLFs(2);
-				this.c.sendTextLn("-----~--------------~-----");
-				this.c.sendTextLn("     Character Select");
-				this.c.sendTextLn("-----~--------------~-----");
+				// Get the character object & pass it a reference to its
+				// associated Connection object
+				Character ch = chars.get(this.character);
+				ch.setConnection(this.conn);
 
-				for (String s : chars.keySet()) {
-					this.c.sendTextLn("- " + s);
-				}
-				this.c.sendTextLn("-----~--------------~-----");
-				this.c.sendText("Please connectionType the name of the character you wish to use, "
-						+ "'New Character' to make a new character, " + "or 'Quit': ");
+				ch.getConnection().sendText(JMudStatics.PROMPT);
 			} else {
-				// Differentiate between character select, quit or new character
-				if (data.toLowerCase().equals("new character")) {
-					this.c.setConnState(ConnectionState.CREATING_CHARACTER);
-					submitJob(new NewCharacterJob(this.c, data));
-
-				} else if (data.toLowerCase().equals("quit")) {
-					this.c.setConnState(ConnectionState.LOGGED_OUT);
-					this.c.setLoginstate(LoginState.Neither);
-					this.c.sendCRLFs(2);
-					submitJob(new LoginValidateJob(this.c));
-
-				} else {
-					// Check to see if the character list has the character they
-					// want
-					if (chars.keySet().contains(data)) {
-						// show selection and enter game
-						this.c.sendTextLn("You selected: " + data);
-						this.c.sendTextLn("Entering game...");
-						this.c.sendCRLFs(2);
-						this.c.setConnState(ConnectionState.LOGGED_IN);
-
-						//Get the character object & pass it a reference to its associated Connection object
-						Character ch = chars.get(data);
-						ch.setConnection(this.c);
-
-						ch.getConnection().sendText(JMudStatics.PROMPT);
-					} else {
-						// otherwise, show them the list again.
-						this.c.sendTextLn("'" + data + "' is not a valid character selection. Try again.");
-						submitJob(new CharacterSelectJob(this.c));
-					}
-				}
+				// otherwise, show them the list again.
+				this.conn.sendTextLn("'" + this.character + "' is not a valid character selection. Try again.");
+				(new DisplayCharactersJob(this.conn)).selfSubmit();
 			}
-
 		}
-		return false;
+
+		return true;
 	}
-
-    public String getData(){
-        return data;
-    }
-
 }

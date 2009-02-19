@@ -23,38 +23,39 @@ import java.util.UUID;
 
 /**
  * Provides mandatory base implementation for all 'Job's'.
+ * 
  * @author David Loman
  * @version 0.1
  */
 public abstract class AbstractJob {
 
-   private JobManager jobManager = JMudStatics.getDefaultJobManager();
-   private UUID ID = null;
+	private JobManager jobMan = JMudStatics.getDefaultJobManager();
+	private UUID uuid = null;
 
-   public AbstractJob() {
-      super();
-      this.ID = UUID.randomUUID();
-   }
+	public AbstractJob() {
+		this(JMudStatics.getDefaultJobManager());
+	}
 
-    /**
-     * What does the return tell us?
-     * @return
-     */
-   public abstract boolean doJob();
+	public AbstractJob( JobManager jm) {
+		super();
+		this.jobMan = jm;
+		this.uuid = UUID.randomUUID();
+	}
 
-   public final UUID getID() {
-      return ID;
-   }
+	/**
+	 * Boolean value is returned to show the sucess of the job. This could
+	 * (Should) be expanded out to be a more dynamic system that would capture
+	 * more Job states that just Success or Fail
+	 * 
+	 * @return success of the job.
+	 */
+	public abstract boolean doJob();
 
-    public void setJobManager(JobManager jobManager){
-        this.jobManager = jobManager;
-    }
+	public final UUID getUUID() {
+		return uuid;
+	}
 
-    public void submitJob(AbstractJob jobToSubmit){
-        jobManager.pushJobToQueue(jobToSubmit);
-    }
-
-    public void submit(){
-        jobManager.pushJobToQueue(this);
-    }
+	public void selfSubmit() {
+		jobMan.pushJobToQueue(this);
+	}
 }

@@ -17,9 +17,8 @@
 package jmud.test.job;
 
 import jmud.engine.core.JMudStatics;
-import jmud.engine.job.definitions.AbstractDataJob;
 import jmud.engine.job.definitions.AbstractJob;
-import jmud.engine.job.definitions.ProcessIncomingDataJob;
+import jmud.engine.job.definitions.CheckConnectionForCommandJob;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 import jmud.test.FakeConnection;
@@ -36,7 +35,7 @@ public class ProcessIncomingDataJobTest {
    private static final String TEST_COMMAND = "test command";
    FakeJobManager fakeJobManager = FakeJobManager.getLazyLoadedInstance();
    FakeConnection fakeConnection;
-   ProcessIncomingDataJob processIncomingDataJob;
+   CheckConnectionForCommandJob processIncomingDataJob;
 
    @Before
    public final void setup() {
@@ -58,10 +57,10 @@ public class ProcessIncomingDataJobTest {
    }
 
    private void submitProcessIncomingDataJobAndWait(final Connection connection) {
-      processIncomingDataJob = new ProcessIncomingDataJob(connection);
+      processIncomingDataJob = new CheckConnectionForCommandJob(connection);
       processIncomingDataJob.setJobManager(FakeJobManager
             .getLazyLoadedInstance());
-      processIncomingDataJob.submit();
+      processIncomingDataJob.selfSubmit();
       fakeJobManager.processSubmittedJob();
       TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
    }
@@ -75,12 +74,12 @@ public class ProcessIncomingDataJobTest {
       lastSubmittedJob = fakeJobManager.getLastSubmittedJob();
       Assert
             .assertTrue("Expected AbstractDataJob not found ",
-                  AbstractDataJob.class.isAssignableFrom(lastSubmittedJob
+                  AbstractJob.class.isAssignableFrom(lastSubmittedJob
                         .getClass()));
       Assert.assertEquals("Submitted job contains wrong data; expected \""
             + TEST_COMMAND + "\", found "
-            + ((AbstractDataJob) lastSubmittedJob).data,
-            ((AbstractDataJob) lastSubmittedJob).data, TEST_COMMAND);
+            + ((AbstractJob) lastSubmittedJob).data,
+            ((AbstractJob) lastSubmittedJob).data, TEST_COMMAND);
    }
 
    @Test

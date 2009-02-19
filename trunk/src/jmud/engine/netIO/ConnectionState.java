@@ -16,34 +16,125 @@
  */
 package jmud.engine.netIO;
 
+import jmud.engine.core.JMudStatics;
 import jmud.engine.job.definitions.*;
 
-public enum ConnectionState{
-    DISCONNECTED{
-        public AbstractJob createCommandFromString(Connection connection, String command){
-            throw new RuntimeException("An attempt was made to processIncoming() while ConnectionState == DISCONNECTED");
-        }
-    },
-    LOGGED_OUT{
-        public AbstractJob createCommandFromString(Connection connection, String command){
-            return new LoginValidateJob(connection, command);
-        }
-    },
-    SELECTING_CHARACTER{
-        public AbstractJob createCommandFromString(Connection connection, String command){
-            return new CharacterSelectJob(connection, command);
-        }
-    },
-    CREATING_CHARACTER{
-        public AbstractJob createCommandFromString(Connection connection, String command){
-            return new NewCharacterJob(connection, command);
-        }
-    },
-    LOGGED_IN{
-        public AbstractJob createCommandFromString(Connection connection, String command){
-            return new BuildCmdFromStringJob(connection, command);
-        }
-    };
+public enum ConnectionState {
+	// CONNECTED, GOODUNAME, LOGGEDIN, WIZLIST, WHO, ABOUT, CHARACTERSELECT,
+	// NEWCHARACTER, DELETECHARACTER, INGAME
 
-    public abstract AbstractJob createCommandFromString(Connection connection, String command);
+	DISCONNECTED {
+		public AbstractJob createJob(Connection c) {
+			synchronized (c) {
+				c.setConnState(ConnectionState.CONNECTED);
+			}
+			return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+		}
+	},
+	CONNECTED {
+		public AbstractJob createJob(Connection c) {
+			// We need to see what the data that came in was
+			// It will represent the Menu Selection
+			synchronized (c) {
+
+				String data = c.getCmdBuffer().getNextCommand();
+
+				if (data.equals("1")) {
+					// Login
+					c.sendText("\nUsername: ");
+					c.setConnState(ConnectionState.GETUNAME);
+					return new LoginValidateJob(c);
+				} else if (data.equals("2")) {
+					c.sendTextLn("Not enabled at this time...");
+					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+				} else if (data.equals("3")) {
+					c.sendTextLn("Not enabled at this time...");
+					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+				} else if (data.equals("4")) {
+					c.sendTextLn("Not enabled at this time...");
+					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+				} else if (data.equals("5")) {
+					return new DisconnectJob(c, "Bye!\n\n");
+				} else {
+					c.sendTextLn("Thats not a menu choice.");
+					c.sendText("Make a selection: ");
+					return new LoginValidateJob(c);
+				}
+			}
+		}
+	},
+	GETUNAME {
+		public AbstractJob createJob(Connection c) {
+			return new LoginValidateJob(c);
+		}
+	},
+	GETPASSWD {
+		public AbstractJob createJob(Connection c) {
+			return new LoginValidateJob(c);
+		}
+	},
+	LOGGEDIN {
+		public AbstractJob createJob(Connection c) {
+			// We need to see what the data that came in was
+			// It will represent the Menu Selection
+			synchronized (c) {
+
+				String data = c.getCmdBuffer().getNextCommand();
+				String[] cmds = data.split(" ");
+				
+				if (cmds[0].toLowerCase().equals("new")) {
+					c.setConnState(ConnectionState.NEWCHARACTER);
+					return new NewCharacterJob(c);
+					
+				} else if (cmds[0].toLowerCase().equals("delete")) {
+					if (cmds.length < 2) {
+						return new SendTextToClientJob(c, "Delete who?");
+					}
+					c.setConnState(ConnectionState.DELETECHARACTER);
+					return new DeleteCharacterJob(c,cmds[1]);
+				} else if (cmds[0].toLowerCase().equals("exit")) {
+					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+				} else {
+					return new CharacterSelectJob(c, cmds[0]);
+				}
+			}
+		}
+	},
+	WIZLIST {
+		public AbstractJob createJob(Connection c) {
+			return null;
+		}
+	},
+	WHO {
+		public AbstractJob createJob(Connection c) {
+			return null;
+		}
+	},
+	ABOUT {
+		public AbstractJob createJob(Connection c) {
+			return null;
+		}
+	},
+	CHARACTERSELECT {
+		public AbstractJob createJob(Connection c) {
+			return null;
+		}
+	},
+	NEWCHARACTER {
+		public AbstractJob createJob(Connection c) {
+			return null;
+		}
+	},
+	DELETECHARACTER {
+		public AbstractJob createJob(Connection c) {
+			return null;
+		}
+	},
+	INGAME {
+		public AbstractJob createJob(Connection c) {
+			return new CheckConnForCmdsJob(c);
+		}
+	};
+
+	public abstract AbstractJob createJob(Connection c);
 }

@@ -16,56 +16,61 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.commands.AbstractCommand;
-import jmud.engine.commands.CommandFactory;
+
+import jmud.engine.job.JobManager;
 import jmud.engine.netIO.Connection;
 
 /**
  * Checks a connection's ByteBuffer to see if a valid command has been stored
  * yet. If there has, then this Job will submit a DetermineWhichCommand_Job.
- *
+ * 
  * @author David Loman
  * @version 0.1
  */
 
-public class BuildCmdFromStringJob extends AbstractDataJob {
-	private final Connection connection;
+public class CheckConnForCmdsJob extends AbstractJob {
+	private final Connection conn;
 
-    public BuildCmdFromStringJob(Connection connection, String data) {
-		this.connection = connection;
-		this.data = data;
+	public CheckConnForCmdsJob(Connection connection) {
+		super();
+		this.conn = connection;
+	}
+
+	public CheckConnForCmdsJob(JobManager jm, Connection connection) {
+		super(jm);
+		this.conn = connection;
 	}
 
 	@Override
 	public final boolean doJob() {
-		this.connection.sendTextLn("Recieved a command: " + this.data);
-
-		String[] ca = this.data.split(" ");
-
-		AbstractCommand ac = CommandFactory.getLazyLoadedInstance().getAbstractCommand(ca[0]);
-		if (ac != null) {
-			AbstractCommand nac = ac.clone(connection, ca);
-			submitJob(nac);
-            
-            this.connection.sendCRLF();
-
-            sendCharacterPrompt();
-
-            return true;
-		} else {
-			this.connection.sendCRLF();
-
-            sendCharacterPrompt();
-
-            return false;
+		// Check for a valid command
+		if (this.conn.getCmdBuffer().hasNextCommand() == false) {
+			return false;
 		}
+		String data = this.conn.getCmdBuffer().getNextCommand();
+
+		this.conn.sendTextLn("Recieved a command: " + data);
+		this.conn.sendPrompt();
+		return true;
+		
+//		String[] ca = data.split(" ");
+//
+//		AbstractCommand ac = CommandFactory.getLazyLoadedInstance().getAbstractCommand(ca[0]);
+//		if (ac != null) {
+//			AbstractCommand nac = ac.clone(conn, ca);
+//			nac.selfSubmit();
+//
+//			this.conn.sendPrompt();
+//
+//			return true;
+//		} else {
+//			this.conn.sendPrompt();
+//
+//			return false;
+//		}
 	}
 
-    private void sendCharacterPrompt(){
-        submitJob(new SendCharacterPromptJob(this.connection));
-    }
-
-    public Connection getConnection() {
-		return connection;
+	public Connection getConnection() {
+		return conn;
 	}
 }

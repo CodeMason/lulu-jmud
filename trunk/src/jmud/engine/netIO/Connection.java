@@ -17,249 +17,244 @@
 package jmud.engine.netIO;
 
 import jmud.engine.core.JMudStatics;
-import jmud.engine.job.definitions.SplashScreenJob;
-
+import jmud.engine.job.definitions.AbstractJob;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
+import java.util.UUID;
 
 /**
  * The Connection class represents a single connection to/from a user. The
  * Connection class is the single, high level point of access for sending data
  * to a user. This abstraction of functionality away from the ConnectionManager
  * simplifies use of the netIO package.
- *
+ * 
  * @author David Loman
  * @version 0.1
  */
-public class Connection{
-    private int accountID = 0;
-    private String uName = "";
-    private String passWd = "";
-    private int loginAttempts = 0;
-    private LoginState loginstate = LoginState.Neither;
-    private final String name;
-    private final SocketChannel socketChannel;
-    private ByteBuffer readBuffer = ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
-    private StringBuilder receivedText;
-    private ConnectionState connState = ConnectionState.DISCONNECTED;
+public class Connection {
+	private int accountID = 0;
+	private UUID connID = null;
+	private String uName = "";
+	private String passWd = "";
+	private int loginAttempts = 0;
+	private final SocketChannel socketChannel;
+	// private ByteBuffer readBuffer =
+	// ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
+	// private StringBuilder receivedText;
+	private ConnectionState connState;
+	private ConnectionManager connMan;
+	private CommandBuffer cmdBuf;
 
-    /**
-     * Explicit constructor.
-     *
-     * @param inSc SocketChannel used for communications
-     * @param name Name to identify this object by.
-     */
-    public Connection(final SocketChannel inSc, final String name){
-        this.socketChannel = inSc;
-        this.connState = ConnectionState.DISCONNECTED;
-        this.name = name;
-        this.receivedText = new StringBuilder();
-    }
+	/**
+	 * Explicit constructor.
+	 * 
+	 * @param inSc
+	 *            SocketChannel used for communications
+	 * @param name
+	 *            Name to identify this object by.
+	 */
+	public Connection(ConnectionManager connMan, final SocketChannel inSc) {
+		this.socketChannel = inSc;
+		this.connMan = connMan;
+		this.connState = ConnectionState.DISCONNECTED;
+		this.connID = connMan.getNewConnectionID();
+		this.cmdBuf = new CommandBuffer();
+	}
 
-    /**
-     * @return the AccountID associated with this Connection.
-     */
-    public int getAccountID(){
-        return accountID;
-    }
+	/**
+	 * Disconnect
+	 * 
+	 * @return true if the disconnect succeeded
+	 * @throws java.io.IOException
+	 */
+	public boolean disconnect() {
+		this.connMan.disconnect(this);
+		try {
+			socketChannel.close();
+		} catch (IOException e) {
+			System.err.println("ConnectionManager.disconnect(SocketChannel): Failed to close socket connection.");
+			e.printStackTrace();
+		}
+		return socketChannel.isConnected();
+	}
 
-    /**
-     * Set the AccountID associated with this Connection
-     *
-     * @param accountID
-     */
-    public void setAccountID(int accountID){
-        this.accountID = accountID;
-    }
+	/*
+	 * Data IO
+	 */
+	public void handleInputFromClient(SocketChannel sc) {
 
-    /**
-     * @return the Connection State associated with this Connection
-     */
-    public ConnectionState getConnState(){
-        return connState;
-    }
+		//Copy the data over into the commandBuffer and parse it into commands.
+		try {
+			this.cmdBuf.write(sc);
+			this.cmdBuf.parseBuffer();
+		} catch (ClosedChannelException e) {
+			this.disconnect();
+		}
 
-    /**
-     * Set this Connection object's Connection State.
-     *
-     * @param connState
-     */
-    public void setConnState(ConnectionState connState){
-        this.connState = connState;
-    }
+		//If a valid command exists, then route it and generate a job.
+		if (this.cmdBuf.hasNextCommand() == false) {
+			return;
+		}
 
-    /**
-     * @return this Connection object's name.
-     */
-    public String getName(){
-        return name;
-    }
+		AbstractJob aj = this.connState.createJob(this);
+		aj.selfSubmit();
+		
+	}
 
-    /**
-     * @return the username associated with this Connection.
-     */
-    public String getUName(){
-        return uName;
-    }
+	/**
+	 * Send the text, with a CRLF, to the client.
+	 * 
+	 * @param textToSend
+	 */
+	public void sendTextLn(String textToSend) {
+		this.sendText(textToSend + JMudStatics.CRLF);
+	}
 
-    /**
-     * Set the username associated with this Connection.
-     *
-     * @param uName
-     */
-    public void setUName(String uName){
-        this.uName = uName;
-    }
+	/**
+	 * Send multiple CRLFs to the client.
+	 */
+	public void sendCRLFs(int numberOfCRLFs) {
+		StringBuilder crlfs = new StringBuilder();
+		for (int i = 0; i < numberOfCRLFs; ++i) {
+			crlfs.append(JMudStatics.CRLF);
+		}
+		this.sendText(crlfs.toString());
+	}
 
-    /**
-     * @return the password associated with this Connection.
-     */
-    public String getPassWd(){
-        return passWd;
-    }
+	/**
+	 * Send a CRLF to the client.
+	 */
+	public void sendCRLF() {
+		this.sendText(JMudStatics.CRLF);
+	}
 
-    /**
-     * Set the password associated with this Connection
-     *
-     * @param passWd
-     */
-    public void setPassWd(String passWd){
-        this.passWd = passWd;
-    }
+	/**
+	 * Send the text, without a CRLF, to the client.
+	 * 
+	 * @param text
+	 */
+	public void sendText(String text) {
+		// Attach the SocketChannel and send the text on its way!
+		this.connMan.send(this.socketChannel, text);
+	}
 
-    /**
-     * @return the number of Login attempts for this connection.
-     */
-    public int getLoginAttempts(){
-        return loginAttempts;
-    }
+	public void sendPrompt() {
+		this.sendCRLF();
+		this.sendText("jMUD:");
+	}
 
-    /**
-     * Reset this Connection object's logAttempts;
-     */
-    public void resetLoginAttempts(){
-        this.loginAttempts = 0;
-    }
+	/*
+	 * Getters n Setters
+	 */
 
-    /**
-     * Increment this Connection object's logAttempts;
-     */
-    public void incrementLoginAttempts(){
-        ++this.loginAttempts;
-    }
+	/**
+	 * @return the AccountID associated with this Connection.
+	 */
+	public int getAccountID() {
+		return this.accountID;
+	}
 
-    /**
-     * @return the Login State associated with this Connection
-     */
-    public LoginState getLoginstate(){
-        return loginstate;
-    }
+	/**
+	 * Set the AccountID associated with this Connection
+	 * 
+	 * @param accountID
+	 */
+	public void setAccountID(int accountID) {
+		this.accountID = accountID;
+	}
 
-    /**
-     * Set this Connection object's Login State
-     *
-     * @param loginstate
-     */
-    public void setLoginstate(LoginState loginstate){
-        this.loginstate = loginstate;
-    }
+	/**
+	 * @return the Connection State associated with this Connection
+	 */
+	public ConnectionState getConnState() {
+		return this.connState;
+	}
 
-    /**
-     * Send the text, with a CRLF, to the client.
-     *
-     * @param textToSend
-     */
-    public void sendTextLn(String textToSend){
-        // Attach the SocketChannel and send the text on its way!
-        this.sendText(textToSend + JMudStatics.CRLF);
-    }
+	/**
+	 * Set this Connection object's Connection State.
+	 * 
+	 * @param connState
+	 */
+	public void setConnState(ConnectionState connState) {
+		this.connState = connState;
+	}
 
-    /**
-     * Send multiple CRLFs to the client.
-     */
-    public void sendCRLFs(int numberOfCRLFs){
-        StringBuilder crlfs = new StringBuilder();
-        for(int i = 0; i < numberOfCRLFs; ++i){
-            crlfs.append(JMudStatics.CRLF);
-        }
-        this.sendText(crlfs.toString());
-    }
+	/**
+	 * @return this Connection's UUID.
+	 */
+	public UUID getConnectionID() {
+		return this.connID;
+	}
 
-    /**
-     * Send a CRLF to the client.
-     */
-    public void sendCRLF(){
-        this.sendText(JMudStatics.CRLF);
-    }
+	/**
+	 * @return this Connection's ConnectionManager reference.
+	 */
+	public ConnectionManager getConnectionManager() {
+		return this.connMan;
+	}
 
-    /**
-     * Send the text, without a CRLF, to the client.
-     *
-     * @param text
-     */
-    public void sendText(String text){
-        // Attach the SocketChannel and send the text on its way!
-        ConnectionManager.getLazyLoadedInstance().send(this.socketChannel, text);
-    }
+	/**
+	 * @return this Connection's SocketChannel.
+	 */
+	public SocketChannel getSocketChannel() {
+		return this.socketChannel;
+	}
 
-    public void sendSplashScreen(){
-        JMudStatics.getDefaultJobManager().pushJobToQueue(new SplashScreenJob(this));
-    }
+	/**
+	 * @return the username associated with this Connection.
+	 */
+	public String getUName() {
+		return this.uName;
+	}
 
-    public boolean isConnectionLost() throws IOException{
-        return socketChannel.read(readBuffer) < 0;
-    }
+	/**
+	 * Set the username associated with this Connection.
+	 * 
+	 * @param uName
+	 */
+	public void setUName(String uName) {
+		this.uName = uName;
+	}
 
-    public boolean isCommandComplete(){
-        storeAndClearReadBuffer();
-        return receivedText.toString().contains(JMudStatics.CRLF);
-    }
+	/**
+	 * @return the password associated with this Connection.
+	 */
+	public String getPassWd() {
+		return this.passWd;
+	}
 
-    public String getAndClearCommand(){
-        String data;
-        storeAndClearReadBuffer();
-        data = receivedText.toString().replace(JMudStatics.CRLF, "");
-        receivedText = new StringBuilder();
-        return data;
-    }
+	/**
+	 * Set the password associated with this Connection
+	 * 
+	 * @param passWd
+	 */
+	public void setPassWd(String passWd) {
+		this.passWd = passWd;
+	}
 
-    private void storeAndClearReadBuffer(){
-        Charset cs = Charset.forName("ISO-8859-1");
-        CharsetDecoder dec = cs.newDecoder();
+	/**
+	 * @return the number of Login attempts for this connection.
+	 */
+	public int getLoginAttempts() {
+		return this.loginAttempts;
+	}
 
-        try{
-            readBuffer.flip();
-            CharBuffer cb = dec.decode(readBuffer);
-            receivedText.append(cb.toString());
-        } catch(CharacterCodingException e){
-            System.err.println("Connection: CharacterCodingException in ByteBuffer of: " + socketChannel.socket().getInetAddress().toString());
-            e.printStackTrace();
-        } catch(Exception e){
-            System.err.println("Connection: Exception in ByteBuffer of: " + socketChannel.socket().getInetAddress().toString());
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * Reset this Connection object's logAttempts;
+	 */
+	public void resetLoginAttempts() {
+		this.loginAttempts = 0;
+	}
 
+	/**
+	 * Increment this Connection object's logAttempts;
+	 */
+	public void incrementLoginAttempts() {
+		++this.loginAttempts;
+	}
 
-    /**
-     * Disconnect
-     *
-     * @return true if the disconnect succeeded
-     * @throws java.io.IOException
-     */
-    public boolean disconnect(){
-        ConnectionManager.getLazyLoadedInstance().disconnectFrom(this);
-        try{
-            socketChannel.close();
-        } catch(IOException e){
-            System.err.println("ConnectionManager.disconnect(SocketChannel): Failed to close socket connection.");
-            e.printStackTrace();
-        }
-        return socketChannel.isConnected();
-    }
+	public CommandBuffer getCmdBuffer() {
+		return cmdBuf;
+	}
 }

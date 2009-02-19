@@ -16,6 +16,32 @@
  */
 package jmud.engine.job.definitions;
 
-public abstract class AbstractDataJob extends AbstractJob{
-    public String data;
+import jmud.engine.netIO.Connection;
+
+/**
+ * Disconnect a connection
+ *
+ * @author Chris Maguire
+ * @date December 5, 2008
+ */
+
+public class DisconnectJob extends AbstractJob {
+
+	private Connection c = null;
+	private String msg;
+	
+	public DisconnectJob(Connection c, String message) {
+		super();
+		this.c = c;
+	}
+
+	@Override
+	public final boolean doJob() {
+		synchronized (this.c) {
+			this.c.sendTextLn(this.msg);
+			this.c.disconnect();
+        }
+		return true;
+	}
+
 }

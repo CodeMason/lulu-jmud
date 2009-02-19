@@ -46,7 +46,7 @@ public class AttackBehavior extends Behavior {
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.Attacked, this.event.getTarget(), this.event.getSource());
 
-		jme.submit();
+		jme.selfSubmit();
 
 		return true;
 	}

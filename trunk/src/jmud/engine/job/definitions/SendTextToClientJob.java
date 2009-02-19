@@ -17,35 +17,30 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
-public class ProcessIncomingDataJob extends AbstractJob {
+/**
+ * Display a splash screen to the user with a login prompt
+ *
+ * @author Chris Maguire
+ * @date December 5, 2008
+ */
 
-	private Connection connection = null;
+public class SendTextToClientJob extends AbstractJob {
 
-	public ProcessIncomingDataJob(Connection connection) {
+	private Connection c = null;
+	private String s;
+	public SendTextToClientJob(Connection c, String textToSend) {
 		super();
-		this.connection = connection;
+		this.c = c;
+		this.s = textToSend;
 	}
 
 	@Override
 	public final boolean doJob() {
-		synchronized (this.connection) {
-            ConnectionState connectionState = connection.getConnState();
-            String data;
-
-            if(!connection.isCommandComplete()){
-                return false;
-            }
-
-            data = connection.getAndClearCommand();
-
-            return createAndSubmitAppropriateCommand(connectionState, data);
-		}
+		synchronized (this.c) {
+			this.c.sendText(this.s);
+        }
+		return true;
 	}
 
-    private boolean createAndSubmitAppropriateCommand(ConnectionState connectionState, String data){
-        submitJob(connectionState.createCommandFromString(this.connection, data));
-        return true;
-    }
 }

@@ -51,7 +51,7 @@ public class SplashScreenJobTest {
 
     private void submitSplashScreenJobAndWait(FakeConnection fakeConnection) {
         SplashScreenJob splashScreenJob = new SplashScreenJob(fakeConnection);
-        splashScreenJob.submit();
+        splashScreenJob.selfSubmit();
         TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
     }
 }

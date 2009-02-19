@@ -20,38 +20,40 @@ import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 
 /**
- * Contains the routines for creating a new Character
+ * Contains the routines for Deleting a  Character
  * 
  * @author David Loman
  * @version 0.1
  */
 
-public class NewCharacterJob extends AbstractJob {
+public class DeleteCharacterJob extends AbstractJob {
 
-	private Connection c;
+	private Connection conn = null;
+	private String character;
 
-	public NewCharacterJob(Connection c) {
+	public DeleteCharacterJob(Connection c, String character) {
 		super();
-		this.c = c;
+		this.conn = c;
+		this.character = character;
 	}
 
 	@Override
 	public final boolean doJob() {
-//		synchronized (this.c) {
-
-			// TODO finish the new character stuff
-			this.c.sendCRLFs(2);
-			this.c.sendTextLn("-----~----------------~-----");
-			this.c.sendTextLn("     Character Creation");
-			this.c.sendTextLn("-----~----------------~-----");
-			this.c.sendCRLF();
-			this.c.sendTextLn("New Character creation is currently unfinished.");
-			this.c.sendCRLFs(2);
+		synchronized (this.conn) {
+			// TODO finish the delete character stuff
+			this.conn.sendCRLFs(2);
+			this.conn.sendTextLn("-----~----------------~-----");
+			this.conn.sendTextLn("     Character Deletion");
+			this.conn.sendTextLn("-----~----------------~-----");
+			this.conn.sendCRLF();
+			this.conn.sendTextLn("Character deletionion is currently unfinished.");
+			this.conn.sendCRLFs(2);
 			
-			this.c.setConnState(ConnectionState.CHARACTERSELECT);
-			this.c.getConnState().createJob(c).selfSubmit();
+			this.conn.sendText("Ran DeleteCharacterJob for: "  + this.character);		
 
-	//	}
+			this.conn.setConnState(ConnectionState.CHARACTERSELECT);
+			this.conn.getConnState().createJob(this.conn).selfSubmit();
+		}
 		return true;
 	}
 }

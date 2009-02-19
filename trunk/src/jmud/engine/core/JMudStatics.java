@@ -30,6 +30,8 @@ public class JMudStatics {
 
 	public static final int MAX_LOGIN_ATTEMPTS = 3;
 
+	public static final char CR = '\r';
+	public static final char LF = '\n';
 	public static final String CRLF = "\r\n";
 
     private static String SPLASH_SCREEN_FILE_NAME = "splashScreen.txt";
@@ -95,5 +97,12 @@ public class JMudStatics {
 				.append("|\\_)  )  | )   ( || (___) || (__/  )").append(CRLF)
 				.append("(____/   |/     \\|(_______)(______/ ").append(CRLF)
 				.append("The Java Mud Framework.").append(CRLF).append(CRLF)
-				.append("Username: ").toString();
+				.append("---------------------------------").append(CRLF)
+				.append("1) Login").append(CRLF)
+				.append("2) View Wizlist").append(CRLF)
+				.append("3) See Who is currently Online").append(CRLF)
+				.append("4) Read about jMUD").append(CRLF)
+				.append("5) Disconnect").append(CRLF)
+				.append("---------------------------------").append(CRLF)
+				.append("Make a selection: ").toString();
 }
