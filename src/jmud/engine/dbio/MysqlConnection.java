@@ -8,7 +8,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import jmud.engine.character.Character;
+import jmud.engine.account.Account;
+import jmud.engine.character.PlayerCharacter;
 import jmud.engine.core.JMudStatics;
 
 /**
@@ -46,7 +47,7 @@ public class MysqlConnection {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			c = DriverManager.getConnection(JMudStatics.dbUrl, JMudStatics.dbUName, JMudStatics.dbPassWd);
-			
+
 			return c;
 		} catch (InstantiationException e) {
 			e.printStackTrace();
@@ -118,73 +119,98 @@ public class MysqlConnection {
 	 * return value of -1 means validation failed.
 	 */
 	public static int verifyLogin(String uname, String passwd) {
-//		Connection c = MysqlConnection.makeNewConnection();
-//
-//		String sql = "SELECT id, passwd FROM Accounts WHERE (uname='" + uname + "');";
-//		ResultSet rs = MysqlConnection.Query(c, sql);
-//		int accountID = -1;
-//		
-//		try {
-//			while (rs.next()) {
-//				String dbpd = rs.getString("passwd");
-//				if (dbpd.equals(passwd)) {
-//					accountID = rs.getInt("id");
-//				}
-//
-//				// can't think of a better way to make
-//				// sure there is only ONE is row processed.
-//				break;
-//			}
-//			
-//			rs.close();
-//			c.close();
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return accountID;
+		// Connection c = MysqlConnection.makeNewConnection();
+		//
+		// String sql = "SELECT id, passwd FROM Accounts WHERE (uname='" + uname
+		// + "');";
+		// ResultSet rs = MysqlConnection.Query(c, sql);
+		// int accountID = -1;
+		//		
+		// try {
+		// while (rs.next()) {
+		// String dbpd = rs.getString("passwd");
+		// if (dbpd.equals(passwd)) {
+		// accountID = rs.getInt("id");
+		// }
+		//
+		// // can't think of a better way to make
+		// // sure there is only ONE is row processed.
+		// break;
+		// }
+		//			
+		// rs.close();
+		// c.close();
+		//
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// return accountID;
 
 		// TODO hook in the DB query here.
 
 		// Temporary validation
-		if (uname.equals(JMudStatics.hardcodeUName)
-				&& passwd.equals(JMudStatics.hardcodePasswd)) {
+		if (uname.equals(JMudStatics.hardcodeUName) && passwd.equals(JMudStatics.hardcodePasswd)) {
 			return 42;
 		} else {
 			return -1;
-		}		
+		}
 	}
 
-	public static Map<String, Character> getCharactersByAccountID(int accountID) {
-		Map<String, Character> chars = new HashMap<String, Character>();
+	public static Map<String, PlayerCharacter> getCharactersByAccountID(int accountID) {
+		Map<String, PlayerCharacter> chars = new HashMap<String, PlayerCharacter>();
 
-//		Connection c = MysqlConnection.makeNewConnection();
-//		String sql = "SELECT * FROM Characters WHERE (accountid='" + accountID + "');";
-//		ResultSet rs = MysqlConnection.Query(c, sql);
+		// Connection c = MysqlConnection.makeNewConnection();
+		// String sql = "SELECT * FROM Characters WHERE (accountid='" +
+		// accountID + "');";
+		// ResultSet rs = MysqlConnection.Query(c, sql);
 
-		
-//		try {
-//
-//
-//			//ALL THIS DEPENDS ON THE DB SCHEMA.
-//			
-//			rs.close();
-//			c.close();
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		//
+		//
+		// //ALL THIS DEPENDS ON THE DB SCHEMA.
+		//			
+		// rs.close();
+		// c.close();
+		//
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// }
 
-		
-		//Temp
+		// Temp
 		for (String s : JMudStatics.characters) {
-			chars.put(s, new Character(s));
+			chars.put(s, new PlayerCharacter(s));
 		}
-	
-		
-		
+
 		return chars;
 	}
 
+	public static Account getAccount(String uName) {
+		// TODO Fix this STUB: MysqlConnection.getAccount(String uName)
+
+		if (uName.equals(JMudStatics.hardcodeUName)) {
+			return new Account(42, JMudStatics.hardcodeUName, JMudStatics.hardcodePasswd);
+		} else {
+			return null;
+		}
+	}
+
+	public static PlayerCharacter getPlayerCharacter(String pcName, int ownerAccID) {
+		// TODO Fix this STUB: MysqlConnection.getPlayerCharacter(String pcName)
+
+		// Use ownerAccID in the SQL Query to verify ownership.
+		if (ownerAccID != 42) {
+			return null;
+		}
+
+		if (pcName.equals("Pinky")) {
+			return new PlayerCharacter("Pinky");
+		} else if (pcName.equals("Stinky")) {
+			return new PlayerCharacter("Stinky");
+		} else if (pcName.equals("Slinky")) {
+			return new PlayerCharacter("Slinky");
+		} else {
+			return null;
+		}
+	}
 }
