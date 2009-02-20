@@ -24,117 +24,392 @@ public enum ConnectionState {
 	// NEWCHARACTER, DELETECHARACTER, INGAME
 
 	DISCONNECTED {
-		public AbstractJob createJob(Connection c) {
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			// AutoForward to runStateJob
+			ConnectionState.DISCONNECTED.runStateJob(c);
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			DisconnectJob dj = new DisconnectJob(c, "Bye bye!!");
+			dj.selfSubmit();
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
 			synchronized (c) {
-				c.setConnState(ConnectionState.CONNECTED);
+				c.sendText(JMudStatics.getSplashScreen());
 			}
-			return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
 		}
 	},
 	CONNECTED {
-		public AbstractJob createJob(Connection c) {
-			// We need to see what the data that came in was
-			// It will represent the Menu Selection
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
 			synchronized (c) {
+				c.sendText(JMudStatics.MAIN_MENU);
+			}
+		}
 
+		@Override
+		public void runStateJob(Connection c) {
+			synchronized (c) {
+				// We need to see what the data that came in was
+				// It will represent the Menu Selection
 				String data = c.getCmdBuffer().getNextCommand();
 
 				if (data.equals("1")) {
 					// Login
 					c.sendText("\nUsername: ");
-					c.setConnState(ConnectionState.GETUNAME);
-					return new LoginValidateJob(c);
+
+					// Trigger state change actions
+					c.changeConnState(ConnectionState.GETUNAME);
+
 				} else if (data.equals("2")) {
-					c.sendTextLn("Not enabled at this time...");
-					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+					// View WizList
+					c.changeConnState(ConnectionState.WIZLIST);
+
 				} else if (data.equals("3")) {
-					c.sendTextLn("Not enabled at this time...");
-					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+					// View WhoList
+					c.changeConnState(ConnectionState.WHO);
+
 				} else if (data.equals("4")) {
-					c.sendTextLn("Not enabled at this time...");
-					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
+					// View About This Mud
+					c.changeConnState(ConnectionState.ABOUT);
+
 				} else if (data.equals("5")) {
-					return new DisconnectJob(c, "Bye!\n\n");
+					// Disconnect
+					// Trigger state change actions
+					c.changeConnState(ConnectionState.DISCONNECTED);
+
 				} else {
+					c.sendCRLFs(2);
 					c.sendTextLn("Thats not a menu choice.");
-					c.sendText("Make a selection: ");
-					return new LoginValidateJob(c);
+
+					// Re-Enter this state
+					ConnectionState.CONNECTED.runEnterJob(c, ConnectionState.CONNECTED);
 				}
 			}
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+			// No Event
 		}
 	},
 	GETUNAME {
-		public AbstractJob createJob(Connection c) {
-			return new LoginValidateJob(c);
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			// AutoForward to runStateJob
+			ConnectionState.GETUNAME.runStateJob(c);
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			LoginJob j = new LoginJob(c);
+			j.selfSubmit();
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+			// No Event
+
 		}
 	},
 	GETPASSWD {
-		public AbstractJob createJob(Connection c) {
-			return new LoginValidateJob(c);
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			// AutoForward to runStateJob
+			ConnectionState.GETPASSWD.runStateJob(c);
 		}
-	},
-	LOGGEDIN {
-		public AbstractJob createJob(Connection c) {
-			// We need to see what the data that came in was
-			// It will represent the Menu Selection
-			synchronized (c) {
 
-				String data = c.getCmdBuffer().getNextCommand();
-				String[] cmds = data.split(" ");
-				
-				if (cmds[0].toLowerCase().equals("new")) {
-					c.setConnState(ConnectionState.NEWCHARACTER);
-					return new NewCharacterJob(c);
-					
-				} else if (cmds[0].toLowerCase().equals("delete")) {
-					if (cmds.length < 2) {
-						return new SendTextToClientJob(c, "Delete who?");
-					}
-					c.setConnState(ConnectionState.DELETECHARACTER);
-					return new DeleteCharacterJob(c,cmds[1]);
-				} else if (cmds[0].toLowerCase().equals("exit")) {
-					return new SendTextToClientJob(c, JMudStatics.getSplashScreen());
-				} else {
-					return new CharacterSelectJob(c, cmds[0]);
-				}
+		@Override
+		public void runStateJob(Connection c) {
+			LoginJob j = new LoginJob(c);
+			j.selfSubmit();
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
 			}
+			// No Event
 		}
 	},
 	WIZLIST {
-		public AbstractJob createJob(Connection c) {
-			return null;
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			AbstractJob j = new DisplayWizListJob(c);
+			j.selfSubmit();
+
+			j = new SendTextToClientJob(c, "Press RETURN to continue...");
+			j.selfSubmit();
+			// Dont auto forward
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			// Read the 'return' out of the connections CommandBuffer
+			c.getCmdBuffer().getNextCommand();
+
+			c.changeConnState(ConnectionState.CONNECTED);
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+			// No Event
 		}
 	},
 	WHO {
-		public AbstractJob createJob(Connection c) {
-			return null;
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			AbstractJob j = new DisplayWhoListJob(c);
+			j.selfSubmit();
+
+			j = new SendTextToClientJob(c, "Press RETURN to continue...");
+			j.selfSubmit();
+			// Dont auto forward
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			// Read the 'return' out of the connections CommandBuffer
+			c.getCmdBuffer().getNextCommand();
+
+			c.changeConnState(ConnectionState.CONNECTED);
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+			// No Event
 		}
 	},
 	ABOUT {
-		public AbstractJob createJob(Connection c) {
-			return null;
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			AbstractJob j = new DisplayAboutScreenJob(c);
+			j.selfSubmit();
+
+			j = new SendTextToClientJob(c, "Press RETURN to continue...");
+			j.selfSubmit();
+			// Dont auto forward
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			// Read the 'return' out of the connections CommandBuffer
+			c.getCmdBuffer().getNextCommand();
+
+			c.changeConnState(ConnectionState.CONNECTED);
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+			// No Event
 		}
 	},
-	CHARACTERSELECT {
-		public AbstractJob createJob(Connection c) {
-			return null;
+	CHARACTERMANAGE {
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			c.sendCRLFs(2);
+			AbstractJob j = new DisplayCharactersJob(c);
+			j.selfSubmit();
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			synchronized (c) {
+				AbstractJob j;
+				// We need to see what the data that came in was
+				// It will represent the Menu Selection
+				String data = c.getCmdBuffer().getNextCommand();
+				String[] cmds = data.split(" ");
+
+				if (cmds[0].toLowerCase().equals("new")) {
+					// Make a new Character
+					c.changeConnState(ConnectionState.NEWCHARACTER);
+
+				} else if (cmds[0].toLowerCase().equals("delete")) {
+					// Delete a character
+					if (cmds.length < 2) {
+						c.sendCRLFs(2);
+						c.sendTextLn("That name is not recognized.\n");
+						ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+						return;
+					}
+
+					// Manually Execute a DeleteCharacterJob to keep things
+					// synced up. We want the Delete Character event to happen
+					// before the Character Display
+					c.sendCRLFs(2);
+					j = new DeleteCharacterJob(c, cmds[1]);
+					boolean deleted = j.doJob();
+
+					if (deleted) {
+						c.sendTextLn("Deleted that character.\n");
+					} else {
+						c.sendTextLn("Hrm, couldn't find that character.\n");
+					}
+
+					// Now refresh the character List
+					ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+					return;
+				} else if (cmds[0].toLowerCase().equals("exit")) {
+					// Exit back to Main Menu.
+					c.changeConnState(ConnectionState.CONNECTED);
+					return;
+				} else if (cmds[0].length() == 0) {
+					c.sendCRLFs(2);
+					c.sendTextLn("Thats not a menu choice.");
+
+					// Re-Enter this state
+					ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+					return;
+				} else {
+					// Try to look up a character and load it ingame.
+					String pcName = cmds[0];
+
+					// Manually Execute a load
+					j = new LoadCharacterJob(c, pcName);
+					boolean loaded = j.doJob();
+
+					if (loaded) {
+						c.changeConnState(ConnectionState.INGAME);
+					} else {
+						c.sendCRLFs(2);
+						c.sendTextLn("Hrm, couldn't find that character.\n");
+
+						// Re-Enter this state
+						ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+
+					}
+				}
+
+			}
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+
+			// Don't forget to clean up the login info on our way out!
+			if (toState == ConnectionState.CONNECTED) {
+				LogoutJob lj = new LogoutJob(c);
+				lj.selfSubmit();
+			}
+
 		}
 	},
 	NEWCHARACTER {
-		public AbstractJob createJob(Connection c) {
-			return null;
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			AbstractJob j = new NewCharacterJob(c);
+			j.selfSubmit();
+
+			j = new SendTextToClientJob(c, "Press RETURN to continue...");
+			j.selfSubmit();
+			// Dont auto forward
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			// Read the 'return' out of the connections CommandBuffer
+			c.getCmdBuffer().getNextCommand();
+
+			c.changeConnState(ConnectionState.CHARACTERMANAGE);
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+			// No Event
 		}
 	},
-	DELETECHARACTER {
-		public AbstractJob createJob(Connection c) {
-			return null;
-		}
-	},
+
+	// DELETECHARACTER {
+	// @Override
+	// public void runEnterJob(Connection c, ConnectionState fromState) {
+	// System.err.println("Returning a NULL object!");
+	// return null;
+	// }
+	//
+	// @Override
+	// public void runStateJob(Connection c) {
+	// }
+	//
+	// @Override
+	// public void runExitJob(Connection c, ConnectionState toState) {
+	// // Disconnect Safety
+	// if (toState == ConnectionState.DISCONNECTED) {
+	// return;
+	// }
+	//
+	// }
+	// },
 	INGAME {
-		public AbstractJob createJob(Connection c) {
-			return new CheckConnForCmdsJob(c);
+		@Override
+		public void runEnterJob(Connection c, ConnectionState fromState) {
+			// Put anything that needs to be done Prior to World Entry here.
+			c.sendCRLFs(2);
+			c.sendTextLn("Entering the world of jMUD...\n\n");
+
+			// AutoForward
+			ConnectionState.INGAME.runStateJob(c);
+		}
+
+		@Override
+		public void runStateJob(Connection c) {
+			
+			//TODO Finish the Command routing! 
+			//Temporary Code Stub
+			if (c.getCmdBuffer().hasNextCommand()) {
+				String cmd = c.getCmdBuffer().getNextCommand();
+				c.sendTextLn("Oh yeah?!  Well " + cmd + " to you too pal!");
+			}
+		}
+
+		@Override
+		public void runExitJob(Connection c, ConnectionState toState) {
+			// Disconnect Safety
+			if (toState == ConnectionState.DISCONNECTED) {
+				return;
+			}
+
+			c.sendTextLn("Leaving the world of jMUD...\n\n");
 		}
 	};
 
-	public abstract AbstractJob createJob(Connection c);
+	public abstract void runExitJob(Connection c, ConnectionState toState);
+
+	public abstract void runStateJob(Connection c);
+
+	public abstract void runEnterJob(Connection c, ConnectionState fromState);
 }

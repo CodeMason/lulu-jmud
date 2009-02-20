@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.character.Character;
+import jmud.engine.character.PlayerCharacter;
 import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 
@@ -30,20 +30,17 @@ import java.util.Map;
  * @version 0.1
  */
 
-public class DisplayCharactersJob extends AbstractJob {
-
-	private Connection c = null;
+public class DisplayCharactersJob extends AbstractConnectionJob {
 
 	public DisplayCharactersJob(Connection c) {
-		super();
-		this.c = c;
+		super(c);
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
 			// Map of character names to the Character object refs
-			Map<String, Character> chars = MysqlConnection.getCharactersByAccountID(this.c.getAccountID());
+			Map<String, PlayerCharacter> chars = MysqlConnection.getCharactersByAccountID(this.c.getAccount().getAccountID());
 
 			// Send client the Character Select Screen.
 			this.c.sendCRLFs(2);
@@ -60,7 +57,6 @@ public class DisplayCharactersJob extends AbstractJob {
 					+ "-'Delete charname' to delete a character\n\t" 
 					+ "-'Exit' to logout and return to the Main menu.");
 			this.c.sendText("Make a selection: ");
-
 		}
 		return true;
 	}

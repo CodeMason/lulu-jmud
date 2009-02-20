@@ -17,7 +17,6 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
  * Contains the routines for creating a new Character
@@ -26,18 +25,15 @@ import jmud.engine.netIO.ConnectionState;
  * @version 0.1
  */
 
-public class NewCharacterJob extends AbstractJob {
-
-	private Connection c;
+public class NewCharacterJob extends AbstractConnectionJob {
 
 	public NewCharacterJob(Connection c) {
-		super();
-		this.c = c;
+		super(c);
 	}
 
 	@Override
 	public final boolean doJob() {
-//		synchronized (this.c) {
+		synchronized (this.c) {
 
 			// TODO finish the new character stuff
 			this.c.sendCRLFs(2);
@@ -48,10 +44,7 @@ public class NewCharacterJob extends AbstractJob {
 			this.c.sendTextLn("New Character creation is currently unfinished.");
 			this.c.sendCRLFs(2);
 			
-			this.c.setConnState(ConnectionState.CHARACTERSELECT);
-			this.c.getConnState().createJob(c).selfSubmit();
-
-	//	}
+		}
 		return true;
 	}
 }

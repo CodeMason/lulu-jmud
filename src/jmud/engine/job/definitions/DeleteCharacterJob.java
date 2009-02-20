@@ -17,42 +17,28 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
- * Contains the routines for Deleting a  Character
+ * Contains the routines for creating a new Character
  * 
  * @author David Loman
  * @version 0.1
  */
 
-public class DeleteCharacterJob extends AbstractJob {
+public class DeleteCharacterJob extends AbstractConnectionJob {
 
-	private Connection conn = null;
-	private String character;
-
-	public DeleteCharacterJob(Connection c, String character) {
-		super();
-		this.conn = c;
-		this.character = character;
+	private String pcName;
+	
+	public DeleteCharacterJob(Connection c, String pcName) {
+		super(c);
+		this.pcName = pcName;
 	}
 
 	@Override
 	public final boolean doJob() {
-		synchronized (this.conn) {
-			// TODO finish the delete character stuff
-			this.conn.sendCRLFs(2);
-			this.conn.sendTextLn("-----~----------------~-----");
-			this.conn.sendTextLn("     Character Deletion");
-			this.conn.sendTextLn("-----~----------------~-----");
-			this.conn.sendCRLF();
-			this.conn.sendTextLn("Character deletionion is currently unfinished.");
-			this.conn.sendCRLFs(2);
+		synchronized (this.c) {
+			this.c.sendTextLn("Deleting " + this.pcName + " for all eternity....");
 			
-			this.conn.sendText("Ran DeleteCharacterJob for: "  + this.character);		
-
-			this.conn.setConnState(ConnectionState.CHARACTERSELECT);
-			this.conn.getConnState().createJob(this.conn).selfSubmit();
 		}
 		return true;
 	}

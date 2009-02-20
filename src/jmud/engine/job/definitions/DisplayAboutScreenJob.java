@@ -16,9 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.account.AccountManager;
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -28,21 +26,27 @@ import jmud.engine.netIO.ConnectionState;
  * @version 0.1
  */
 
-public class LogoutJob extends AbstractJob {
-	private Connection c = null;
+public class DisplayAboutScreenJob extends AbstractConnectionJob {
 
-	public LogoutJob(Connection c) {
-		super();
-		this.c = c;
+	public DisplayAboutScreenJob(Connection c) {
+		super(c);
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
-			this.c.getAccount().resetLoginAttempts();
-			AccountManager.getInstance().unloadAccont(this.c.getAccount());
-			this.c.changeConnState(ConnectionState.CONNECTED);
+			// Send client the Character Select Screen.
+			this.c.sendCRLFs(2);
+			this.c.sendTextLn("-----~----------------~------");
+			this.c.sendTextLn("-      About This Mud       -");
+			this.c.sendTextLn("-----~----------------~------");
+			this.c.sendTextLn("-- Really neat and thought --");
+			this.c.sendTextLn("-- provoking text.         --");
+			this.c.sendTextLn("-----~----------------~------");
+			this.c.sendCRLFs(2);
+			
 		}
 		return true;
 	}
+
 }

@@ -16,9 +16,10 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.account.AccountManager;
+import jmud.engine.account.Account;
+import jmud.engine.character.PlayerCharacter;
+import jmud.engine.character.PlayerCharacterManager;
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -28,21 +29,28 @@ import jmud.engine.netIO.ConnectionState;
  * @version 0.1
  */
 
-public class LogoutJob extends AbstractJob {
-	private Connection c = null;
-
-	public LogoutJob(Connection c) {
-		super();
-		this.c = c;
+public class LoadCharacterJob extends AbstractConnectionJob {
+	
+	private String pcName;
+	
+	public LoadCharacterJob(Connection c, String pcName) {
+		super(c);
+		this.pcName = pcName;
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
-			this.c.getAccount().resetLoginAttempts();
-			AccountManager.getInstance().unloadAccont(this.c.getAccount());
-			this.c.changeConnState(ConnectionState.CONNECTED);
+			Account a = this.c.getAccount();
+			
+			PlayerCharacter pc = PlayerCharacterManager.getInstance().loadPlayerCharacter(this.pcName, a.getAccountID());
+			
+			if (pc == null) {
+				return false;
+			} else {
+				this.c.setPc(pc);
+				return true;
+			}
 		}
-		return true;
 	}
 }
