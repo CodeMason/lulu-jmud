@@ -1,6 +1,5 @@
 package jmud.engine.netIO;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -159,13 +158,24 @@ public class CommandBuffer {
 	}
 
 	public String getNextCommand() {
-		String s = null;
+		String s = "";
 		if (this.hasNextCommand()) {
 			synchronized (this.completeCmds) {
-				s = this.completeCmds.remove(0);
+				s += this.completeCmds.remove(0);
 			}
 		}
 		return s;
+	}
+	
+	public String toString() {
+		String out = "";
+		out+= "CharacterBuffer is: " + this.charBuf.size() + " characters long.\n";
+		out += "Completed Command Queue:\n";
+		for (String s : this.completeCmds) {
+			out += "\t-" + s.replace("\r", "\\r").replace("\n","\\n") + "\n";
+		}
+				
+		return out;
 	}
 
 }

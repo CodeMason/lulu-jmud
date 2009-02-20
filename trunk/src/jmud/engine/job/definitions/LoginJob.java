@@ -16,8 +16,9 @@
  */
 package jmud.engine.job.definitions;
 
+import jmud.engine.account.Account;
+import jmud.engine.account.AccountManager;
 import jmud.engine.core.JMudStatics;
-import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 
@@ -29,12 +30,9 @@ import jmud.engine.netIO.ConnectionState;
  * @version 0.1
  */
 
-public class LoginValidateJob extends AbstractJob {
-	private Connection c = null;
-
-	public LoginValidateJob(Connection c) {
-		super();
-		this.c = c;
+public class LoginJob extends AbstractConnectionJob {
+	public LoginJob(Connection c) {
+		super(c);
 	}
 
 	@Override
@@ -49,46 +47,62 @@ public class LoginValidateJob extends AbstractJob {
 			// data is either uname or passwd
 			String data = this.c.getCmdBuffer().getNextCommand();
 
+			Account a;
+			
 			if (this.c.getConnState() == ConnectionState.GETUNAME) {
 				// We are validating the uName
-				this.c.setUName(data);
+
+				//Load the Account from the Database
+				a = AccountManager.getInstance().loadAccount(data);
+				
+				if (a == null) {
+					//There is no account with that username
+					this.c.sendText("There is no account with that username.");
+					this.c.changeConnState(ConnectionState.CONNECTED);
+					return false;
+				}
+				
+				//Give the Connection a reference to the loaded account;
+				this.c.setAccount(a);
+				
 				this.c.sendText("Password: ");
-				this.c.setConnState(ConnectionState.GETPASSWD);
+				this.c.changeConnState(ConnectionState.GETPASSWD);
 				return true;
+				
+				
 			} else if (this.c.getConnState() == ConnectionState.GETPASSWD) {
 				// We are validating the Passwd
+				a = this.c.getAccount();
+				
+				if (data.equals(a.getPassWd())) {
+					//We are validated
 
-				this.c.setPassWd(data);
-				int accntID = MysqlConnection.verifyLogin(this.c.getUName(), this.c.getPassWd());
+					//DEBUG
+					this.c.sendTextLn("Validated. (AccountID=" + Integer.toString(a.getAccountID()) + ")");
+					
+					a.resetLoginAttempts();
+					this.c.changeConnState(ConnectionState.CHARACTERMANAGE);
 
-				if (accntID >= 0) {
-					this.c.sendTextLn("Validated. (" + Integer.toString(accntID) + ")");
-					this.c.setAccountID(accntID);
-					this.c.setConnState(ConnectionState.LOGGEDIN);
-
-					// Fire off the next Job:
-					(new DisplayCharactersJob(this.c)).selfSubmit();
-
+			
+					return true;
 				} else {
+					a.incrementLoginAttempts();
+					a.save();
+					AccountManager.getInstance().unloadAccont(a);
+										
 					this.c.sendCRLF();
-					this.c.setUName("");
-					this.c.setPassWd("");
-					this.c.setConnState(ConnectionState.CONNECTED);
-					this.c.incrementLoginAttempts();
-
 					this.c.sendTextLn("Username and password do not match ("
-							+ (JMudStatics.MAX_LOGIN_ATTEMPTS - this.c.getLoginAttempts()) + " tries left.)");
+							+ (JMudStatics.MAX_LOGIN_ATTEMPTS - a.getLoginAttempts()) + " tries left.)");
 
-					if (this.c.getLoginAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
-						this.c.sendTextLn("\n\nNumber of tries exceeded.  Goodbye!\n\n");
+					if (a.getLoginAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
+						this.c.sendTextLn("\n\nNumber of tries exceeded.");
 						this.c.sendCRLFs(2);
-						this.c.disconnect();
+						this.c.changeConnState(ConnectionState.DISCONNECTED);
 					} else {
-						this.sendLoginPrompt();
+						this.c.changeConnState(ConnectionState.CONNECTED);
 					}
+					return false;
 				}
-
-				return true;
 			} else {
 				// Something *very* bad happened...
 				System.err.println("Bad ConnectionState for a LoginValidateJob.");
@@ -96,9 +110,4 @@ public class LoginValidateJob extends AbstractJob {
 			}
 		}
 	}
-
-	public void sendLoginPrompt() {
-		this.c.sendText(JMudStatics.getSplashScreen());
-	}
-
 }

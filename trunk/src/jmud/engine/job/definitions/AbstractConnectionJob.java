@@ -16,33 +16,32 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.account.AccountManager;
+import jmud.engine.job.JobManager;
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
- * Just a template. Can be deleted once the Job Repository has sufficient
- * samples to draw from.
+ * Provides mandatory base implementation for all 'Job's'.
  * 
  * @author David Loman
  * @version 0.1
  */
+public abstract class AbstractConnectionJob extends AbstractJob {
+	protected Connection c;
 
-public class LogoutJob extends AbstractJob {
-	private Connection c = null;
-
-	public LogoutJob(Connection c) {
+	public AbstractConnectionJob(Connection c) {
 		super();
 		this.c = c;
 	}
 
-	@Override
-	public final boolean doJob() {
-		synchronized (this.c) {
-			this.c.getAccount().resetLoginAttempts();
-			AccountManager.getInstance().unloadAccont(this.c.getAccount());
-			this.c.changeConnState(ConnectionState.CONNECTED);
-		}
-		return true;
+	public AbstractConnectionJob(JobManager jm, Connection c) {
+		super(jm);
+		this.c = c;
 	}
+
+	public abstract boolean doJob();
+
+	public Connection getC() {
+		return c;
+	}
+
 }

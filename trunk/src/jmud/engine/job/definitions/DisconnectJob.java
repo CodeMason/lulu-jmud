@@ -27,18 +27,29 @@ import jmud.engine.netIO.Connection;
 
 public class DisconnectJob extends AbstractJob {
 
-	private Connection c = null;
+	private Connection c;
 	private String msg;
 	
 	public DisconnectJob(Connection c, String message) {
 		super();
 		this.c = c;
+		this.msg = message;
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
+			
+			this.c.sendCRLFs(3);
 			this.c.sendTextLn(this.msg);
+			this.c.sendCRLFs(3);
+			
+			try {
+				Thread.sleep(500L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			this.c.disconnect();
         }
 		return true;

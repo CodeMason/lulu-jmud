@@ -85,6 +85,9 @@ public class ConnectionManager implements Runnable {
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(hostAddress, port);
 		serverChannel.socket().bind(inetSocketAddress);
 
+		System.out.println("ConnectionManager is configured to listen at: " + hostAddress.getCanonicalHostName()
+				+ " on port: " + port);
+
 		// register an interest in Accepting new connections.
 		serverChannel.register(this.selector, SelectionKey.OP_ACCEPT);
 	}
@@ -116,8 +119,7 @@ public class ConnectionManager implements Runnable {
 
 		// make new connection
 		Connection c = new Connection(this, sc);
-		c.setConnState(ConnectionState.DISCONNECTED);
-		c.getConnState().createJob(c).selfSubmit();
+		c.changeConnState(ConnectionState.CONNECTED);
 
 		System.out.println("ConnectionManager: New Connection. ID: " + c.getConnectionID());
 
@@ -248,7 +250,7 @@ public class ConnectionManager implements Runnable {
 
 		synchronized (c) {
 			// Lets make the selector thread do *some* work.
-			c.handleInputFromClient(c.getSocketChannel());
+			c.handleInputFromClient();
 		}
 	}
 

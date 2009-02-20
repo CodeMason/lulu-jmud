@@ -16,32 +16,26 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.account.AccountManager;
 import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
 
 /**
- * Just a template. Can be deleted once the Job Repository has sufficient
- * samples to draw from.
+ * Contains the routines for creating a new Character
  * 
  * @author David Loman
  * @version 0.1
  */
 
-public class LogoutJob extends AbstractJob {
-	private Connection c = null;
+public class ConnectionStateJob extends AbstractConnectionJob {
 
-	public LogoutJob(Connection c) {
-		super();
-		this.c = c;
+	public ConnectionStateJob(Connection c) {
+		super(c);
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
-			this.c.getAccount().resetLoginAttempts();
-			AccountManager.getInstance().unloadAccont(this.c.getAccount());
-			this.c.changeConnState(ConnectionState.CONNECTED);
+			// Determine Action appropriate for the current ConnectionState
+			this.c.getConnState().runStateJob(this.c);
 		}
 		return true;
 	}

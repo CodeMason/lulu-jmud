@@ -16,8 +16,11 @@
  */
 package jmud.engine.netIO;
 
+import jmud.engine.account.Account;
+import jmud.engine.character.PlayerCharacter;
 import jmud.engine.core.JMudStatics;
-import jmud.engine.job.definitions.AbstractJob;
+import jmud.engine.job.definitions.ConnectionStateJob;
+
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
@@ -33,18 +36,18 @@ import java.util.UUID;
  * @version 0.1
  */
 public class Connection {
-	private int accountID = 0;
+	// private int accountID = 0;
 	private UUID connID = null;
-	private String uName = "";
-	private String passWd = "";
-	private int loginAttempts = 0;
+	// private String uName = "";
+	// private String passWd = "";
+	// private int loginAttempts = 0;
 	private final SocketChannel socketChannel;
-	// private ByteBuffer readBuffer =
-	// ByteBuffer.allocate(JMudStatics.CONNECTION_READ_BUFFER_SIZE);
-	// private StringBuilder receivedText;
 	private ConnectionState connState;
 	private ConnectionManager connMan;
 	private CommandBuffer cmdBuf;
+
+	private PlayerCharacter pc;
+	private Account account;
 
 	/**
 	 * Explicit constructor.
@@ -60,6 +63,8 @@ public class Connection {
 		this.connState = ConnectionState.DISCONNECTED;
 		this.connID = connMan.getNewConnectionID();
 		this.cmdBuf = new CommandBuffer();
+		this.pc = null;
+		this.account = null;
 	}
 
 	/**
@@ -82,33 +87,26 @@ public class Connection {
 	/*
 	 * Data IO
 	 */
-	public void handleInputFromClient(SocketChannel sc) {
+	public void handleInputFromClient() {
 
-		//Copy the data over into the commandBuffer and parse it into commands.
+		// Copy the data over into the commandBuffer and parse it into commands.
 		try {
-			this.cmdBuf.write(sc);
+			this.cmdBuf.write(this.socketChannel);
 			this.cmdBuf.parseBuffer();
 		} catch (ClosedChannelException e) {
 			this.disconnect();
 		}
 
-		//If a valid command exists, then route it and generate a job.
+		System.err.println(this.cmdBuf.toString());
+		
+		// If a valid command exists, then route it and generate a job.
 		if (this.cmdBuf.hasNextCommand() == false) {
 			return;
 		}
 
-		AbstractJob aj = this.connState.createJob(this);
-		aj.selfSubmit();
-		
-	}
-
-	/**
-	 * Send the text, with a CRLF, to the client.
-	 * 
-	 * @param textToSend
-	 */
-	public void sendTextLn(String textToSend) {
-		this.sendText(textToSend + JMudStatics.CRLF);
+		// Determine Action appropriate for the current ConnectionState
+		ConnectionStateJob j = new ConnectionStateJob(this);
+		j.selfSubmit();
 	}
 
 	/**
@@ -130,6 +128,15 @@ public class Connection {
 	}
 
 	/**
+	 * Send the text, with a CRLF, to the client.
+	 * 
+	 * @param textToSend
+	 */
+	public void sendTextLn(String textToSend) {
+		this.sendText(textToSend + JMudStatics.CRLF);
+	}
+
+	/**
 	 * Send the text, without a CRLF, to the client.
 	 * 
 	 * @param text
@@ -147,23 +154,6 @@ public class Connection {
 	/*
 	 * Getters n Setters
 	 */
-
-	/**
-	 * @return the AccountID associated with this Connection.
-	 */
-	public int getAccountID() {
-		return this.accountID;
-	}
-
-	/**
-	 * Set the AccountID associated with this Connection
-	 * 
-	 * @param accountID
-	 */
-	public void setAccountID(int accountID) {
-		this.accountID = accountID;
-	}
-
 	/**
 	 * @return the Connection State associated with this Connection
 	 */
@@ -174,10 +164,24 @@ public class Connection {
 	/**
 	 * Set this Connection object's Connection State.
 	 * 
-	 * @param connState
+	 * @param newState
 	 */
-	public void setConnState(ConnectionState connState) {
-		this.connState = connState;
+	public void changeConnState(ConnectionState newState) {
+		ConnectionState oldState = this.connState;
+
+		if (oldState == newState) {
+			// There is no change in state
+
+		} else {
+			// DEBUG ONLY
+			// this.sendText("\n(Changed ConnectionState from " +
+			// oldState.toString() + " to "
+			// + newState.toString() + " : ");
+
+			oldState.runExitJob(this, newState);
+			this.connState = newState;
+			newState.runEnterJob(this, oldState);
+		}
 	}
 
 	/**
@@ -195,66 +199,64 @@ public class Connection {
 	}
 
 	/**
-	 * @return this Connection's SocketChannel.
+	 * @return the SocketChannel reference associated with this Connection.
 	 */
 	public SocketChannel getSocketChannel() {
 		return this.socketChannel;
 	}
 
 	/**
-	 * @return the username associated with this Connection.
+	 * @return the CommandBuffer reference associated with this Connection.
 	 */
-	public String getUName() {
-		return this.uName;
-	}
-
-	/**
-	 * Set the username associated with this Connection.
-	 * 
-	 * @param uName
-	 */
-	public void setUName(String uName) {
-		this.uName = uName;
-	}
-
-	/**
-	 * @return the password associated with this Connection.
-	 */
-	public String getPassWd() {
-		return this.passWd;
-	}
-
-	/**
-	 * Set the password associated with this Connection
-	 * 
-	 * @param passWd
-	 */
-	public void setPassWd(String passWd) {
-		this.passWd = passWd;
-	}
-
-	/**
-	 * @return the number of Login attempts for this connection.
-	 */
-	public int getLoginAttempts() {
-		return this.loginAttempts;
-	}
-
-	/**
-	 * Reset this Connection object's logAttempts;
-	 */
-	public void resetLoginAttempts() {
-		this.loginAttempts = 0;
-	}
-
-	/**
-	 * Increment this Connection object's logAttempts;
-	 */
-	public void incrementLoginAttempts() {
-		++this.loginAttempts;
-	}
-
 	public CommandBuffer getCmdBuffer() {
 		return cmdBuf;
 	}
+
+	/**
+	 * @return the Player object reference associated with this Connection.
+	 */
+	public PlayerCharacter getPc() {
+		return pc;
+	}
+
+	/**
+	 * @param pc
+	 *            the Player object reference to associate with this Connection.
+	 */
+	public void setPc(PlayerCharacter pc) {
+		this.pc = pc;
+	}
+
+	/**
+	 * @return whether or not there is a PlayerCharacter object reference
+	 *         associated with this Connection.
+	 */
+	public boolean hasPc() {
+		return (this.pc != null);
+	}
+
+	/**
+	 * @return the Account object reference associated with this Connection
+	 */
+	public Account getAccount() {
+		return account;
+	}
+
+	/**
+	 * @param account
+	 *            the Account object reference to associate with this
+	 *            Connection.
+	 */
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	/**
+	 * @return whether or not there is an Account object reference associated
+	 *         with this Connection.
+	 */
+	public boolean hasAccount() {
+		return (this.account != null);
+	}
+
 }
