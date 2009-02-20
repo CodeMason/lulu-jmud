@@ -97,12 +97,15 @@ public class JMudStatics {
 				.append("|\\_)  )  | )   ( || (___) || (__/  )").append(CRLF)
 				.append("(____/   |/     \\|(_______)(______/ ").append(CRLF)
 				.append("The Java Mud Framework.").append(CRLF).append(CRLF)
-				.append("---------------------------------").append(CRLF)
+				.append("---------------------------------").append(CRLF).toString();
+    
+    public static final String MAIN_MENU = new StringBuffer().append(CRLF)
+				.append("--~------------------------------").append(CRLF)
 				.append("1) Login").append(CRLF)
 				.append("2) View Wizlist").append(CRLF)
 				.append("3) See Who is currently Online").append(CRLF)
 				.append("4) Read about jMUD").append(CRLF)
 				.append("5) Disconnect").append(CRLF)
-				.append("---------------------------------").append(CRLF)
+				.append("--~------------------------------").append(CRLF)
 				.append("Make a selection: ").toString();
 }
