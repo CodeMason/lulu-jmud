@@ -102,7 +102,7 @@ public class JMudObject {
 
 	public JMudObject addChildObject(JMudObject object) {
 		object.setParentObject(this);
-		return this.childObjects.put(object.getUuid(), object);
+		return this.childObjects.put(object.getUUID(), object);
 	}
 
 	public void clearChildObjects() {
@@ -144,7 +144,7 @@ public class JMudObject {
 	}
 
 	public JMudObject childrenRemove(final JMudObject jmo) {
-		this.childrenRemove(jmo.getUuid());
+		this.childrenRemove(jmo.getUUID());
 		return jmo;
 	}
 
@@ -164,7 +164,7 @@ public class JMudObject {
 		this.humanReadableName = objectName;
 	}
 
-	public UUID getUuid() {
+	public UUID getUUID() {
 		return this.uuid;
 	}
 
@@ -189,7 +189,7 @@ public class JMudObject {
 	}
 
     private void removeCurrentObject(Map<UUID, JMudObject> map){
-        map.remove(this.getUuid());
+        map.remove(this.getUUID());
     }
 
     public final void orphan() {

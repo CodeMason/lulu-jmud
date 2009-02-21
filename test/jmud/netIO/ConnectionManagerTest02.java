@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test.netIO;
+package jmud.netIO;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
+import jmud.TestUtil;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
 import jmud.engine.netIO.ConnectionManager;
-import jmud.test.TestUtil;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 public class ConnectionManagerTest02 {
 
@@ -48,7 +48,7 @@ public class ConnectionManagerTest02 {
 
 		// Lets get that Quit command in there.
 		QuitCommand qc = new QuitCommand(); // use the null null constructor
-		qc.selfRegister();
+		qc.selfSubmit();
 
 		TestUtil.pause(stayAlive);
 

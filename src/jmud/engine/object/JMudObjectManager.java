@@ -73,7 +73,7 @@ public class JMudObjectManager {
 		JMudObject jmo = null; //stubbed.
 
 		//Look up the parent by UUID
-		UUID parentID = jmo.getParentObject().getUuid();
+		UUID parentID = jmo.getParentObject().getUUID();
 		JMudObject parent = JMudObjectManager.getInstance().getJMudObject(parentID);
 
 		//Attach

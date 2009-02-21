@@ -14,32 +14,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test;
+package jmud.dbio;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.dbio.MysqlConnection;
 
-public class FakeConnection extends Connection {
-    private String lastSentText;
-    public boolean isCommandComplete;
-    public String command;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-    public FakeConnection() {
-        super(null, null);
-    }
+public class DBConnectionTest01{
 
-    public void sendText(String textToSend) {
-        lastSentText = textToSend;
-    }
+	/**
+	 * @param args
+	 * @throws SQLException
+	 */
+	public static void main(String[] args) throws SQLException {
 
-    public String getLastSentText(){
-        return lastSentText;
-    }
+		String sql;
 
-    public String getAndClearCommand() {
-        return command;
-    }
+		sql = "SELECT * FROM accounts";
 
-    public boolean isCommandComplete() {
-        return isCommandComplete;
-    }
+		Connection con = MysqlConnection.makeNewConnection();
+		ResultSet rs = MysqlConnection.Query(con, sql);
+		System.out.println(rs);
+
+		while (rs.next()) {
+			System.out.println(rs.getString("uname") + " " + rs.getString("passwd"));
+		}
+
+	}
+
 }

@@ -2,9 +2,6 @@ package jmud.engine.attribute;
 
 /**
  * Attribute is a data object that holds a name/value pair.
- *
- * @author Dave Loman (CM: oooh, Dave _H_ Loman, ... I thought it was the other Dave Loman :D)
- * Yeah yeah, it auto filled the value :/ Fixt
  */
 public class Attribute {
    /**
@@ -18,13 +15,13 @@ public class Attribute {
 
    /**
     * Explicit constructor.
-    * @param inName the attribute name
-    * @param inValue the attribute value
+    * @param name the attribute name
+    * @param value the attribute value
     */
-   public Attribute(final String inName, final Object inValue) {
+   public Attribute(final String name, final Object value) {
 		super(); // always call the super constructor... just good form! ;)
-		this.name = inName;
-		this.value = inValue;
+		this.name = name;
+		this.value = value;
 	}
 
    /**
@@ -42,10 +39,10 @@ public class Attribute {
 	}
 
     public enum AttributeType{
-        OBJECT_BULK,
-        CONTAINING_BULK,
-        OBJECT_SLOT_TYPE,
-        CONTAINING_SLOT_TYPE
+        BULK,
+        BULK_CONTAINED,
+        SLOT_TYPE,
+        SLOT_TYPE_CONTAINED
     }
 
 }

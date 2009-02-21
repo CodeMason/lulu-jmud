@@ -29,11 +29,11 @@ import java.util.UUID;
  */
 public abstract class AbstractJob {
 
-	private JobManager jobMan = JMudStatics.getDefaultJobManager();
+	private JobManager jobMan = JMudStatics.getJobManager();
 	private UUID uuid = null;
 
 	public AbstractJob() {
-		this(JMudStatics.getDefaultJobManager());
+		this(JMudStatics.getJobManager());
 	}
 
 	public AbstractJob( JobManager jm) {

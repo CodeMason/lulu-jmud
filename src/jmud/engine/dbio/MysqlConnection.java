@@ -1,16 +1,12 @@
 package jmud.engine.dbio;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-
 import jmud.engine.account.Account;
 import jmud.engine.character.PlayerCharacter;
 import jmud.engine.core.JMudStatics;
+
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Provides access to the database and functions to return specific data from
@@ -25,13 +21,6 @@ public class MysqlConnection {
 	// compile errors right now.
 	// FIXME Rework the Database IO layer after the basic mud data structs are
 	// in place.
-
-	/*                                      */
-	/*                                      */
-	/* Generic Utility Methods */
-	/*                                      */
-	/*                                      */
-
 	/**
 	 * Use values from JMudStatics and create a DB connection.
 	 * 

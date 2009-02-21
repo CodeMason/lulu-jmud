@@ -46,14 +46,4 @@ public class AttackedBehavior extends Behavior {
 
 		return true;
 	}
-
-	/**
-	 * @see Behavior#clone()
-	 * @return a new <code>GetBeHavior</code>
-	 */
-	@Override
-	public final Behavior clone() {
-		return new AttackedBehavior(this.owner);
-	}
-
 }

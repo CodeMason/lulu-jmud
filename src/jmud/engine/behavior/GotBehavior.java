@@ -63,13 +63,4 @@ public class GotBehavior extends Behavior {
 
 		return true;
 	}
-
-	/**
-	 * @see jmud.engine.behavior.Behavior#clone()
-	 * @return a new <code>GetBeHavior</code>
-	 */
-	@Override
-	public final Behavior clone() {
-		return new GotBehavior(this.owner);
-	}
 }

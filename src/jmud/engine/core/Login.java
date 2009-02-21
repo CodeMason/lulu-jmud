@@ -1,30 +1,20 @@
 package jmud.engine.core;
 
-/**
- * Represents the state of a login process.
- * @author Chris Maguire
- */
 public class Login {
 
-   /**
-    * @author Chris Maguire
-    */
    public enum LoginState {
-      LOGIN, PASSWORD;
+      LOGIN, PASSWORD
    }
 
    /**
     * Maximum allowable login failures.
     */
-   public static final int MAX_FAILS = 3;
+   public static final int MAX_FAILED_LOGINS = 3;
 
-   /**
-    * A running count of failed login attempts.
-    */
-   private int failedLoginAttempts;
+   private int failedLogins;
    private StringBuffer login;
    private StringBuffer password;
-   private LoginState state;
+   private LoginState loginState;
 
    /**
     * Default constructor.
@@ -38,18 +28,16 @@ public class Login {
     * Check if the user has failed their login for the "maximumth" time.
     * @return true if the user has failed too many times, false if not
     */
-   public final boolean checkMaxFailedLogins() {
+   public final boolean isLoginFailureLimitReached() {
 
-      // I use >= just in case they've managed to fail more than the max number
-      // of times
-      return failedLoginAttempts >= MAX_FAILS;
+      return failedLogins >= MAX_FAILED_LOGINS;
    }
 
    /**
     * @return the current unfinished portion of the login attempt
     */
    public final StringBuffer getCurrentStateString() {
-      if (LoginState.LOGIN.equals(state)) {
+      if (LoginState.LOGIN.equals(loginState)) {
          return login;
       } else {
          return password;
@@ -76,8 +64,8 @@ public class Login {
     * Return the login state number.
     * @return Number representing the login state
     */
-   public final LoginState getState() {
-      return state;
+   public final LoginState getLoginState() {
+      return loginState;
    }
 
    /**
@@ -85,7 +73,7 @@ public class Login {
     * @param strLogin
     *           the supplied username
     */
-   public final void saveLogin(final String strLogin) {
+   public final void setLogin(final String strLogin) {
       this.login = new StringBuffer(strLogin);
    }
 
@@ -104,16 +92,19 @@ public class Login {
    public final void setLoginFailed() {
 
       // increment the number of failed login attempts
-      failedLoginAttempts++;
+      failedLogins++;
 
-      // clear the login and password they tried
-      login.delete(0, login.length());
-      password.delete(0, password.length());
+       clearLoginAndPassword();
 
-      state = LoginState.LOGIN;
+      loginState = LoginState.LOGIN;
    }
 
-   /**
+    private void clearLoginAndPassword() {
+        login.delete(0, login.length());
+        password.delete(0, password.length());
+    }
+
+    /**
     * Set the state of the login process (i.e. Login or Password). That is,
     * store what step the user is at: are they entering their username or their
     * password?
@@ -121,8 +112,8 @@ public class Login {
     *           Should be Login.LOGIN for "Login" and Login.PASSWORD for
     *           "Password"
     */
-   public final void setState(final LoginState inState) {
-      this.state = inState;
+   public final void setLoginState(final LoginState inState) {
+      this.loginState = inState;
    }
 
 }

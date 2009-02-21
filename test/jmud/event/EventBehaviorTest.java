@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test.event;
+package jmud.event;
 
 import jmud.engine.behavior.*;
 import jmud.engine.event.JMudEvent;
@@ -23,7 +23,7 @@ import jmud.engine.event.JMudEventRegistrar;
 import jmud.engine.event.JMudEventType;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
-import jmud.test.TestUtil;
+import jmud.TestUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -149,7 +149,7 @@ public class EventBehaviorTest{
 
     private void submitTimeBufferedEvent(JMudEvent getEvent){
         TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_WORKER_WAKEUP);
-        getEvent.submitJob(getEvent);
+        getEvent.selfSubmit();
         TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
     }
 

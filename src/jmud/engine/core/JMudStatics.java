@@ -8,13 +8,13 @@ import java.io.FileReader;
 public class JMudStatics {
 
 	//TODO ultimately, these values will be read in from a config file.
-    public static final String dbUrl = "jdbc:mysql://localhost:3306/jmuddb";
+    public static final String dbUrl = "jdbc:mysql://localhost:3306/jmud";
 	public static final String dbUName = "root";
 	public static final String dbPassWd = "jmud";
 	public static final int dbPort = 3306;
     public static final String log4jConfigFile = "log4j.lcf";
     // ToDo CM: load from config so that a different default JobManager can be specified
-    public static JobManager defaultJobManager = JobManager.getLazyLoadedInstance();
+    public static JobManager jobManager = JobManager.getLazyLoadedInstance();
 
 
     //ToDo CM: this should be configurable per user (e.g. [CurrHP]:[MaxHP]/[CurrMana]:[MaxMana] etc.)
@@ -27,36 +27,34 @@ public class JMudStatics {
 
 	// This determines the MAX length of a single line of input from a console.
     public static final int CONNECTION_READ_BUFFER_SIZE = 8196;
-
 	public static final int MAX_LOGIN_ATTEMPTS = 3;
-
 	public static final char CR = '\r';
 	public static final char LF = '\n';
 	public static final String CRLF = "\r\n";
 
-    private static String SPLASH_SCREEN_FILE_NAME = "splashScreen.txt";
+    private static String splashScreenFileName = "splashScreen.txt";
 
-     public static JobManager getDefaultJobManager(){
-        return defaultJobManager;
+     public static JobManager getJobManager(){
+        return jobManager;
     }
 
-    public static void setDefaultJobManager(JobManager jobManager) {
-        defaultJobManager = jobManager;
+    public static void setJobManager(JobManager jobManager) {
+        JMudStatics.jobManager = jobManager;
     }
 
     public static String getSplashScreen(){
-        return SPLASH_SCREEN_FROM_FILE.length() > 0 ? SPLASH_SCREEN_FROM_FILE : DEFAULT_SPLASH_SCREEN;
+        return !SPLASH_SCREEN_FROM_FILE.isEmpty() ? SPLASH_SCREEN_FROM_FILE : DEFAULT_SPLASH_SCREEN;
     }
 
     public static void reloadSplashScreenFromFile(String splashScreenFileName){
-        SPLASH_SCREEN_FILE_NAME = splashScreenFileName;
+        JMudStatics.splashScreenFileName = splashScreenFileName;
         SPLASH_SCREEN_FROM_FILE = getSplashScreenFromFile();
     }
 
     private static String SPLASH_SCREEN_FROM_FILE = getSplashScreenFromFile();
 
     private static String getSplashScreenFromFile(){
-        File splashScreenFile = new File(SPLASH_SCREEN_FILE_NAME);
+        File splashScreenFile = new File(splashScreenFileName);
         return(readFile(splashScreenFile));
     }
 
@@ -68,7 +66,7 @@ public class JMudStatics {
 
         if(fileToRead.exists()){
             try {
-                fileReader = new FileReader(SPLASH_SCREEN_FILE_NAME);
+                fileReader = new FileReader(splashScreenFileName);
 
                 charsRead = fileReader.read(charsFromFile);
             }catch(Exception e){

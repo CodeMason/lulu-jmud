@@ -33,10 +33,6 @@ public abstract class AbstractCommand extends AbstractJob {
 		return aliases;
 	}
 
-	public final void selfRegister() {
-		CommandFactory.getLazyLoadedInstance().addAbstractCommand(this);
-	}
-
 	public Connection getConn() {
 		return conn;
 	}
