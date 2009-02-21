@@ -58,26 +58,26 @@ public enum ConnectionState {
 				// It will represent the Menu Selection
 				String data = c.getCmdBuffer().getNextCommand();
 
-				if (data.equals("1")) {
+				if ("1".equals(data)) {
 					// Login
 					c.sendText("\nUsername: ");
 
 					// Trigger state change actions
 					c.changeConnState(ConnectionState.GETUNAME);
 
-				} else if (data.equals("2")) {
+				} else if ("2".equals(data)) {
 					// View WizList
 					c.changeConnState(ConnectionState.WIZLIST);
 
-				} else if (data.equals("3")) {
+				} else if ("3".equals(data)) {
 					// View WhoList
 					c.changeConnState(ConnectionState.WHO);
 
-				} else if (data.equals("4")) {
+				} else if ("4".equals(data)) {
 					// View About This Mud
 					c.changeConnState(ConnectionState.ABOUT);
 
-				} else if (data.equals("5")) {
+				} else if ("5".equals(data)) {
 					// Disconnect
 					// Trigger state change actions
 					c.changeConnState(ConnectionState.DISCONNECTED);

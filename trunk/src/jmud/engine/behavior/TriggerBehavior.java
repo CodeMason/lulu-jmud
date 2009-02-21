@@ -53,12 +53,12 @@ public class TriggerBehavior extends Behavior {
 			obj = this.event.getTarget();
 		} else {
 			// Now this *SHOULDNT* have happened.
-			System.err.println("triggerEventRole is niether Source nor Target in TriggerBehavior!");
+			System.err.println("triggerEventRole is neither Source nor Target in TriggerBehavior!");
 			return false;
 		}
 
 		// check vs triggerEventObject
-		if (this.triggerEventObject.getUuid() != obj.getUuid()) {
+		if (this.triggerEventObject.getUUID() != obj.getUUID()) {
 			// Nope this isn't the object that will trip the trigger
 			return false;
 		}

@@ -53,7 +53,7 @@ public class JobWorker implements Runnable {
 		while (this.runCmd) {
 
 			// Access to Queue is synchronized internal to JobManager
-			AbstractJob job = JMudStatics.getDefaultJobManager().popJobFromQueue();
+			AbstractJob job = JMudStatics.getJobManager().popJobFromQueue();
 
 			if (job != null) {
 

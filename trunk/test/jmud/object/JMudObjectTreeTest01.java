@@ -1,7 +1,7 @@
-package jmud.test.object;
+package jmud.object;
 
 import jmud.engine.object.JMudObject;
-import jmud.test.TestUtil;
+import jmud.TestUtil;
 
 import org.junit.Assert;
 import org.junit.Before;

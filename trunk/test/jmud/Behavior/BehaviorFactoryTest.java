@@ -14,13 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test.Behavior;
+package jmud.Behavior;
 
 import jmud.engine.behavior.AttackBehavior;
 import jmud.engine.behavior.Behavior;
 import jmud.engine.behavior.BehaviorFactory;
 import jmud.engine.object.JMudObject;
-import jmud.test.event.TestBehavior;
+import jmud.event.TestBehavior;
 import org.junit.Assert;
 import org.junit.Test;
 

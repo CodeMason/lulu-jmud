@@ -40,14 +40,4 @@ public class SimpleBehavior extends Behavior {
 		// loop back to ccBehavior()
 		return this.ccBehavior();
 	}
-
-	/**
-	 * @see jmud.engine.behavior.Behavior#clone()
-	 * @return a new <code>GetBeHavior</code>
-	 */
-	@Override
-	public final Behavior clone() {
-		return new GetBehavior(this.owner);
-	}
-
 }

@@ -32,6 +32,7 @@ public class DisplayAboutScreenJob extends AbstractConnectionJob {
 		super(c);
 	}
 
+    // ToDo: we should create this programmatically (i.e. provide title and text and create "screen" on the fly.
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {

@@ -105,7 +105,7 @@ public class LoginJob extends AbstractConnectionJob {
 				}
 			} else {
 				// Something *very* bad happened...
-				System.err.println("Bad ConnectionState for a LoginValidateJob.");
+				System.err.println("Bad ConnectionState for a LoginJob.");
 				return false;
 			}
 		}

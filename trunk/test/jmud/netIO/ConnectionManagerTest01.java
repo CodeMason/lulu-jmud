@@ -14,11 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test.netIO;
+package jmud.netIO;
 
 import jmud.engine.job.JobManager;
 import jmud.engine.netIO.ConnectionManager;
-import jmud.test.TestUtil;
+import jmud.TestUtil;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

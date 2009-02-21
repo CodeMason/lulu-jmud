@@ -4,8 +4,6 @@ import jmud.engine.core.Targetable;
 
 /**
  * Represents a definition for the behavior of an item.
- * @author Chris Maguire
- * @version 0.1
  */
 public abstract class AbstractItemDef {
 
@@ -20,10 +18,10 @@ public abstract class AbstractItemDef {
    /**
     * Force dev to implement a check for when the object is picked up.
     * @param targetGetting
-    * @param i
+    * @param item
     * @return
     */
-   protected abstract boolean getCheck(Targetable targetGetting, Item i);
+   protected abstract boolean getCheck(Targetable targetGetting, Item item);
 
    public final String getName() {
       return name;

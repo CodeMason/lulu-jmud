@@ -28,14 +28,4 @@ public class SendToConsoleBehavior extends Behavior {
 		this.event.getTarget().sendToConsole(text);
 		return true;
 	}
-
-	/**
-	 * @see jmud.engine.behavior.Behavior#clone()
-	 * @return a new <code>DisplayTextStdOutBehavior</code>
-	 */
-	@Override
-	public Behavior clone() {
-		return new SendToConsoleBehavior(this.owner);
-	}
-
 }

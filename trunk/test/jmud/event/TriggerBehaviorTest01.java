@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test.event;
+package jmud.event;
 
 import jmud.engine.behavior.AttackBehavior;
 import jmud.engine.behavior.AttackedBehavior;
@@ -24,7 +24,7 @@ import jmud.engine.behavior.TriggerBehavior;
 import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
-import jmud.test.TestUtil;
+import jmud.TestUtil;
 
 /**
  *
@@ -75,7 +75,7 @@ public class TriggerBehaviorTest01{
 
       // make the JMudEvent that will cause pcSteve to get the bag
       JMudEvent ge = new JMudEvent(JMudEventType.Get, pcSteve, bag);
-      System.out.println("GetEvent eventID is: " + ge.getID());
+      System.out.println("GetEvent eventID is: " + ge.getUUID());
 
       // Submit the event
       ge.selfSubmit();

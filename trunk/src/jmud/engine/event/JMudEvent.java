@@ -1,6 +1,7 @@
 package jmud.engine.event;
 
 import jmud.engine.behavior.Behavior;
+import jmud.engine.behavior.BehaviorFactory;
 import jmud.engine.job.definitions.AbstractJob;
 import jmud.engine.object.JMudObject;
 
@@ -47,7 +48,7 @@ public class JMudEvent extends AbstractJob {
 
 			if (!ccObjectBehaviors.isEmpty()) {
 				for (Behavior b : ccObjectBehaviors) {
-                    newB = b.clone();
+                    newB = BehaviorFactory.createBehavior(b.getClass(), b.getOwner());
                     newB.setEvent(this);
 					newB.selfSubmit();
 				}

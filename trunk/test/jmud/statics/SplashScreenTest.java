@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.test.statics;
+package jmud.statics;
 
 import jmud.engine.core.JMudStatics;
 import org.junit.Assert;
