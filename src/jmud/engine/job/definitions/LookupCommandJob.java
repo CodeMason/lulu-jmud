@@ -16,9 +16,8 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.account.Account;
-import jmud.engine.character.PlayerCharacter;
-import jmud.engine.character.PlayerCharacterManager;
+import jmud.engine.commands.AbstractCommand;
+import jmud.engine.commands.CommandManager;
 import jmud.engine.netIO.Connection;
 
 /**
@@ -30,25 +29,31 @@ import jmud.engine.netIO.Connection;
  */
 
 public class LookupCommandJob extends AbstractConnectionJob {
-	
-	private String pcName;
-	
-	public LookupCommandJob(Connection c, String pcName) {
+
+	private String[] cmdArray;
+
+	public LookupCommandJob(Connection c, String[] cmdArray) {
 		super(c);
-		this.pcName = pcName;
+		this.cmdArray = cmdArray;
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.c) {
-			Account a = this.c.getAccount();
-			
-			PlayerCharacter pc = PlayerCharacterManager.getInstance().loadPlayerCharacter(this.pcName, a.getAccountID());
-			
-			if (pc == null) {
+
+			//See if we can lookup the
+			AbstractCommand ac = CommandManager.getLazyLoadedInstance()
+					.lookupCommand(this.cmdArray[0]);
+
+			if (ac == null) {
+				// No command was found with that name. Tell client as much:
+				this.c.sendTextLn("I do not understand: " + this.cmdArray[0]);
+				this.c.sendPrompt();
 				return false;
 			} else {
-				this.c.setPc(pc);
+				AbstractCommand newAc = ac.getNewInstance(this.c, this.jobMan,
+						this.cmdArray);
+				newAc.selfSubmit();
 				return true;
 			}
 		}

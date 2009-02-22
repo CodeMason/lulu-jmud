@@ -391,9 +391,17 @@ public enum ConnectionState {
 			//TODO Finish the Command routing! 
 			//Temporary Code Stub
 			if (c.getCmdBuffer().hasNextCommand()) {
-				String cmd = c.getCmdBuffer().getNextCommand();
-				c.sendTextLn("Oh yeah?!  Well " + cmd + " to you too pal!");
+				String cmdStr = c.getCmdBuffer().getNextCommand();
+				c.sendTextLn("Oh yeah?!  Well " + cmdStr + " to you too pal!");
+				
+				String cmd = cmdStr.split(" ")[0];
+				
+				
+				
 			}
+			
+			
+			
 		}
 
 		@Override
