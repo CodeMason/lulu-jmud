@@ -380,6 +380,7 @@ public enum ConnectionState {
 			// Put anything that needs to be done Prior to World Entry here.
 			c.sendCRLFs(2);
 			c.sendTextLn("Entering the world of jMUD...\n\n");
+			c.sendPrompt();
 
 			// AutoForward
 			ConnectionState.INGAME.runStateJob(c);
@@ -392,11 +393,12 @@ public enum ConnectionState {
 			//Temporary Code Stub
 			if (c.getCmdBuffer().hasNextCommand()) {
 				String cmdStr = c.getCmdBuffer().getNextCommand();
-				c.sendTextLn("Oh yeah?!  Well " + cmdStr + " to you too pal!");
+//				c.sendTextLn("Oh yeah?!  Well " + cmdStr + " to you too pal!");
+//				
+//				String cmd = cmdStr.split(" ")[0];
 				
-				String cmd = cmdStr.split(" ")[0];
-				
-				
+				LookupCommandJob j = new LookupCommandJob(c,cmdStr.split(" "));
+				j.selfSubmit();
 				
 			}
 			
