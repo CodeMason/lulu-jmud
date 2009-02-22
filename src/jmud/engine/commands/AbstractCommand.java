@@ -1,6 +1,7 @@
 package jmud.engine.commands;
 
-import jmud.engine.job.definitions.AbstractJob;
+import jmud.engine.job.JobManager;
+import jmud.engine.job.definitions.AbstractConnectionJob;
 import jmud.engine.netIO.Connection;
 
 import java.util.ArrayList;
@@ -8,21 +9,26 @@ import java.util.ArrayList;
 /**
  * @author david.h.loman
  */
-public abstract class AbstractCommand extends AbstractJob {
+public abstract class AbstractCommand extends AbstractConnectionJob {
 
 	/**
 	 * Aliases for the command.
 	 */
 	protected ArrayList<String> aliases = new ArrayList<String>();
 
-	private Connection conn;
+	/**
+	 * The string command received from the client, only broken down into an
+	 * array by .split(" ")
+	 */
 	private String[] cmdArray;
 
-	/**
-    * 
-    */
 	public AbstractCommand(Connection c, String[] cmdArray) {
-		this.conn = c;
+		super(c);
+		this.cmdArray = cmdArray;
+	}
+
+	public AbstractCommand(JobManager jm, Connection c, String[] cmdArray) {
+		super(jm, c);
 		this.cmdArray = cmdArray;
 	}
 
@@ -33,10 +39,6 @@ public abstract class AbstractCommand extends AbstractJob {
 		return aliases;
 	}
 
-	public Connection getConn() {
-		return conn;
-	}
-
 	public String[] getCmdArray() {
 		return cmdArray;
 	}
@@ -45,11 +47,12 @@ public abstract class AbstractCommand extends AbstractJob {
 	public boolean doJob() {
 		boolean retval = true;
 
-		if (this.conn == null || this.cmdArray == null) {
+		if (this.c == null || this.cmdArray == null) {
 			retval = false;
 		} else {
-			this.getConn().sendCRLF();
-			this.getConn().sendTextLn("Processing a " + this.getClass().getSimpleName());
+			this.c.sendCRLF();
+			this.c.sendTextLn(
+					"Processing a " + this.getClass().getSimpleName());
 			retval = this.doCmd();
 		}
 		return retval;
@@ -57,5 +60,4 @@ public abstract class AbstractCommand extends AbstractJob {
 
 	protected abstract boolean doCmd();
 
-	public abstract AbstractCommand clone(Connection c, String[] cmdArray);
 }
