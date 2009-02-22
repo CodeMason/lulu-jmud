@@ -124,6 +124,10 @@ public abstract class Behavior extends AbstractJob {
 		this.event = inEvent;
 	}
 
+    public Behavior clone(){
+        return null;
+    }
+
     @Override
 	public String toString() {
 		StringBuilder out = new StringBuilder("BehaviorID:  " + this.getUUID());

@@ -47,8 +47,10 @@ public class JMudEvent extends AbstractJob {
 			}
 
 			if (!ccObjectBehaviors.isEmpty()) {
-				for (Behavior b : ccObjectBehaviors) {
-                    newB = BehaviorFactory.createBehavior(b.getClass(), b.getOwner());
+                for (Behavior b : ccObjectBehaviors) {
+                    // ToDo CM: need to be able to instantiate trigger behaviors, which need more than just the owner and event
+                    // TriggerBehavior fires another event
+                    newB = BehaviorFactory.createBehavior(b);
                     newB.setEvent(this);
 					newB.selfSubmit();
 				}

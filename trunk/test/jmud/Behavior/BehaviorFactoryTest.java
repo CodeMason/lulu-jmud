@@ -48,7 +48,7 @@ public class BehaviorFactoryTest{
     @Test
     public void testCreateMulitpleBehaviors(){
         List<Class> behaviorClasses = Arrays.asList((Class) TestBehavior.class, AttackBehavior.class);
-        List<Behavior> createdBehaviors = BehaviorFactory.createBehaviors(behaviorClasses, new JMudObject());
+        List<Behavior> createdBehaviors = BehaviorFactory.createBehaviorsFromClasses(behaviorClasses, new JMudObject());
         Assert.assertEquals("BehaviorFactory created incorrect number of behaviors", createdBehaviors.size(), behaviorClasses.size());
         Assert.assertTrue("BehaviorFactory failed to create specified Behavior instances", instanceOfEachClassExists(behaviorClasses, createdBehaviors));
     }
@@ -56,7 +56,7 @@ public class BehaviorFactoryTest{
     @Test
     public void testCreateMulitpleSameBehaviors(){
         List<Class> behaviorClasses = Arrays.asList((Class) TestBehavior.class, TestBehavior.class);
-        List<Behavior> createdBehaviors = BehaviorFactory.createBehaviors(behaviorClasses, new JMudObject());
+        List<Behavior> createdBehaviors = BehaviorFactory.createBehaviorsFromClasses(behaviorClasses, new JMudObject());
         Assert.assertEquals("BehaviorFactory created incorrect number of behaviors", createdBehaviors.size(), behaviorClasses.size());
         Assert.assertEquals("BehaviorFactory failed to create specified Behavior instance", createdBehaviors.get(0).getClass(), TestBehavior.class);
         Assert.assertEquals("BehaviorFactory failed to create specified Behavior instance", createdBehaviors.get(1).getClass(), TestBehavior.class);
@@ -87,7 +87,7 @@ public class BehaviorFactoryTest{
 
     @Test
     public void testCreateBehaviorsWithNullJMudObject(){
-        Assert.assertEquals("BehaviorFactory created Behavior instances with null JMudObject", BehaviorFactory.createBehaviors(Arrays.asList((Class)TestBehavior.class, AttackBehavior.class), null).size(), 0);
+        Assert.assertEquals("BehaviorFactory created Behavior instances with null JMudObject", 0, BehaviorFactory.createBehaviorsFromClasses(Arrays.asList((Class)TestBehavior.class, AttackBehavior.class), null).size());
     }
 
     @Test
@@ -97,11 +97,11 @@ public class BehaviorFactoryTest{
 
     @Test
     public void testCreateBehaviorsWithNullBehaviorClassList(){
-        Assert.assertEquals("BehaviorFactory created Behavior instances with null Behavior class list", BehaviorFactory.createBehaviors(null, new JMudObject()).size(), 0);
+        Assert.assertEquals("BehaviorFactory created Behavior instances with null Behavior class list", 0, BehaviorFactory.createBehaviorsFromClasses(null, new JMudObject()).size());
     }
 
     @Test
     public void testCreateBehaviorsWithEmptyBehaviorClassList(){
-        Assert.assertEquals("BehaviorFactory created Behavior instances with null Behavior class list", BehaviorFactory.createBehaviors(new ArrayList<Class>(), new JMudObject()).size(), 0);
+        Assert.assertEquals("BehaviorFactory created Behavior instances with null Behavior class list", 0, BehaviorFactory.createBehaviorsFromClasses(new ArrayList<Class>(), new JMudObject()).size());
     }
 }

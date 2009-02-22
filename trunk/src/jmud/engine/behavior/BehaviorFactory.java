@@ -7,20 +7,34 @@ import java.util.List;
 
 public class BehaviorFactory{
 
-    public static Behavior createBehavior(Class behaviorClass, JMudObject behaviorOwner){
-        if(isBehaviorClass(behaviorClass) && behaviorOwner != null){
-            return createBehaviorFromClass(behaviorClass, behaviorOwner);
-        }else{
-            return null;
+    public static Behavior createBehavior(Behavior behavior){
+        Behavior newBehavior = createBehavior(behavior.getClass(), behavior.getOwner());
+
+        if(newBehavior == null){
+            System.out.println("Could not create behavior from class, cloning instead");
+            newBehavior = behavior.clone();
         }
+
+        return newBehavior;
+    }
+    
+    public static Behavior createBehavior(Class behaviorClass, JMudObject owner){
+        Behavior newBehavior = null;
+
+        if(isBehaviorClass(behaviorClass) && owner != null){
+            newBehavior = createBehaviorFromClass(behaviorClass, owner);
+        }
+
+        return newBehavior;
     }
 
-    public static List<Behavior> createBehaviors(List<Class> behaviorClasses, JMudObject behaviorOwner){
+
+    public static List<Behavior> createBehaviorsFromClasses(List<Class> behaviorClasses, JMudObject behaviorOwner){
         List<Behavior> createdBehaviors = new ArrayList<Behavior>();
         Behavior createdBehavior;
         if(behaviorClasses != null){
             for(Class behaviorClass : behaviorClasses){
-                createdBehavior = createBehavior(behaviorClass, behaviorOwner);
+                createdBehavior = createBehaviorFromClass(behaviorClass, behaviorOwner);
                 if(createdBehavior != null){
                     createdBehaviors.add(createdBehavior);
                 }
@@ -34,12 +48,14 @@ public class BehaviorFactory{
     }
 
     private static Behavior createBehaviorFromClass(Class behaviorClass, JMudObject behaviorOwner){
-        Behavior defaultBehavior;
-        try{
-            defaultBehavior = (Behavior) behaviorClass.getConstructor(JMudObject.class).newInstance(behaviorOwner);
-        } catch(Exception e){
-            System.out.println("Could not instantiate instance of Behavior\n" + e);
-            defaultBehavior = null;
+        Behavior defaultBehavior = null;
+
+        if(behaviorOwner != null){
+            try{
+                defaultBehavior = (Behavior) behaviorClass.getConstructor(JMudObject.class).newInstance(behaviorOwner);
+            } catch(Exception e){
+                System.out.println("Default constructor (Class, JMudObject) not found: behavior of type " + behaviorClass.getName() + " not created: \n" + e);
+            }
         }
         return defaultBehavior;
     }
