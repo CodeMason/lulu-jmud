@@ -62,7 +62,7 @@ public class JMudObject {
     }
 
     private void registerDefaultBehaviorsForEventTypesHandled(){
-        this.registerBehaviorsForEventTypesHandled(BehaviorFactory.createBehaviors(DEFAULT_BEHAVIOR_CLASSES, this));
+        this.registerBehaviorsForEventTypesHandled(BehaviorFactory.createBehaviorsFromClasses(DEFAULT_BEHAVIOR_CLASSES, this));
     }
 
 

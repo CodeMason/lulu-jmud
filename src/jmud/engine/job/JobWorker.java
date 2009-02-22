@@ -47,7 +47,6 @@ public class JobWorker implements Runnable {
 		return workerId;
 	}
 
-	@Override
 	public final void run() {
 		System.out.println("JobWorker ID:" + this.workerId + " is running.");
 		while (this.runCmd) {

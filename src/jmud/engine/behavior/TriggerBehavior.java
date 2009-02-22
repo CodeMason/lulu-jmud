@@ -109,7 +109,7 @@ public class TriggerBehavior extends Behavior {
 		return false;
 	}
 
-	@Override
+    @Override
 	public Behavior clone() {
 
 		if (this.responseObject == null) {
