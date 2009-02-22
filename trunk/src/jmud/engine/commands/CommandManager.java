@@ -4,20 +4,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandFactory {
+public class CommandManager {
 	private static class LazyLoader {
-		private static final CommandFactory LAZY_LOADED_INSTANCE = new CommandFactory();
+		private static final CommandManager LAZY_LOADED_INSTANCE = new CommandManager();
 		private LazyLoader() {
 		}
 	}
 
-	public static CommandFactory getLazyLoadedInstance() {
+	public static CommandManager getLazyLoadedInstance() {
 		return LazyLoader.LAZY_LOADED_INSTANCE;
 	}
 
 	private final Map<String, AbstractCommand> cmdMap = Collections.synchronizedMap(new HashMap<String, AbstractCommand>());
 
-	protected CommandFactory() {
+	protected CommandManager() {
         // Singleton
     }
 
