@@ -21,26 +21,17 @@ public class CommandManager {
         // Singleton
     }
 
-	public final void addAbstractCommand(AbstractCommand cmd) {
+	
+	
+	public final void registerCommand(AbstractCommand cmd) {
 		for (String alias : cmd.getAliases()) {
 			this.cmdMap.put(alias, cmd);
 		}
 	}
 
-	public final AbstractCommand getAbstractCommand(String alias) {
+	public final AbstractCommand lookupCommand(String alias) {
 		return this.cmdMap.get(alias);
 	}
 
-	public final AbstractCommand remAbstractCommandAlias(String alias) {
-		return this.cmdMap.remove(alias);
-	}
-
-	public final void remAbstractCommand(AbstractCommand cmd) {
-        // ToDo CM: might want to remove based on the set of values in case the set of aliases has changed
-        for (String alias : cmd.getAliases()) {
-			this.cmdMap.remove(alias);
-		}
-
-	}
 
 }

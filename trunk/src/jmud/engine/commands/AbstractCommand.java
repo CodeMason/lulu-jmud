@@ -25,11 +25,13 @@ public abstract class AbstractCommand extends AbstractConnectionJob {
 	public AbstractCommand(Connection c, String[] cmdArray) {
 		super(c);
 		this.cmdArray = cmdArray;
+		this.setAliases();
 	}
 
 	public AbstractCommand(JobManager jm, Connection c, String[] cmdArray) {
 		super(jm, c);
 		this.cmdArray = cmdArray;
+		this.setAliases();
 	}
 
 	/**
@@ -51,8 +53,8 @@ public abstract class AbstractCommand extends AbstractConnectionJob {
 			retval = false;
 		} else {
 			this.c.sendCRLF();
-			this.c.sendTextLn(
-					"Processing a " + this.getClass().getSimpleName());
+			this.c.sendTextLn("Processing a "
+							+ this.getClass().getSimpleName());
 			retval = this.doCmd();
 		}
 		return retval;
@@ -60,4 +62,8 @@ public abstract class AbstractCommand extends AbstractConnectionJob {
 
 	protected abstract boolean doCmd();
 
+	public abstract AbstractCommand getNewInstance(Connection c, JobManager jm,
+			String[] cmdArray);
+
+	protected abstract void setAliases();
 }

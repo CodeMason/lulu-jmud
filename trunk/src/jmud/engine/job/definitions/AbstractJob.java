@@ -29,8 +29,8 @@ import java.util.UUID;
  */
 public abstract class AbstractJob {
 
-	private JobManager jobMan = JMudStatics.getJobManager();
-	private UUID uuid = null;
+	protected JobManager jobMan = JMudStatics.getJobManager();
+	protected UUID uuid = null;
 
 	public AbstractJob() {
 		this(JMudStatics.getJobManager());

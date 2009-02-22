@@ -1,6 +1,7 @@
 package jmud.engine.commands.definitions;
 
 import jmud.engine.commands.AbstractCommand;
+import jmud.engine.job.JobManager;
 import jmud.engine.netIO.Connection;
 import jmud.engine.netIO.ConnectionState;
 
@@ -28,11 +29,18 @@ public class QuitCommand extends AbstractCommand {
 	 */
 	public QuitCommand(Connection c, String[] cmdArray) {
 		super(c, cmdArray);
+
+	}
+	public QuitCommand(JobManager jm, Connection c, String[] cmdArray) {
+		super(jm, c, cmdArray);
+	}
+	
+	@Override
+	protected void setAliases() {
 		this.getAliases().add("quit");
 		this.getAliases().add("qui");
 		this.getAliases().add("qu");
 		this.getAliases().add("q");
-
 	}
 
 	@Override
@@ -42,5 +50,12 @@ public class QuitCommand extends AbstractCommand {
 
 		return true;
 	}
+
+	@Override
+	public AbstractCommand getNewInstance(Connection c, JobManager jm,
+			String[] cmdArray) {
+		return new QuitCommand(jm,c,cmdArray);
+	}
+
 
 }
