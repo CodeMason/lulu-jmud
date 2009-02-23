@@ -1,8 +1,7 @@
 package jmud.engine.account;
 
 import java.util.HashMap;
-
-import jmud.engine.dbio.MysqlConnection;
+import jmud.engine.dbio.util.SqlConnHelpers;
 
 /**
  * <code>AccountManager</code> is a singleton patterned class designed to store
@@ -58,7 +57,7 @@ public class AccountManager {
 	 */
 	public Account loadAccount(String uName) {
 		// Get the account data from the database
-		Account a = MysqlConnection.getAccount(uName);
+		Account a = SqlConnHelpers.getAccount(uName);
 
 		if (a == null) {
 			return null;
