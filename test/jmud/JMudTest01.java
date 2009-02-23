@@ -38,11 +38,11 @@ public class JMudTest01 {
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException {
 
-		final long stayAlive = 1000 * 180L;
+		final long stayAlive = 1000 * 60 * 5L;
 		System.out.println("Test started with a autostop timer = " + (stayAlive / 1000) + " sec(s).");
 
 		//initialize JobManager with only 1 worker
-		JobManager.getLazyLoadedInstance().init(1);
+		JobManager.getLazyLoadedInstance().init(10);
 
 		//Initialize single instance and register:
 		QuitCommand qc = new QuitCommand();
