@@ -42,7 +42,7 @@ public class EventBehaviorTest{
 
     @Before
    public void setup(){
-       JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
+       JobManager.getInstance().init(NUM_JOB_WORKERS);
        JMudEventRegistrar.getLazyLoadedInstance();
        loadTestJMudObjects(TestUtil.buildSimpleJMudObjectTree());
        addBehaviorsToJMudObjects();
@@ -143,7 +143,7 @@ public class EventBehaviorTest{
     @After
    public void tearDown(){
        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
-       JobManager.getLazyLoadedInstance().stopAllWorkers();
+       JobManager.getInstance().stopAllWorkers();
    }
 
 

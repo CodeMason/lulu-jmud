@@ -35,7 +35,7 @@ public class EventBehaviorPerformanceTest{
 
    @Before
    public void setup(){
-       JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
+       JobManager.getInstance().init(NUM_JOB_WORKERS);
        JMudEventRegistrar.getLazyLoadedInstance();
        root = TestUtil.buildObjectTree(NUM_PARENT_OBJECTS);
    }
@@ -65,7 +65,7 @@ public class EventBehaviorPerformanceTest{
    @After
    public void tearDown(){
        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
-       JobManager.getLazyLoadedInstance().stopAllWorkers();
+       JobManager.getInstance().stopAllWorkers();
    }
 
     private void submitTimeBufferedEvent(JMudEvent getEvent){

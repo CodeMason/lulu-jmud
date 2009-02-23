@@ -3,7 +3,7 @@ package jmud.engine.account;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIOx.JMudClient;
 import jmud.engine.dbio.Persistable;
 
 public class Account implements Persistable {

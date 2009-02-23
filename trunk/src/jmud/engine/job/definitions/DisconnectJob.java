@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIOx.JMudClient;
 
 /**
  * Disconnect a connection

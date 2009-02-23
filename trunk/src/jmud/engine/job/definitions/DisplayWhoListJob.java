@@ -17,7 +17,8 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.character.PlayerCharacterManager;
-import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIOx.JMudClient;
+
 import java.util.Set;
 
 /**

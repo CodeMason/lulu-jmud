@@ -37,7 +37,7 @@ public class EventRegistrationTest{
 
     @Before
    public void setup(){
-       JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
+       JobManager.getInstance().init(NUM_JOB_WORKERS);
        eventRegistrar= JMudEventRegistrar.getLazyLoadedInstance();
        loadTestJMudObjects(TestUtil.buildSimpleJMudObjectTree());
        addBehaviorsToJMudObjects();
@@ -62,7 +62,7 @@ public class EventRegistrationTest{
     @After
    public void tearDown(){
        TestUtil.pause(TestUtil.MILLIS_TO_ALLOW_EVENT_COMPLETION);
-       JobManager.getLazyLoadedInstance().stopAllWorkers();
+       JobManager.getInstance().stopAllWorkers();
    }
 
     private void loadTestJMudObjects(JMudObject root){

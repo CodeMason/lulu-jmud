@@ -18,8 +18,9 @@ package jmud;
 
 import jmud.engine.commands.CommandManager;
 import jmud.engine.commands.definitions.QuitCommand;
+import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.JMudClientManager;
+import jmud.engine.netIOx.JMudClientManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -30,7 +31,6 @@ public class JMudTest01 {
 	 *
 	 * This test was designed to test the login, character select, new character and game entrance functions....
 	 *
-	 * // ToDo CM: writing a unit test for this is going to fun. :(
      *
 	 * @param args
 	 * @throws IOException
@@ -41,8 +41,11 @@ public class JMudTest01 {
 		final long stayAlive = 1000 * 60 * 5L;
 		System.out.println("Test started with a autostop timer = " + (stayAlive / 1000) + " sec(s).");
 
+		//Set the MysqlConnection:
+		MysqlConnection.useMysql = true;
+		
 		//initialize JobManager with only 1 worker
-		JobManager.getLazyLoadedInstance().init(10);
+		JobManager.getInstance().init(10);
 
 		//Initialize single instance and register:
 		QuitCommand qc = new QuitCommand();
@@ -56,7 +59,7 @@ public class JMudTest01 {
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
 		cm.stop();
-		JobManager.getLazyLoadedInstance().stopAllWorkers();
+		JobManager.getInstance().stopAllWorkers();
 	}
 
 }

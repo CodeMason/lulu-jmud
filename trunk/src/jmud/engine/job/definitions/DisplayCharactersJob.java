@@ -18,7 +18,7 @@ package jmud.engine.job.definitions;
 
 import jmud.engine.character.PlayerCharacter;
 import jmud.engine.dbio.util.SqlConnHelpers;
-import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIOx.JMudClient;
 
 import java.util.Map;
 

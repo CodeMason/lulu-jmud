@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIOx.JMudClient;
 
 /**
  * Display a splash screen to the user with a login prompt

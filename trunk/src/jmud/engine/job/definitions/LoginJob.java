@@ -19,8 +19,8 @@ package jmud.engine.job.definitions;
 import jmud.engine.account.Account;
 import jmud.engine.account.AccountManager;
 import jmud.engine.core.JMudStatics;
-import jmud.engine.netIO.JMudClient;
-import jmud.engine.netIO.JMudClientState;
+import jmud.engine.netIOx.JMudClient;
+import jmud.engine.netIOx.JMudClientState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
