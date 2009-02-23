@@ -33,15 +33,15 @@ import java.util.Set;
 
 public class JobManager {
 
-    private static final class LazyInstanceLoader {
-        private static final JobManager LAZY_LOADED_INSTANCE = new JobManager();
+    private static final class InstanceLoader {
+        private static final JobManager INSTANCE = new JobManager();
 
-        private LazyInstanceLoader() {
+        private InstanceLoader() {
         }
     }
 
-    public static JobManager getLazyLoadedInstance() {
-        return LazyInstanceLoader.LAZY_LOADED_INSTANCE;
+    public static JobManager getInstance() {
+        return InstanceLoader.INSTANCE;
     }
 
     private Map<Integer, JobWorker> workers = new HashMap<Integer, JobWorker>();

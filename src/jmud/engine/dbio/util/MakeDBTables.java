@@ -21,7 +21,7 @@ public class MakeDBTables {
 		sql = " CREATE TABLE /*!32312 IF NOT EXISTS*/ 'accounts' (   'accountid' int(10) unsigned NOT NULL AUTO_INCREMENT,  'uname' varchar(255) NOT NULL,  'passwd' varchar(255) NOT NULL,   PRIMARY KEY ('accountid'),  UNIQUE KEY 'accountid' ('accountid'),   KEY 'accountid_2' ('accountid') ) AUTO_INCREMENT=2 COMMENT='This table holds the AccountID, uname, and passwords';";
 
 		Connection con = MysqlConnection.makeNewConnection();
-		int i = MysqlConnection.Update(con, sql);
+		int i = MysqlConnection.insertOrUpdate(con, sql);
 		System.out.println(i);
 	}
 
