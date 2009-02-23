@@ -9,7 +9,7 @@ import jmud.engine.object.JMudObject;
  *
  * @author david.h.loman
  */
-public class GetBehavior extends Behavior {
+public class GetBehavior extends BaseBehavior {
 
 	/**
 	 * Default constructor.
@@ -22,7 +22,7 @@ public class GetBehavior extends Behavior {
 	}
 
 	/**
-	 * @see jmud.engine.behavior.Behavior#behave()
+	 * @see jmud.engine.behavior.BaseBehavior#behave()
 	 * @return true
 	 */
 
@@ -32,9 +32,9 @@ public class GetBehavior extends Behavior {
 		JMudObject target = this.event.getTarget();
 
         // ToDo CM: I don't think I could be trusted to do this on my own every time :)
-        target.orphan();
-		source.addChildObject(target);
-
+		target.setParentObject(null);
+		source.addChild(target);
+	
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);
 
@@ -44,7 +44,7 @@ public class GetBehavior extends Behavior {
 	}
 
 	@Override
-	protected boolean ccBehavior() {
+	protected boolean bystanderBehavior() {
 		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
 		return true;
 	}
@@ -52,6 +52,6 @@ public class GetBehavior extends Behavior {
 	@Override
 	protected boolean sourceBehavior() {
 		// loop back to ccBehavior()
-		return this.ccBehavior();
+		return this.bystanderBehavior();
 	}
 }

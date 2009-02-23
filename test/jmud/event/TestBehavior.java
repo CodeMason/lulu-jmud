@@ -16,7 +16,7 @@
  */
 package jmud.event;
 
-import jmud.engine.behavior.Behavior;
+import jmud.engine.behavior.BaseBehavior;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
@@ -24,7 +24,7 @@ import jmud.engine.object.JMudObject;
 /**
  * A Behavior class that flags itself as having been called
  */
-public class TestBehavior extends Behavior {
+public class TestBehavior extends BaseBehavior {
     private static boolean hasBehaviorBeenCalled;
 
     /**
@@ -38,7 +38,7 @@ public class TestBehavior extends Behavior {
     }
 
 	/**
-	 * @see jmud.engine.behavior.Behavior#behave()
+	 * @see jmud.engine.behavior.BaseBehavior#behave()
 	 * @return true
 	 */
 	@Override
@@ -55,7 +55,7 @@ public class TestBehavior extends Behavior {
 	}
 
 	/**
-	 * @see jmud.engine.behavior.Behavior#clone()
+	 * @see jmud.engine.behavior.BaseBehavior#clone()
 	 * @return a new <code>GetBeHavior</code>
 	 */
 	@Override

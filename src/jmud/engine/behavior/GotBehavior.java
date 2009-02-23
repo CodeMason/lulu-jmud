@@ -8,7 +8,7 @@ import jmud.engine.object.JMudObject;
  *
  * @author david.h.loman
  */
-public class GotBehavior extends Behavior {
+public class GotBehavior extends BaseBehavior {
 
 	/**
 	 * Default constructor.
@@ -23,15 +23,15 @@ public class GotBehavior extends Behavior {
 	/**
      * What the "getter" does (i.e. the JMudObject getting something)
      *
-	 * @see jmud.engine.behavior.Behavior#behave()
+	 * @see jmud.engine.behavior.BaseBehavior#behave()
 	 * @return true
 	 */
 	@Override
 	public final boolean targetBehavior() {
 		// What the owner sees
 
-		String txt = "You get the " + this.event.getSource().getHumanReadableName();
-		this.event.getTarget().sendToConsole(txt);
+		String txt = "You get the " + this.event.getSource().getDisplayedName();
+		this.event.getTarget().sendTextToObject(txt);
 
 		return true;
 	}
@@ -41,10 +41,10 @@ public class GotBehavior extends Behavior {
      * @return
      */
     @Override
-	protected boolean ccBehavior() {
+	protected boolean bystanderBehavior() {
 		// What anyone else sees.
-	   	String txt = this.event.getTarget().getHumanReadableName() + " gets the " + this.event.getSource().getHumanReadableName();
-		this.owner.sendToConsole(txt);
+	   	String txt = this.event.getTarget().getDisplayedName() + " gets the " + this.event.getSource().getDisplayedName();
+		this.owner.sendTextToObject(txt);
 
 		return true;
 	}
@@ -57,8 +57,8 @@ public class GotBehavior extends Behavior {
 	protected boolean sourceBehavior() {
 		// What You see.
 
-    	String txt = this.event.getTarget().getHumanReadableName() + " picks YOU up!!";
-		this.event.getSource().sendToConsole(txt);
+    	String txt = this.event.getTarget().getDisplayedName() + " picks YOU up!!";
+		this.event.getSource().sendTextToObject(txt);
 
 
 		return true;
