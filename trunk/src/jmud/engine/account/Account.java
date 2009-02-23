@@ -7,10 +7,11 @@ import jmud.engine.netIO.JMudClient;
 import jmud.engine.dbio.Persistable;
 
 public class Account implements Persistable {
-	private int accountID = 0;
+	private int accountID;
 	private String uName = "";
 	private String passWd = "";
-	private int loginAttempts = 0;
+	private int loginAttempts;
+	private boolean locked;
 
 	private JMudClient c;
 
@@ -34,18 +35,27 @@ public class Account implements Persistable {
 		this.loginAttempts = loginAttempts;
 		this.c = c;
 	}
-	
+
 	public Account(ResultSet rs) throws SQLException {
 		super();
 		if (rs.first() == false) {
 			throw new SQLException("Empty ResultSet.");
 		}
-		
+
 		this.accountID = rs.getInt("accountid");
-		this.uName  = rs.getString("uname");
+		this.uName = rs.getString("uname");
 		this.passWd = rs.getString("passwd");
-		//this.loginAttempts = 0;	
+		// this.loginAttempts = 0;
+		this.locked = rs.getBoolean("locked");
+		
 	}
+
+	@Override
+	public boolean save() {
+		// TODO Finish Account.Save()
+		return false;
+	}
+
 
 	/*
 	 * Getters n Setters
@@ -136,10 +146,19 @@ public class Account implements Persistable {
 		this.c = c;
 	}
 
-	@Override
-	public boolean save() {
-		// TODO Finish Account.Save()
-		return false;
+	
+	
+	/**
+	 * @return the locked
+	 */
+	public boolean isLocked() {
+		return locked;
 	}
 
+	/**
+	 * @param locked the locked to set
+	 */
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
 }
