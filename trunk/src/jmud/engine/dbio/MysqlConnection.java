@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 public class MysqlConnection {
-	private static boolean useMysql = false;
+	public static boolean useMysql = false;
 
 	// TODO Commented out the whole class since its doing nothing but generating
 	// compile errors right now.
@@ -34,8 +34,8 @@ public class MysqlConnection {
 		 */
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			return DriverManager.getConnection(JMudStatics.dbUrl,
-					JMudStatics.dbUName, JMudStatics.dbPassWd);
+			return DriverManager.getConnection(JMudStatics.dbUrl + JMudStatics.dbName, JMudStatics.dbUName,
+					JMudStatics.dbPassWd);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -70,14 +70,14 @@ public class MysqlConnection {
 	}
 
 	/**
-	 * DB sccess method for SQL statements that do NOT return any data except
+	 * DB access method for SQL statements that do NOT return any data except
 	 * the number of Rows Modified.
 	 * 
 	 * @param sql
 	 *            A valid SQL Update
 	 * @return a ResultSet based on the passed in SQL statement.
 	 */
-	public static int Update(java.sql.Connection c, String sql) {
+	public static int insertOrUpdate(java.sql.Connection c, String sql) {
 		Statement s;
 		int rs;
 
@@ -98,38 +98,78 @@ public class MysqlConnection {
 	/*                                      */
 
 	/**
-	 * Takes two strings and returns an int that represents the AccountID A
-	 * return value of -1 means validation failed.
+	 * Takes the String UName of and attempts to look up an account. If an
+	 * account is found in the DB, an Account object is returned. If the DB
+	 * lookup fails, then null is returned.
 	 */
-	public static Account verifyLogin(String uname) {
-
-		if (MysqlConnection.useMysql) {
-			try {
-				java.sql.Connection c = MysqlConnection.makeNewConnection();
-
-				String sql = "SELECT * FROM Accounts WHERE (uname='" + uname
-						+ "');";
-				ResultSet rs = MysqlConnection.Query(c, sql);
-
-				Account a;
-				a = new Account(rs);
-				rs.close();
-				c.close();
-				return a;
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return null;
-			}
-
-		} else {
+	public static Account getAccountByUName(String uname) {
+		if (!MysqlConnection.useMysql) {
 			// If we are using a Development DB stub.
-			return new Account(42, JMudStatics.hardcodeUName,
-					JMudStatics.hardcodePasswd);
+			return new Account(42, JMudStatics.hardcodeUName, JMudStatics.hardcodePasswd);
 		}
+
+		try {
+			java.sql.Connection c = MysqlConnection.makeNewConnection();
+
+			String sql = "SELECT * FROM Accounts WHERE (uname='" + uname + "');";
+			ResultSet rs = MysqlConnection.Query(c, sql);
+
+			Account a;
+			a = new Account(rs); // This might throw an SQLException if the
+			// ResultSet is empty!
+			rs.close();
+			c.close();
+			return a;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
-	public static Map<String, PlayerCharacter> getCharactersByAccountID(
-			int accountID) {
+	public static boolean saveAccount(Account a) {
+		if (!MysqlConnection.useMysql) {
+			// If we are using a Development DB stub.
+			return true;
+		}
+
+		try {
+			java.sql.Connection c = MysqlConnection.makeNewConnection();
+			String sql = "";
+
+			// Check to see if the account is already there!
+			if (MysqlConnection.getAccount(a.getPassWd()) == null) {
+				// New account
+				sql += "INSERT INTO accounts (";
+				sql += "uname, passwd, locked";
+				sql += ") VALUES (";
+				sql += "'" + a.getUName() + "', ";
+				sql += "'" + a.getPassWd() + "', ";
+				sql += "" + a.isLocked() + "";
+				sql += ")";
+			} else {
+				// existing account
+
+				sql += "UPDATE accounts SET";
+				sql += "uname='" + a.getUName() + "', ";
+				sql += "passwd='" + a.getPassWd() + "', ";
+				sql += "locked='" + a.isLocked() + "' ";
+				sql += "WHERE accountid=" + a.getAccountID();
+
+			}
+
+			int rs = MysqlConnection.insertOrUpdate(c, sql);
+
+			c.close();
+			return (rs == 1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public static Map<String, PlayerCharacter> getCharactersByAccountID(int accountID) {
 		Map<String, PlayerCharacter> chars = new HashMap<String, PlayerCharacter>();
 
 		// Connection c = MysqlConnection.makeNewConnection();
@@ -161,15 +201,13 @@ public class MysqlConnection {
 		// TODO Fix this STUB: MysqlConnection.getAccount(String uName)
 
 		if (uName.equals(JMudStatics.hardcodeUName)) {
-			return new Account(42, JMudStatics.hardcodeUName,
-					JMudStatics.hardcodePasswd);
+			return new Account(42, JMudStatics.hardcodeUName, JMudStatics.hardcodePasswd);
 		} else {
 			return null;
 		}
 	}
 
-	public static PlayerCharacter getPlayerCharacter(String pcName,
-			int ownerAccID) {
+	public static PlayerCharacter getPlayerCharacter(String pcName, int ownerAccID) {
 		// TODO Fix this STUB: MysqlConnection.getPlayerCharacter(String pcName)
 
 		// Use ownerAccID in the SQL Query to verify ownership.

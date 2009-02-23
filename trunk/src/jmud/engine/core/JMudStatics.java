@@ -8,14 +8,15 @@ import java.io.FileReader;
 public class JMudStatics {
 
 	//TODO ultimately, these values will be read in from a config file.
-    public static final String dbUrl = "jdbc:mysql://localhost:3306/jmud";
+    public static final String dbUrl = "jdbc:mysql://localhost:3306/";
+    public static final String dbName = "jmud";
 	public static final String dbUName = "jmud_server";
 	public static final String dbPassWd = "jmud";
 	public static final int dbPort = 3306;
 	
     public static final String log4jConfigFile = "log4j.lcf";
     // ToDo CM: load from config so that a different default JobManager can be specified
-    public static JobManager jobManager = JobManager.getLazyLoadedInstance();
+    public static JobManager jobManager = JobManager.getInstance();
 
 
     //ToDo CM: this should be configurable per user (e.g. [CurrHP]:[MaxHP]/[CurrMana]:[MaxMana] etc.)
