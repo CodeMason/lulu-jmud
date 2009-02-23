@@ -89,7 +89,7 @@ public class TestUtil{
     }
 
     private static void addBehaviorsToObject(JMudObject object, List<Class> behaviorClassesToAdd){
-        for(Behavior behavior : BehaviorFactory.createBehaviorsFromClasses(behaviorClassesToAdd, object)){
+        for(BaseBehavior behavior : BehaviorRegistrar.createBehaviorsFromClasses(behaviorClassesToAdd, object)){
             object.registerBehaviorForEventTypesHandled(behavior);
         }
     }

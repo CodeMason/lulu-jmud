@@ -165,7 +165,7 @@ public class EventBehaviorTest{
         List<Class> behaviorClassesToAdd = Arrays.asList((Class) GetBehavior.class, GotBehavior.class, AttackBehavior.class, AttackedBehavior.class);
 
         for(JMudObject objectNeedingBehavior : objectsNeedingBehaviors){
-            for(Behavior behavior : BehaviorFactory.createBehaviorsFromClasses(behaviorClassesToAdd, objectNeedingBehavior)){
+            for(BaseBehavior behavior : BehaviorRegistrar.createBehaviorsFromClasses(behaviorClassesToAdd, objectNeedingBehavior)){
                 objectNeedingBehavior.registerBehaviorForEventTypesHandled(behavior);
             }
         }

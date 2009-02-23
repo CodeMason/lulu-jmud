@@ -17,10 +17,7 @@
 package jmud.engine.object;
 
 import jmud.engine.attribute.Attribute;
-import jmud.engine.behavior.Behavior;
-import jmud.engine.behavior.BehaviorFactory;
-import jmud.engine.behavior.SendToConsoleBehavior;
-import jmud.engine.event.JMudEvent;
+import jmud.engine.behavior.BaseBehavior;
 import jmud.engine.event.JMudEventType;
 
 import java.util.*;
@@ -29,226 +26,194 @@ import java.util.*;
  * Represents any "thing" in the mud
  */
 public class JMudObject {
-    private static final JMudObject ROOT_PARENT = null;
-    private static final List<Class> DEFAULT_BEHAVIOR_CLASSES = Arrays.asList((Class)SendToConsoleBehavior.class);
-
-    private UUID uuid = null;
-	private String humanReadableName = "";
-	private JMudObject parentObject = ROOT_PARENT;
-	private final Map<UUID, JMudObject> childObjects = Collections.synchronizedMap(new HashMap<UUID, JMudObject>());
-	private final Map<String, Attribute> attributesByName = Collections.synchronizedMap(new HashMap<String, Attribute>());
-	private final Map<JMudEventType, List<Behavior>> eventTypeBehaviors = Collections.synchronizedMap(new EnumMap<JMudEventType, List<Behavior>>(JMudEventType.class));
 
 	/**
-	 * Default constructor.
+	 * Universally Unique Identifier
+	 */
+	private UUID uuid = null;
+
+	/**
+	 * Textual name that is displayed in the MUD TODO: DHL: Perhaps this should
+	 * be an Attribute....
+	 */
+	private String displayedName = "";
+
+	/**
+	 * A mapping of sibling JMudObjects and their relation
+	 */
+	private Map<String, JMudObject> siblingConnectionMap = Collections
+			.synchronizedMap(new HashMap<String, JMudObject>());
+
+	/**
+	 * A set of child JMudObjects
+	 */
+	private Set<JMudObject> childObjects = Collections.synchronizedSet(new HashSet<JMudObject>());
+
+	/**
+	 * Reference to a Parent JMudObject, if one exists
+	 */
+	private JMudObject parentObject;
+
+	/**
+	 * A mapping of events to behaviors
+	 */
+	private Map<JMudEventType, BaseBehavior> behaviorMap = Collections
+			.synchronizedMap(new HashMap<JMudEventType, BaseBehavior>());
+
+	/**
+	 * A mapping of Attribute names to Attribute references
+	 */
+	private Map<String, Attribute> attributeMap = Collections.synchronizedMap(new HashMap<String, Attribute>());
+
+	/*
+	 * Constructors
 	 */
 	public JMudObject() {
-		this("", ROOT_PARENT);
+		this(UUID.randomUUID());
 	}
 
-	public JMudObject(JMudObject parentObject) {
-		this("", parentObject);
+	public JMudObject(UUID uuid) {
+		this.uuid = uuid;
 	}
 
-	public JMudObject(String humanReadableName) {
-		this(humanReadableName, ROOT_PARENT);
-	}
-
-	private JMudObject(String humanReadableName, final JMudObject parentObject) {
-		this.parentObject = parentObject;
-		this.humanReadableName = humanReadableName;
-		this.uuid = UUID.randomUUID();
-        registerDefaultBehaviorsForEventTypesHandled();
-    }
-
-    private void registerDefaultBehaviorsForEventTypesHandled(){
-        this.registerBehaviorsForEventTypesHandled(BehaviorFactory.createBehaviorsFromClasses(DEFAULT_BEHAVIOR_CLASSES, this));
-    }
-
-
-    private void registerBehaviorsForEventTypesHandled(List<Behavior> behaviorsToRegister){
-        for(Behavior behaviorToRegister : behaviorsToRegister){
-            registerBehaviorForEventTypesHandled(behaviorToRegister);
-        }
-    }
-
-    /**
-	 * Register a behaviors with an event class.
-	 *
-	 * @param behavior Behavior to mapped to Behavior.getEventTypesHandled();
+	/*
+	 * Sibling Map routines
 	 */
-	public void registerBehaviorForEventTypesHandled(Behavior behavior) {
-		for (JMudEventType eventType : behavior.getEventTypesHandled()) {
-			List<Behavior> eventBehaviors = getBehaviors(eventType);
-            eventBehaviors.add(behavior);
-			this.eventTypeBehaviors.put(eventType, eventBehaviors);
-		}
+
+	public Set<String> getRelations() {
+		return this.siblingConnectionMap.keySet();
 	}
 
-	/**
-	 * For any event, return the list of applicable behaviors
-	 *
-	 * @param event the event to find behaviors for
-	 * @return the behaviors that match the event
+	public JMudObject getSiblingByRelation(String relation) {
+		return this.siblingConnectionMap.get(relation);
+	}
+
+	public Set<JMudObject> getAllSibling() {
+		return (Set<JMudObject>) this.siblingConnectionMap.values();
+	}
+
+	public void addSibling(String relation, JMudObject sibling) {
+		this.siblingConnectionMap.put(relation, sibling);
+	}
+
+	public JMudObject remSiblingByRelation(String relation) {
+		return this.siblingConnectionMap.remove(relation);
+	}
+
+	/*
+	 * Parent JMudObject Getter/Setter
 	 */
-	public List<Behavior> getBehaviors(JMudEvent event) {
-		return this.getBehaviors(event.getEventType());
+	public JMudObject getParentObject() {
+		return this.parentObject;
 	}
 
-	public List<Behavior> getBehaviors(JMudEventType eventType) {
-        List<Behavior> existingEventBehaviors = eventTypeBehaviors.get(eventType);
-        return Collections.synchronizedList(existingEventBehaviors != null ? existingEventBehaviors : new ArrayList<Behavior>());
+	public void setParentObject(JMudObject parent) {
+		this.parentObject = parent;
 	}
 
-	public JMudObject addChildObject(JMudObject object) {
-		object.setParentObject(this);
-		return this.childObjects.put(object.getUUID(), object);
+	/*
+	 * Child JMudObject Set routines
+	 */
+	public boolean addChild(JMudObject jmo) {
+		return this.childObjects.add(jmo);
 	}
 
-	public void clearChildObjects() {
-		childObjects.clear();
+	public boolean hasChild(JMudObject jmo) {
+		return this.childObjects.contains(jmo);
 	}
 
-	public boolean hasChildObject(UUID uuid) {
-		return childObjects.containsKey(uuid);
+	public boolean remove(JMudObject jmo) {
+		return this.childObjects.remove(jmo);
 	}
-
-	public boolean hasChildObject(JMudObject object) {
-		return childObjects.containsValue(object);
-	}
-
-	// TODO CM: we may want to look at optimizing this (maybe name -> uuid hash?)
-	public JMudObject getChildObject(String objectName) {
-		for (JMudObject childObject : this.childObjects.values()) {
-			if (childObject.getHumanReadableName().equals(objectName)) {
-				return childObject;
-			}
-		}
-		return null;
-	}
-
-	public JMudObject getChild(final UUID uuid) {
-		return childObjects.get(uuid);
-	}
-
-	public Map<UUID, JMudObject> getChildObjects() {
+	public Set<JMudObject> getAllChildren() {
 		return this.childObjects;
 	}
 
-    public int childrenSize(){
-        return this.childObjects.size();
-    }
-
-	public Set<UUID> getChildObjectKeys() {
-		return childObjects.keySet();
-	}
-
-	public JMudObject childrenRemove(final JMudObject jmo) {
-		this.childrenRemove(jmo.getUUID());
-		return jmo;
-	}
-
-	public JMudObject childrenRemove(final UUID uuid) {
-		JMudObject jmo = this.childObjects.remove(uuid);
-		if (jmo != null) {
-			jmo.setParentObject(null);
-		}
-		return jmo;
-	}
-
-	public String getHumanReadableName() {
-		return this.humanReadableName;
-	}
-
-	public void setHumanReadableName(String objectName) {
-		this.humanReadableName = objectName;
-	}
-
+	/*
+	 * UUID Getter
+	 */
 	public UUID getUUID() {
 		return this.uuid;
 	}
 
-	/**
-	 * Get the Attribute Map
-	 *
-	 * @return
+	/*
+	 * Displayed Name Getter/Setter
 	 */
-	public Map<String, Attribute> getAttributesByName() {
-		return attributesByName;
+	public String getDisplayedName() {
+		return displayedName;
 	}
 
-	public final Map<UUID, JMudObject> getSiblings() {
-
-		Map<UUID, JMudObject> map = null;
-
-        if (this.parentObject != null) {
-			map = this.parentObject.getChildObjects();
-            removeCurrentObject(map);
-        }
-		return map;
+	public void setDisplayedName(String displayedName) {
+		this.displayedName = displayedName;
 	}
 
-    private void removeCurrentObject(Map<UUID, JMudObject> map){
-        map.remove(this.getUUID());
-    }
-
-    public final void orphan() {
-        removeFromParent();
-		this.setParentObject(null);
-
-	}
-
-    private void removeFromParent(){
-        JMudObject parent = this.getParentObject();
-
-        if (parent != null) {
-            parent.childrenRemove(this);
-        }
-    }
-
-    public final void changeParent(JMudObject newParent) {
-		if (newParent != null) {
-            this.orphan();
-			newParent.addChildObject(this);
-            this.setParentObject(newParent);
-        }
-	}
-
-	/**
-	 * Directly sets this object's parent JMudObject object reference.
-	 *
-	 * @param newParent
-	 *            the new parent of this JMudObject
+	/*
+	 * Attribute Map Routines
 	 */
-	private void setParentObject(JMudObject newParent) {
-		this.parentObject = newParent;
+	public boolean containsAttribute(String attrName) {
+		return this.attributeMap.containsKey(attrName);
 	}
 
-	public final JMudObject getParentObject() {
-		return this.parentObject;
+	public boolean containsAttribute(Attribute a) {
+		return this.attributeMap.containsValue(a);
 	}
 
-	@Override
-	public final String toString() {
-        StringBuilder out = new StringBuilder(this.toStringShort());
-
-		if (this.parentObject != null) {
-			out.append("\t hasParent:TRUE");
-		} else {
-			out.append("\t hasParent:FALSE");
-		}
-
-		out.append("\t childrenCount:").append(this.childrenSize()).append("\t attrCount:").append(
-				this.getAttributesByName().size()).append("\t behaviorCount:").append(this.eventTypeBehaviors.size());
-
-		return out.toString();
+	public Attribute getAttribute(String attrName) {
+		return this.attributeMap.get(attrName);
 	}
 
-	public final String toStringShort() {
-		return "JMudObject: " + this.humanReadableName + "(" + this.uuid.toString() + ")";
+	public Set<String> getAttributeNames() {
+		return this.attributeMap.keySet();
 	}
 
-	public void sendToConsole(String text) {
-		System.out.println("\n" + this.humanReadableName + "'s console: " + text);
+	public Set<Attribute> getAttributes() {
+		return (Set<Attribute>) this.attributeMap.values();
 	}
+
+	public Attribute addAttribute(String name, Attribute a) {
+		return this.attributeMap.put(name, a);
+	}
+
+	public Attribute remAttribute(String name) {
+		return this.attributeMap.remove(name);
+	}
+
+	/*
+	 * Behavior Map Routines
+	 */
+
+	public boolean containsBehavior(BaseBehavior b) {
+		return behaviorMap.containsValue(b);
+	}
+
+	public BaseBehavior getBehavior(JMudEventType jmet) {
+		return behaviorMap.get(jmet);
+	}
+
+	public Set<JMudEventType> getEventTypes() {
+		return behaviorMap.keySet();
+	}
+
+	public BaseBehavior addBehavior(JMudEventType jmet, BaseBehavior b) {
+		return behaviorMap.put(jmet, b);
+	}
+
+	public BaseBehavior removeBehavior(JMudEventType jmet) {
+		return behaviorMap.remove(jmet);
+	}
+
+	public Set<BaseBehavior> getBehaviors() {
+		return (Set<BaseBehavior>) behaviorMap.values();
+	}
+
+	
+	/*
+	 * IO
+	 */
+	
+	public void sendTextToObject(String text) {
+		System.out.println(text);
+	}
+	
+	
 }

@@ -14,19 +14,20 @@ public class PlayerCharacter extends JMudObject implements Persistable {
 
 	private JMudClient c = null;
 	private int ownerAccountID;
-	
+
 	/**
 	 * Explicit constructor.
 	 * 
 	 * @param iID
 	 *            the ID
-	 * @param inName
+	 * @param name
 	 *            the character's name
 	 * @param desc
 	 *            the description of the character
 	 */
-	public PlayerCharacter(final String inName) {
-		super(inName);
+	public PlayerCharacter(final String name) {
+		super();
+		this.setDisplayedName(name);
 
 	}
 
@@ -39,9 +40,9 @@ public class PlayerCharacter extends JMudObject implements Persistable {
 	}
 
 	public String getPlayerCharactersName() {
-		return this.getHumanReadableName();
+		return this.getDisplayedName();
 	}
-	
+
 	/**
 	 * @return the ownerAccountID
 	 */
@@ -49,23 +50,19 @@ public class PlayerCharacter extends JMudObject implements Persistable {
 		return ownerAccountID;
 	}
 
-	/**
-	 * Override the sendToConsole nature of the baseJMudObject and instead, link
-	 * it to the Connection
-	 */
-	@Override
-	public void sendToConsole(String text) {
-		if (this.c != null) {
-			this.c.sendTextLn(text);
-		} else {
-			//Send it to.... where?!?
-		}
-	}
-
 	@Override
 	public boolean save() {
 		// TODO Finish PlayerCharacter.save()
 		return false;
+	}
+
+	public void sendTextToObject(String text) {
+		if (this.c != null) {
+			this.c.sendTextLn(text);
+		} else {
+
+			System.out.println(text);
+		}
 	}
 
 }

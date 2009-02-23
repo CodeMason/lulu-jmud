@@ -69,17 +69,17 @@ public class JMudObjectManager {
 	private void loadJMudObjectTreeFromDB() {
 		// TODO stubbed JMudObject load from DB here.
 
-		//Get the JMudObject from the Database
-		JMudObject jmo = null; //stubbed.
-
-		//Look up the parent by UUID
-		UUID parentID = jmo.getParentObject().getUUID();
-		JMudObject parent = JMudObjectManager.getInstance().getJMudObject(parentID);
-
-		//Attach
-		parent.addChildObject(jmo);
-
-		return;
+//		//Get the JMudObject from the Database
+//		JMudObject jmo = null; //stubbed.
+//
+//		//Look up the parent by UUID
+//		UUID parentID = jmo.getParentObject().getUUID();
+//		JMudObject parent = JMudObjectManager.getInstance().getJMudObject(parentID);
+//
+//		//Attach
+//		parent.addChildObject(jmo);
+//
+//		return;
 	}
 
 	public JMudObject getJMudObject(UUID uuid) {

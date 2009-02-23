@@ -1,7 +1,7 @@
 package jmud.engine.event;
 
-import jmud.engine.behavior.Behavior;
-import jmud.engine.behavior.BehaviorFactory;
+import jmud.engine.behavior.BaseBehavior;
+import jmud.engine.behavior.BehaviorRegistrar;
 import jmud.engine.job.definitions.AbstractJob;
 import jmud.engine.object.JMudObject;
 
@@ -12,27 +12,30 @@ public class JMudEvent extends AbstractJob {
 
 	private final transient JMudObject source;
 	private final transient JMudObject target;
+	
 
-	private Map<String, Object> namedEventParameters = null;
 
 	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
 		this.targetEventType = eventType;
 		this.source = source;
 		this.target = target;
-
-		this.namedEventParameters = Collections.synchronizedMap(new HashMap<String, Object>());
 	}
 
 	@Override
 	public boolean doJob() {
-        Behavior newB;
+        BaseBehavior newB;
 		synchronized (System.out) {
 			System.out.println("Running a JMudEvent::" + this.targetEventType);
 		}
 
         Set<JMudObject> objectsToNotify = new HashSet<JMudObject>();
-		objectsToNotify.addAll(this.source.getParentObject().getChildObjects().values());
-		objectsToNotify.addAll(this.target.getParentObject().getChildObjects().values());
+        //add source's siblings
+		objectsToNotify.addAll(this.source.getParentObject().getAllChildren());
+		
+		//add target's siblings
+		objectsToNotify.addAll(this.target.getParentObject().getAllChildren());
+		
+		//Huh?!
 		objectsToNotify.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetObjects(this.target, this.getEventType()));
 
 		// Set success flag
@@ -40,17 +43,17 @@ public class JMudEvent extends AbstractJob {
 
 		for (JMudObject ccObject : objectsToNotify) {
 
-			List<Behavior> ccObjectBehaviors = ccObject.getBehaviors(this.getEventType());
+			List<BaseBehavior> ccObjectBehaviors = ccObject.getBehaviors(this.getEventType());
 
 			if (ccObjectBehaviors == null) {
-				ccObjectBehaviors = new ArrayList<Behavior>();
+				ccObjectBehaviors = new ArrayList<BaseBehavior>();
 			}
 
 			if (!ccObjectBehaviors.isEmpty()) {
-                for (Behavior b : ccObjectBehaviors) {
+                for (BaseBehavior b : ccObjectBehaviors) {
                     // ToDo CM: need to be able to instantiate trigger behaviors, which need more than just the owner and event
                     // TriggerBehavior fires another event
-                    newB = BehaviorFactory.createBehavior(b);
+                    newB = BehaviorRegistrar.createBehavior(b);
                     newB.setEvent(this);
 					newB.selfSubmit();
 				}
