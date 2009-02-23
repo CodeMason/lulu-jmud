@@ -1,5 +1,8 @@
 package jmud.engine.account;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import jmud.engine.netIO.Connection;
 import jmud.engine.dbio.Persistable;
 
@@ -30,6 +33,18 @@ public class Account implements Persistable {
 		this.uName = name;
 		this.loginAttempts = loginAttempts;
 		this.c = c;
+	}
+	
+	public Account(ResultSet rs) throws SQLException {
+		super();
+		if (rs.first() == false) {
+			throw new SQLException("Empty ResultSet.");
+		}
+		
+		this.accountID = rs.getInt("accountid");
+		this.uName  = rs.getString("uname");
+		this.passWd = rs.getString("passwd");
+		//this.loginAttempts = 0;	
 	}
 
 	/*
