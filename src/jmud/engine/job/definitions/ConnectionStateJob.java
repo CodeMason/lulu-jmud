@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIOx.JMudClient;
+import jmud.engine.netio.JMudClient;
 
 /**
  * Contains the routines for creating a new Character

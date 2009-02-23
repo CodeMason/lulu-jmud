@@ -16,7 +16,7 @@
  */
 package jmud;
 
-import jmud.engine.netIOx.JMudClient;
+import jmud.engine.netio.JMudClient;
 
 public class FakeConnection extends JMudClient {
     private String lastSentText;

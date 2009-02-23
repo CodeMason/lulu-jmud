@@ -17,7 +17,7 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.job.JobManager;
-import jmud.engine.netIOx.JMudClient;
+import jmud.engine.netio.JMudClient;
 
 /**
  * Provides mandatory base implementation for all 'Job's'.
