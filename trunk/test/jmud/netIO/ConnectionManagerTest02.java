@@ -19,7 +19,7 @@ package jmud.netIO;
 import jmud.TestUtil;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.ConnectionManager;
+import jmud.engine.netIO.JMudClientManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -43,7 +43,7 @@ public class ConnectionManagerTest02 {
 		JobManager.getLazyLoadedInstance().init(1);
 
 		// initialize and start ConnMan
-		ConnectionManager cm = new ConnectionManager(54321);
+		JMudClientManager cm = new JMudClientManager(54321);
 		cm.start();
 
 		// Lets get that Quit command in there.

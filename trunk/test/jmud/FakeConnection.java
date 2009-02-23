@@ -16,9 +16,9 @@
  */
 package jmud;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
-public class FakeConnection extends Connection {
+public class FakeConnection extends JMudClient {
     private String lastSentText;
     public boolean isCommandComplete;
     public String command;

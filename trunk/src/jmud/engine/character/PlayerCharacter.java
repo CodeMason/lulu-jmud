@@ -1,7 +1,7 @@
 package jmud.engine.character;
 
 import jmud.engine.dbio.Persistable;
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 import jmud.engine.object.JMudObject;
 
 /**
@@ -12,7 +12,7 @@ import jmud.engine.object.JMudObject;
  */
 public class PlayerCharacter extends JMudObject implements Persistable {
 
-	private Connection c = null;
+	private JMudClient c = null;
 	private int ownerAccountID;
 	
 	/**
@@ -30,11 +30,11 @@ public class PlayerCharacter extends JMudObject implements Persistable {
 
 	}
 
-	public Connection getConnection() {
+	public JMudClient getConnection() {
 		return c;
 	}
 
-	public void setConnection(Connection conn) {
+	public void setConnection(JMudClient conn) {
 		this.c = conn;
 	}
 

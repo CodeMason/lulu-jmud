@@ -14,34 +14,27 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.engine.job.definitions;
+package jmud.engine.netIO;
 
-import jmud.engine.job.JobManager;
-import jmud.engine.netIO.Connection;
+import java.nio.channels.SocketChannel;
 
 /**
- * Provides mandatory base implementation for all 'Job's'.
- * 
  * @author David Loman
- * @version 0.1
  */
-public abstract class AbstractConnectionJob extends AbstractJob {
-	protected Connection c;
+public class JMudClientEvent{
 
-	public AbstractConnectionJob(Connection c) {
-		super();
-		this.c = c;
-	}
+    public SocketChannel socket;
+    public EventType eventType;
+    public int ops;
 
-	public AbstractConnectionJob(JobManager jm, Connection c) {
-		super(jm);
-		this.c = c;
-	}
+    public JMudClientEvent(SocketChannel inSocket, EventType inType, int inOps){
+        this.socket = inSocket;
+        this.eventType = inType;
+        this.ops = inOps;
+    }
 
-	public abstract boolean doJob();
-
-	public Connection getC() {
-		return c;
-	}
-
+    public static enum EventType {
+        REGISTER,
+        CHANGEOPS
+    }
 }

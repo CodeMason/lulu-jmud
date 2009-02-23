@@ -17,7 +17,7 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.character.PlayerCharacterManager;
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 import java.util.Set;
 
 /**
@@ -28,9 +28,9 @@ import java.util.Set;
  * @version 0.1
  */
 
-public class DisplayWhoListJob extends AbstractConnectionJob {
+public class DisplayWhoListJob extends AbstractClientJob {
 
-	public DisplayWhoListJob(Connection c) {
+	public DisplayWhoListJob(JMudClient c) {
 		super(c);
 	}
 

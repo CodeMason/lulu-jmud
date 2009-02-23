@@ -17,8 +17,8 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.account.AccountManager;
-import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
+import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIO.JMudClientState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -29,9 +29,9 @@ import jmud.engine.netIO.ConnectionState;
  */
 
 public class LogoutJob extends AbstractJob {
-	private Connection c = null;
+	private JMudClient c = null;
 
-	public LogoutJob(Connection c) {
+	public LogoutJob(JMudClient c) {
 		super();
 		this.c = c;
 	}
@@ -41,7 +41,7 @@ public class LogoutJob extends AbstractJob {
 		synchronized (this.c) {
 			this.c.getAccount().resetLoginAttempts();
 			AccountManager.getInstance().unloadAccont(this.c.getAccount());
-			this.c.changeConnState(ConnectionState.CONNECTED);
+			this.c.changeConnState(JMudClientState.CONNECTED);
 		}
 		return true;
 	}

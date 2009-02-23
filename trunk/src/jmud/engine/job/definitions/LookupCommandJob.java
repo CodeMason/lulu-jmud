@@ -18,7 +18,7 @@ package jmud.engine.job.definitions;
 
 import jmud.engine.commands.AbstractCommand;
 import jmud.engine.commands.CommandManager;
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -28,11 +28,11 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class LookupCommandJob extends AbstractConnectionJob {
+public class LookupCommandJob extends AbstractClientJob {
 
 	private String[] cmdArray;
 
-	public LookupCommandJob(Connection c, String[] cmdArray) {
+	public LookupCommandJob(JMudClient c, String[] cmdArray) {
 		super(c);
 		this.cmdArray = cmdArray;
 	}

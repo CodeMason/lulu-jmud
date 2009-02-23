@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Disconnect a connection
@@ -27,10 +27,10 @@ import jmud.engine.netIO.Connection;
 
 public class DisconnectJob extends AbstractJob {
 
-	private Connection c;
+	private JMudClient c;
 	private String msg;
 	
-	public DisconnectJob(Connection c, String message) {
+	public DisconnectJob(JMudClient c, String message) {
 		super();
 		this.c = c;
 		this.msg = message;

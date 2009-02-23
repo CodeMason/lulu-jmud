@@ -19,8 +19,8 @@ package jmud.engine.job.definitions;
 import jmud.engine.account.Account;
 import jmud.engine.account.AccountManager;
 import jmud.engine.core.JMudStatics;
-import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
+import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIO.JMudClientState;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -30,8 +30,8 @@ import jmud.engine.netIO.ConnectionState;
  * @version 0.1
  */
 
-public class LoginJob extends AbstractConnectionJob {
-	public LoginJob(Connection c) {
+public class LoginJob extends AbstractClientJob {
+	public LoginJob(JMudClient c) {
 		super(c);
 	}
 
@@ -49,7 +49,7 @@ public class LoginJob extends AbstractConnectionJob {
 
 			Account a;
 			
-			if (this.c.getConnState() == ConnectionState.GETUNAME) {
+			if (this.c.getConnState() == JMudClientState.GETUNAME) {
 				// We are validating the uName
 
 				//Load the Account from the Database
@@ -58,7 +58,7 @@ public class LoginJob extends AbstractConnectionJob {
 				if (a == null) {
 					//There is no account with that username
 					this.c.sendText("There is no account with that username.");
-					this.c.changeConnState(ConnectionState.CONNECTED);
+					this.c.changeConnState(JMudClientState.CONNECTED);
 					return false;
 				}
 				
@@ -66,11 +66,11 @@ public class LoginJob extends AbstractConnectionJob {
 				this.c.setAccount(a);
 				
 				this.c.sendText("Password: ");
-				this.c.changeConnState(ConnectionState.GETPASSWD);
+				this.c.changeConnState(JMudClientState.GETPASSWD);
 				return true;
 				
 				
-			} else if (this.c.getConnState() == ConnectionState.GETPASSWD) {
+			} else if (this.c.getConnState() == JMudClientState.GETPASSWD) {
 				// We are validating the Passwd
 				a = this.c.getAccount();
 				
@@ -81,7 +81,7 @@ public class LoginJob extends AbstractConnectionJob {
 					this.c.sendTextLn("Validated. (AccountID=" + Integer.toString(a.getAccountID()) + ")");
 					
 					a.resetLoginAttempts();
-					this.c.changeConnState(ConnectionState.CHARACTERMANAGE);
+					this.c.changeConnState(JMudClientState.CHARACTERMANAGE);
 
 			
 					return true;
@@ -97,9 +97,9 @@ public class LoginJob extends AbstractConnectionJob {
 					if (a.getLoginAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
 						this.c.sendTextLn("\n\nNumber of tries exceeded.");
 						this.c.sendCRLFs(2);
-						this.c.changeConnState(ConnectionState.DISCONNECTED);
+						this.c.changeConnState(JMudClientState.DISCONNECTED);
 					} else {
-						this.c.changeConnState(ConnectionState.CONNECTED);
+						this.c.changeConnState(JMudClientState.CONNECTED);
 					}
 					return false;
 				}

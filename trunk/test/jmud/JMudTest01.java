@@ -19,7 +19,7 @@ package jmud;
 import jmud.engine.commands.CommandManager;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.ConnectionManager;
+import jmud.engine.netIO.JMudClientManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -49,7 +49,7 @@ public class JMudTest01 {
 		CommandManager.getLazyLoadedInstance().registerCommand(qc);
 		
 	      // initialize and start ConnMan
-		ConnectionManager cm = new ConnectionManager(54321);
+		JMudClientManager cm = new JMudClientManager(54321);
 		cm.start();
 
 		TestUtil.pause(stayAlive);

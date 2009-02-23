@@ -19,7 +19,7 @@ package jmud.engine.job.definitions;
 import jmud.engine.account.Account;
 import jmud.engine.character.PlayerCharacter;
 import jmud.engine.character.PlayerCharacterManager;
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -29,11 +29,11 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class LoadCharacterJob extends AbstractConnectionJob {
+public class LoadCharacterJob extends AbstractClientJob {
 	
 	private String pcName;
 	
-	public LoadCharacterJob(Connection c, String pcName) {
+	public LoadCharacterJob(JMudClient c, String pcName) {
 		super(c);
 		this.pcName = pcName;
 	}
