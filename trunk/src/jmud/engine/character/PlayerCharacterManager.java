@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import jmud.engine.character.PlayerCharacter;
-import jmud.engine.dbio.MysqlConnection;
+import jmud.engine.dbio.util.SqlConnHelpers;
 
 /**
  * <code>CharacterManager</code> is a singleton patterned class designed to
@@ -72,7 +72,7 @@ public class PlayerCharacterManager {
 	 */
 	public PlayerCharacter loadPlayerCharacter(String pcName, int ownerAccountID) {
 		// Get the PlayerCharacter data from the database
-		PlayerCharacter pc = MysqlConnection.getPlayerCharacter(pcName, ownerAccountID);
+		PlayerCharacter pc = SqlConnHelpers.getPlayerCharacter(pcName, ownerAccountID);
 
 		
 		if (pc == null) {

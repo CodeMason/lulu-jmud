@@ -17,7 +17,7 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.character.PlayerCharacter;
-import jmud.engine.dbio.MysqlConnection;
+import jmud.engine.dbio.util.SqlConnHelpers;
 import jmud.engine.netIO.JMudClient;
 
 import java.util.Map;
@@ -40,7 +40,7 @@ public class DisplayCharactersJob extends AbstractClientJob {
 	public final boolean doJob() {
 		synchronized (this.c) {
 			// Map of character names to the Character object refs
-			Map<String, PlayerCharacter> chars = MysqlConnection.getCharactersByAccountID(this.c.getAccount().getAccountID());
+			Map<String, PlayerCharacter> chars = SqlConnHelpers.getCharactersByAccountID(this.c.getAccount().getAccountID());
 
 			// Send client the Character Select Screen.
 			this.c.sendCRLFs(2);
