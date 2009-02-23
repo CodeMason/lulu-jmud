@@ -51,7 +51,7 @@ public class TriggerBehaviorTest01{
     */
    public static void main(final String[] args) {
 
-      JobManager.getLazyLoadedInstance().init(NUM_JOB_WORKERS);
+      JobManager.getInstance().init(NUM_JOB_WORKERS);
 
       JMudEventRegistrar.getLazyLoadedInstance();
 
@@ -89,7 +89,7 @@ public class TriggerBehaviorTest01{
       TestUtil.printJMudObjectTree(root);
       System.out.println("\n\n");
 
-      JobManager.getLazyLoadedInstance().stopAllWorkers();
+      JobManager.getInstance().stopAllWorkers();
    }
 
     private static void addNewJMudObjectTestBehaviors(){

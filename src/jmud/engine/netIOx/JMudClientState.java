@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Lulu's JMud.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jmud.engine.netIO;
+package jmud.engine.netIOx;
 
 import jmud.engine.core.JMudStatics;
 import jmud.engine.job.definitions.*;

@@ -19,7 +19,7 @@ package jmud.netIO;
 import jmud.TestUtil;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.JMudClientManager;
+import jmud.engine.netIOx.JMudClientManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -40,7 +40,7 @@ public class ConnectionManagerTest02 {
 		System.out.println("Test started with a autostop timer = " + (stayAlive / 1000) + " sec(s).");
 
 		// initialize JobManager with only 1 worker
-		JobManager.getLazyLoadedInstance().init(1);
+		JobManager.getInstance().init(1);
 
 		// initialize and start ConnMan
 		JMudClientManager cm = new JMudClientManager(54321);
@@ -54,7 +54,7 @@ public class ConnectionManagerTest02 {
 
 		System.out.println("Test timeout reached(" + (stayAlive / 1000) + " secs).  Shutting down.");
 		cm.stop();
-		JobManager.getLazyLoadedInstance().stopAllWorkers();
+		JobManager.getInstance().stopAllWorkers();
 	}
 
 }

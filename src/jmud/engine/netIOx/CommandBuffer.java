@@ -1,4 +1,4 @@
-package jmud.engine.netIO;
+package jmud.engine.netIOx;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

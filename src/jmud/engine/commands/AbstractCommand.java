@@ -2,7 +2,7 @@ package jmud.engine.commands;
 
 import jmud.engine.job.JobManager;
 import jmud.engine.job.definitions.AbstractClientJob;
-import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIOx.JMudClient;
 
 import java.util.ArrayList;
 
