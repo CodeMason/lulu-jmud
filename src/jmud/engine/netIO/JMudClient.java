@@ -35,15 +35,15 @@ import java.util.UUID;
  * @author David Loman
  * @version 0.1
  */
-public class Connection {
+public class JMudClient {
 	// private int accountID = 0;
 	private UUID connID = null;
 	// private String uName = "";
 	// private String passWd = "";
 	// private int loginAttempts = 0;
 	private final SocketChannel socketChannel;
-	private ConnectionState connState;
-	private ConnectionManager connMan;
+	private JMudClientState connState;
+	private JMudClientManager connMan;
 	private CommandBuffer cmdBuf;
 
 	private PlayerCharacter pc;
@@ -57,10 +57,10 @@ public class Connection {
 	 * @param name
 	 *            Name to identify this object by.
 	 */
-	public Connection(ConnectionManager connMan, final SocketChannel inSc) {
+	public JMudClient(JMudClientManager connMan, final SocketChannel inSc) {
 		this.socketChannel = inSc;
 		this.connMan = connMan;
-		this.connState = ConnectionState.DISCONNECTED;
+		this.connState = JMudClientState.DISCONNECTED;
 		this.connID = connMan.getNewConnectionID();
 		this.cmdBuf = new CommandBuffer();
 		this.pc = null;
@@ -157,7 +157,7 @@ public class Connection {
 	/**
 	 * @return the Connection State associated with this Connection
 	 */
-	public ConnectionState getConnState() {
+	public JMudClientState getConnState() {
 		return this.connState;
 	}
 
@@ -166,8 +166,8 @@ public class Connection {
 	 * 
 	 * @param newState
 	 */
-	public void changeConnState(ConnectionState newState) {
-		ConnectionState oldState = this.connState;
+	public void changeConnState(JMudClientState newState) {
+		JMudClientState oldState = this.connState;
 
 		if (oldState == newState) {
 			// There is no change in state
@@ -194,7 +194,7 @@ public class Connection {
 	/**
 	 * @return this Connection's ConnectionManager reference.
 	 */
-	public ConnectionManager getConnectionManager() {
+	public JMudClientManager getConnectionManager() {
 		return this.connMan;
 	}
 

@@ -3,7 +3,7 @@ package jmud.engine.account;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 import jmud.engine.dbio.Persistable;
 
 public class Account implements Persistable {
@@ -12,7 +12,7 @@ public class Account implements Persistable {
 	private String passWd = "";
 	private int loginAttempts = 0;
 
-	private Connection c;
+	private JMudClient c;
 
 	public Account() {
 		this(0);
@@ -26,7 +26,7 @@ public class Account implements Persistable {
 		this(accountID, name, passWd, 0, null);
 	}
 
-	public Account(int accountID, String name, String passWd, int loginAttempts, Connection c) {
+	public Account(int accountID, String name, String passWd, int loginAttempts, JMudClient c) {
 		super();
 		this.accountID = accountID;
 		this.passWd = passWd;
@@ -123,7 +123,7 @@ public class Account implements Persistable {
 	/**
 	 * @return the Connection object reference associated with this Account.
 	 */
-	public Connection getC() {
+	public JMudClient getC() {
 		return c;
 	}
 
@@ -132,7 +132,7 @@ public class Account implements Persistable {
 	 *            the Connection object reference to associate with this
 	 *            Account.
 	 */
-	public void setC(Connection c) {
+	public void setC(JMudClient c) {
 		this.c = c;
 	}
 

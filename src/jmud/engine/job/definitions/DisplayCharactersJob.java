@@ -18,7 +18,7 @@ package jmud.engine.job.definitions;
 
 import jmud.engine.character.PlayerCharacter;
 import jmud.engine.dbio.MysqlConnection;
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 import java.util.Map;
 
@@ -30,9 +30,9 @@ import java.util.Map;
  * @version 0.1
  */
 
-public class DisplayCharactersJob extends AbstractConnectionJob {
+public class DisplayCharactersJob extends AbstractClientJob {
 
-	public DisplayCharactersJob(Connection c) {
+	public DisplayCharactersJob(JMudClient c) {
 		super(c);
 	}
 

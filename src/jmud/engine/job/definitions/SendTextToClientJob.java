@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Display a splash screen to the user with a login prompt
@@ -27,9 +27,9 @@ import jmud.engine.netIO.Connection;
 
 public class SendTextToClientJob extends AbstractJob {
 
-	private Connection c = null;
+	private JMudClient c = null;
 	private String s;
-	public SendTextToClientJob(Connection c, String textToSend) {
+	public SendTextToClientJob(JMudClient c, String textToSend) {
 		super();
 		this.c = c;
 		this.s = textToSend;

@@ -2,8 +2,8 @@ package jmud.engine.commands.definitions;
 
 import jmud.engine.commands.AbstractCommand;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.Connection;
-import jmud.engine.netIO.ConnectionState;
+import jmud.engine.netIO.JMudClient;
+import jmud.engine.netIO.JMudClientState;
 
 public class QuitCommand extends AbstractCommand {
 
@@ -27,11 +27,11 @@ public class QuitCommand extends AbstractCommand {
 	 * @param c
 	 * @param cmdArray
 	 */
-	public QuitCommand(Connection c, String[] cmdArray) {
+	public QuitCommand(JMudClient c, String[] cmdArray) {
 		super(c, cmdArray);
 
 	}
-	public QuitCommand(JobManager jm, Connection c, String[] cmdArray) {
+	public QuitCommand(JobManager jm, JMudClient c, String[] cmdArray) {
 		super(jm, c, cmdArray);
 	}
 	
@@ -46,13 +46,13 @@ public class QuitCommand extends AbstractCommand {
 	@Override
 	protected boolean doCmd() {
 		// Change the character state from INGAME back to CHARACTERMANAGER
-		this.c.changeConnState(ConnectionState.CHARACTERMANAGE);
+		this.c.changeConnState(JMudClientState.CHARACTERMANAGE);
 
 		return true;
 	}
 
 	@Override
-	public AbstractCommand getNewInstance(Connection c, JobManager jm,
+	public AbstractCommand getNewInstance(JMudClient c, JobManager jm,
 			String[] cmdArray) {
 		return new QuitCommand(jm,c,cmdArray);
 	}

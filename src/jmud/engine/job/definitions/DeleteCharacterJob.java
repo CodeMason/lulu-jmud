@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Contains the routines for creating a new Character
@@ -25,11 +25,11 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class DeleteCharacterJob extends AbstractConnectionJob {
+public class DeleteCharacterJob extends AbstractClientJob {
 
 	private String pcName;
 	
-	public DeleteCharacterJob(Connection c, String pcName) {
+	public DeleteCharacterJob(JMudClient c, String pcName) {
 		super(c);
 		this.pcName = pcName;
 	}

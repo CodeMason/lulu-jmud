@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient
@@ -26,9 +26,9 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class DisplayAboutScreenJob extends AbstractConnectionJob {
+public class DisplayAboutScreenJob extends AbstractClientJob {
 
-	public DisplayAboutScreenJob(Connection c) {
+	public DisplayAboutScreenJob(JMudClient c) {
 		super(c);
 	}
 

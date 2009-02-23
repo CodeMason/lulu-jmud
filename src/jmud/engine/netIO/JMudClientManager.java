@@ -37,16 +37,16 @@ import java.util.*;
  * @author David Loman
  * @version 0.1
  */
-public class ConnectionManager implements Runnable {
+public class JMudClientManager implements Runnable {
 
 	private boolean runStatus = true;
 	private boolean runCmd = true;
 	private int maxAllowedConns = 1024;
 	private Thread myThread;
 	private Selector selector;
-	private final List<ConnectionEvent> pendingEvents = new LinkedList<ConnectionEvent>();
+	private final List<JMudClientEvent> pendingEvents = new LinkedList<JMudClientEvent>();
 	private final Map<SocketChannel, List<ByteBuffer>> socketChannelByteBuffers = new HashMap<SocketChannel, List<ByteBuffer>>();
-	private final Map<SocketChannel, Connection> sockChanConnMap = new HashMap<SocketChannel, Connection>();
+	private final Map<SocketChannel, JMudClient> sockChanConnMap = new HashMap<SocketChannel, JMudClient>();
 
 	/*
 	 * 
@@ -61,7 +61,7 @@ public class ConnectionManager implements Runnable {
 	 * @param port
 	 * @throws IOException
 	 */
-	public ConnectionManager(int port) throws IOException {
+	public JMudClientManager(int port) throws IOException {
 		this(InetAddress.getLocalHost(), port);
 	}
 
@@ -73,7 +73,7 @@ public class ConnectionManager implements Runnable {
 	 * @param port
 	 * @throws IOException
 	 */
-	public ConnectionManager(InetAddress hostAddress, int port) throws IOException {
+	public JMudClientManager(InetAddress hostAddress, int port) throws IOException {
 		// Create a new Selector
 		this.selector = SelectorProvider.provider().openSelector();
 
@@ -112,14 +112,14 @@ public class ConnectionManager implements Runnable {
 		System.out.println("ConnectionManager: Total Connections now: " + this.sockChanConnMap.size());
 	}
 
-	private Connection createNewConnection(SocketChannel sc) throws IOException {
+	private JMudClient createNewConnection(SocketChannel sc) throws IOException {
 		// configure socket channel
 		sc.configureBlocking(false);
 		sc.register(this.selector, SelectionKey.OP_READ);
 
 		// make new connection
-		Connection c = new Connection(this, sc);
-		c.changeConnState(ConnectionState.CONNECTED);
+		JMudClient c = new JMudClient(this, sc);
+		c.changeConnState(JMudClientState.CONNECTED);
 
 		System.out.println("ConnectionManager: New Connection. ID: " + c.getConnectionID());
 
@@ -173,7 +173,7 @@ public class ConnectionManager implements Runnable {
 	 * @return true if the disconnect succeeded
 	 * @throws IOException
 	 */
-	public boolean disconnect(final Connection c) {
+	public boolean disconnect(final JMudClient c) {
 		System.out.println("ConnectionManager.disconnect(Connection): c=" + c.toString());
 		this.sockChanConnMap.remove(c.getSocketChannel());
 
@@ -236,7 +236,7 @@ public class ConnectionManager implements Runnable {
 	 */
 	private void read(final SelectionKey key) {
 		SocketChannel sc = (SocketChannel) key.channel();
-		Connection c = this.sockChanConnMap.get(sc);
+		JMudClient c = this.sockChanConnMap.get(sc);
 
 		// Check to see if we got a handle on a Connection object
 		if (c == null) {
@@ -281,7 +281,7 @@ public class ConnectionManager implements Runnable {
 	public final void send(SocketChannel sockChan, byte[] data) {
 		synchronized (this.pendingEvents) {
 			// Indicate we want the interest ops set changed
-			this.pendingEvents.add(new ConnectionEvent(sockChan, ConnectionEvent.EventType.CHANGEOPS,
+			this.pendingEvents.add(new JMudClientEvent(sockChan, JMudClientEvent.EventType.CHANGEOPS,
 					SelectionKey.OP_WRITE));
 
 			// And queue the data we want written
@@ -403,7 +403,7 @@ public class ConnectionManager implements Runnable {
 		synchronized (this.pendingEvents) {
 			SelectionKey selKey;
 
-			for (ConnectionEvent connEvent : this.pendingEvents) {
+			for (JMudClientEvent connEvent : this.pendingEvents) {
 				switch (connEvent.eventType) {
 				case CHANGEOPS:
 					selKey = connEvent.socket.keyFor(this.selector);

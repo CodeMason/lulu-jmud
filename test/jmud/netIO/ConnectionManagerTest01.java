@@ -17,7 +17,7 @@
 package jmud.netIO;
 
 import jmud.engine.job.JobManager;
-import jmud.engine.netIO.ConnectionManager;
+import jmud.engine.netIO.JMudClientManager;
 import jmud.TestUtil;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ConnectionManagerTest01 {
 		JobManager.getLazyLoadedInstance().init(1);
 
 	      // initialize and start ConnMan
-		ConnectionManager cm = new ConnectionManager(54321);
+		JMudClientManager cm = new JMudClientManager(54321);
 		cm.start();
 
 		TestUtil.pause(stayAlive);

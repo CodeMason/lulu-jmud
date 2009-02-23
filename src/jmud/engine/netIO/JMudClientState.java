@@ -19,25 +19,25 @@ package jmud.engine.netIO;
 import jmud.engine.core.JMudStatics;
 import jmud.engine.job.definitions.*;
 
-public enum ConnectionState {
+public enum JMudClientState {
 	// CONNECTED, GOODUNAME, LOGGEDIN, WIZLIST, WHO, ABOUT, CHARACTERSELECT,
 	// NEWCHARACTER, DELETECHARACTER, INGAME
 
 	DISCONNECTED {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			// AutoForward to runStateJob
-			ConnectionState.DISCONNECTED.runStateJob(c);
+			JMudClientState.DISCONNECTED.runStateJob(c);
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			DisconnectJob dj = new DisconnectJob(c, "Bye bye!!");
 			dj.selfSubmit();
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			synchronized (c) {
 				c.sendText(JMudStatics.getSplashScreen());
 			}
@@ -45,14 +45,14 @@ public enum ConnectionState {
 	},
 	CONNECTED {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			synchronized (c) {
 				c.sendText(JMudStatics.MAIN_MENU);
 			}
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			synchronized (c) {
 				// We need to see what the data that came in was
 				// It will represent the Menu Selection
@@ -63,39 +63,39 @@ public enum ConnectionState {
 					c.sendText("\nUsername: ");
 
 					// Trigger state change actions
-					c.changeConnState(ConnectionState.GETUNAME);
+					c.changeConnState(JMudClientState.GETUNAME);
 
 				} else if ("2".equals(data)) {
 					// View WizList
-					c.changeConnState(ConnectionState.WIZLIST);
+					c.changeConnState(JMudClientState.WIZLIST);
 
 				} else if ("3".equals(data)) {
 					// View WhoList
-					c.changeConnState(ConnectionState.WHO);
+					c.changeConnState(JMudClientState.WHO);
 
 				} else if ("4".equals(data)) {
 					// View About This Mud
-					c.changeConnState(ConnectionState.ABOUT);
+					c.changeConnState(JMudClientState.ABOUT);
 
 				} else if ("5".equals(data)) {
 					// Disconnect
 					// Trigger state change actions
-					c.changeConnState(ConnectionState.DISCONNECTED);
+					c.changeConnState(JMudClientState.DISCONNECTED);
 
 				} else {
 					c.sendCRLFs(2);
 					c.sendTextLn("Thats not a menu choice.");
 
 					// Re-Enter this state
-					ConnectionState.CONNECTED.runEnterJob(c, ConnectionState.CONNECTED);
+					JMudClientState.CONNECTED.runEnterJob(c, JMudClientState.CONNECTED);
 				}
 			}
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -103,21 +103,21 @@ public enum ConnectionState {
 	},
 	GETUNAME {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			// AutoForward to runStateJob
-			ConnectionState.GETUNAME.runStateJob(c);
+			JMudClientState.GETUNAME.runStateJob(c);
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			LoginJob j = new LoginJob(c);
 			j.selfSubmit();
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -126,21 +126,21 @@ public enum ConnectionState {
 	},
 	GETPASSWD {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			// AutoForward to runStateJob
-			ConnectionState.GETPASSWD.runStateJob(c);
+			JMudClientState.GETPASSWD.runStateJob(c);
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			LoginJob j = new LoginJob(c);
 			j.selfSubmit();
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -148,7 +148,7 @@ public enum ConnectionState {
 	},
 	WIZLIST {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			AbstractJob j = new DisplayWizListJob(c);
 			j.selfSubmit();
 
@@ -158,17 +158,17 @@ public enum ConnectionState {
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			// Read the 'return' out of the connections CommandBuffer
 			c.getCmdBuffer().getNextCommand();
 
-			c.changeConnState(ConnectionState.CONNECTED);
+			c.changeConnState(JMudClientState.CONNECTED);
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -176,7 +176,7 @@ public enum ConnectionState {
 	},
 	WHO {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			AbstractJob j = new DisplayWhoListJob(c);
 			j.selfSubmit();
 
@@ -186,17 +186,17 @@ public enum ConnectionState {
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			// Read the 'return' out of the connections CommandBuffer
 			c.getCmdBuffer().getNextCommand();
 
-			c.changeConnState(ConnectionState.CONNECTED);
+			c.changeConnState(JMudClientState.CONNECTED);
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -204,7 +204,7 @@ public enum ConnectionState {
 	},
 	ABOUT {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			AbstractJob j = new DisplayAboutScreenJob(c);
 			j.selfSubmit();
 
@@ -214,17 +214,17 @@ public enum ConnectionState {
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			// Read the 'return' out of the connections CommandBuffer
 			c.getCmdBuffer().getNextCommand();
 
-			c.changeConnState(ConnectionState.CONNECTED);
+			c.changeConnState(JMudClientState.CONNECTED);
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -232,14 +232,14 @@ public enum ConnectionState {
 	},
 	CHARACTERMANAGE {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			c.sendCRLFs(2);
 			AbstractJob j = new DisplayCharactersJob(c);
 			j.selfSubmit();
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			synchronized (c) {
 				AbstractJob j;
 				// We need to see what the data that came in was
@@ -249,14 +249,14 @@ public enum ConnectionState {
 
 				if (cmds[0].toLowerCase().equals("new")) {
 					// Make a new Character
-					c.changeConnState(ConnectionState.NEWCHARACTER);
+					c.changeConnState(JMudClientState.NEWCHARACTER);
 
 				} else if (cmds[0].toLowerCase().equals("delete")) {
 					// Delete a character
 					if (cmds.length < 2) {
 						c.sendCRLFs(2);
 						c.sendTextLn("That name is not recognized.\n");
-						ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+						JMudClientState.CHARACTERMANAGE.runEnterJob(c, JMudClientState.CHARACTERMANAGE);
 						return;
 					}
 
@@ -274,18 +274,18 @@ public enum ConnectionState {
 					}
 
 					// Now refresh the character List
-					ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+					JMudClientState.CHARACTERMANAGE.runEnterJob(c, JMudClientState.CHARACTERMANAGE);
 					return;
 				} else if (cmds[0].toLowerCase().equals("exit")) {
 					// Exit back to Main Menu.
-					c.changeConnState(ConnectionState.CONNECTED);
+					c.changeConnState(JMudClientState.CONNECTED);
 					return;
 				} else if (cmds[0].length() == 0) {
 					c.sendCRLFs(2);
 					c.sendTextLn("Thats not a menu choice.");
 
 					// Re-Enter this state
-					ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+					JMudClientState.CHARACTERMANAGE.runEnterJob(c, JMudClientState.CHARACTERMANAGE);
 					return;
 				} else {
 					// Try to look up a character and load it ingame.
@@ -296,13 +296,13 @@ public enum ConnectionState {
 					boolean loaded = j.doJob();
 
 					if (loaded) {
-						c.changeConnState(ConnectionState.INGAME);
+						c.changeConnState(JMudClientState.INGAME);
 					} else {
 						c.sendCRLFs(2);
 						c.sendTextLn("Hrm, couldn't find that character.\n");
 
 						// Re-Enter this state
-						ConnectionState.CHARACTERMANAGE.runEnterJob(c, ConnectionState.CHARACTERMANAGE);
+						JMudClientState.CHARACTERMANAGE.runEnterJob(c, JMudClientState.CHARACTERMANAGE);
 
 					}
 				}
@@ -311,14 +311,14 @@ public enum ConnectionState {
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 
 			// Don't forget to clean up the login info on our way out!
-			if (toState == ConnectionState.CONNECTED) {
+			if (toState == JMudClientState.CONNECTED) {
 				LogoutJob lj = new LogoutJob(c);
 				lj.selfSubmit();
 			}
@@ -327,7 +327,7 @@ public enum ConnectionState {
 	},
 	NEWCHARACTER {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			AbstractJob j = new NewCharacterJob(c);
 			j.selfSubmit();
 
@@ -337,17 +337,17 @@ public enum ConnectionState {
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			// Read the 'return' out of the connections CommandBuffer
 			c.getCmdBuffer().getNextCommand();
 
-			c.changeConnState(ConnectionState.CHARACTERMANAGE);
+			c.changeConnState(JMudClientState.CHARACTERMANAGE);
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 			// No Event
@@ -376,18 +376,18 @@ public enum ConnectionState {
 	// },
 	INGAME {
 		@Override
-		public void runEnterJob(Connection c, ConnectionState fromState) {
+		public void runEnterJob(JMudClient c, JMudClientState fromState) {
 			// Put anything that needs to be done Prior to World Entry here.
 			c.sendCRLFs(2);
 			c.sendTextLn("Entering the world of jMUD...\n\n");
 			c.sendPrompt();
 
 			// AutoForward
-			ConnectionState.INGAME.runStateJob(c);
+			JMudClientState.INGAME.runStateJob(c);
 		}
 
 		@Override
-		public void runStateJob(Connection c) {
+		public void runStateJob(JMudClient c) {
 			
 			//TODO Finish the Command routing! 
 			//Temporary Code Stub
@@ -407,9 +407,9 @@ public enum ConnectionState {
 		}
 
 		@Override
-		public void runExitJob(Connection c, ConnectionState toState) {
+		public void runExitJob(JMudClient c, JMudClientState toState) {
 			// Disconnect Safety
-			if (toState == ConnectionState.DISCONNECTED) {
+			if (toState == JMudClientState.DISCONNECTED) {
 				return;
 			}
 
@@ -417,9 +417,9 @@ public enum ConnectionState {
 		}
 	};
 
-	public abstract void runExitJob(Connection c, ConnectionState toState);
+	public abstract void runExitJob(JMudClient c, JMudClientState toState);
 
-	public abstract void runStateJob(Connection c);
+	public abstract void runStateJob(JMudClient c);
 
-	public abstract void runEnterJob(Connection c, ConnectionState fromState);
+	public abstract void runEnterJob(JMudClient c, JMudClientState fromState);
 }

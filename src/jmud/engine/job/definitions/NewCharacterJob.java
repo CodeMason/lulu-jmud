@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.netIO.Connection;
+import jmud.engine.netIO.JMudClient;
 
 /**
  * Contains the routines for creating a new Character
@@ -25,9 +25,9 @@ import jmud.engine.netIO.Connection;
  * @version 0.1
  */
 
-public class NewCharacterJob extends AbstractConnectionJob {
+public class NewCharacterJob extends AbstractClientJob {
 
-	public NewCharacterJob(Connection c) {
+	public NewCharacterJob(JMudClient c) {
 		super(c);
 	}
 
