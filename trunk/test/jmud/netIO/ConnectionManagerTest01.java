@@ -17,7 +17,7 @@
 package jmud.netIO;
 
 import jmud.engine.job.JobManager;
-import jmud.engine.netIOx.JMudClientManager;
+import jmud.engine.netio.JMudClientManager;
 import jmud.TestUtil;
 
 import java.io.IOException;

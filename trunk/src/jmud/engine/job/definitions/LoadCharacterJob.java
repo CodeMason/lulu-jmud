@@ -19,7 +19,7 @@ package jmud.engine.job.definitions;
 import jmud.engine.account.Account;
 import jmud.engine.character.PlayerCharacter;
 import jmud.engine.character.PlayerCharacterManager;
-import jmud.engine.netIOx.JMudClient;
+import jmud.engine.netio.JMudClient;
 
 /**
  * Just a template. Can be deleted once the Job Repository has sufficient

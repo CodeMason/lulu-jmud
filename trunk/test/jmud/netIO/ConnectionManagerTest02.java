@@ -19,7 +19,7 @@ package jmud.netIO;
 import jmud.TestUtil;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIOx.JMudClientManager;
+import jmud.engine.netio.JMudClientManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

@@ -2,8 +2,8 @@ package jmud.engine.commands.definitions;
 
 import jmud.engine.commands.AbstractCommand;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIOx.JMudClient;
-import jmud.engine.netIOx.JMudClientState;
+import jmud.engine.netio.JMudClient;
+import jmud.engine.netio.JMudClientState;
 
 public class QuitCommand extends AbstractCommand {
 

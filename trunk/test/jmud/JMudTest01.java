@@ -20,7 +20,7 @@ import jmud.engine.commands.CommandManager;
 import jmud.engine.commands.definitions.QuitCommand;
 import jmud.engine.dbio.MysqlConnection;
 import jmud.engine.job.JobManager;
-import jmud.engine.netIOx.JMudClientManager;
+import jmud.engine.netio.JMudClientManager;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

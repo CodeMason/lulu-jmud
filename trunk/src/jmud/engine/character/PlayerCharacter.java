@@ -1,7 +1,7 @@
 package jmud.engine.character;
 
 import jmud.engine.dbio.Persistable;
-import jmud.engine.netIOx.JMudClient;
+import jmud.engine.netio.JMudClient;
 import jmud.engine.object.JMudObject;
 
 /**
