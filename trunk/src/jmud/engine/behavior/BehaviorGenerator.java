@@ -17,7 +17,6 @@ public class BehaviorGenerator<T extends AbstractBehavior> {
 
 	@SuppressWarnings("unchecked")
 	public T newInstance() {
-
 		try {
 			Class<?> c = Class.forName(this.className);
 			return (T) c.newInstance();
@@ -31,4 +30,10 @@ public class BehaviorGenerator<T extends AbstractBehavior> {
 		}
 		return null;
 	}
+
+	public String getClassName() {
+		return className;
+	}
+
+
 }
