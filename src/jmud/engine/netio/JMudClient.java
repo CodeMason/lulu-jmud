@@ -31,7 +31,7 @@ import java.util.UUID;
  * Connection class is the single, high level point of access for sending data
  * to a user. This abstraction of functionality away from the ConnectionManager
  * simplifies use of the netIO package.
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -51,11 +51,9 @@ public class JMudClient {
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param inSc
 	 *            SocketChannel used for communications
-	 * @param name
-	 *            Name to identify this object by.
 	 */
 	public JMudClient(JMudClientManager connMan, final SocketChannel inSc) {
 		this.socketChannel = inSc;
@@ -69,7 +67,7 @@ public class JMudClient {
 
 	/**
 	 * Disconnect
-	 * 
+	 *
 	 * @return true if the disconnect succeeded
 	 * @throws java.io.IOException
 	 */
@@ -91,16 +89,16 @@ public class JMudClient {
 
 		// Copy the data over into the commandBuffer and parse it into commands.
 		try {
-			this.cmdBuf.write(this.socketChannel);
-			this.cmdBuf.parseBuffer();
+			this.cmdBuf.readFrom(this.socketChannel);
+			this.cmdBuf.parseCommands();
 		} catch (ClosedChannelException e) {
 			this.disconnect();
 		}
 
 		System.err.println(this.cmdBuf.toString());
-		
+
 		// If a valid command exists, then route it and generate a job.
-		if (this.cmdBuf.hasNextCommand() == false) {
+		if (!this.cmdBuf.hasNextCommand()) {
 			return;
 		}
 
@@ -129,7 +127,7 @@ public class JMudClient {
 
 	/**
 	 * Send the text, with a CRLF, to the client.
-	 * 
+	 *
 	 * @param textToSend
 	 */
 	public void sendTextLn(String textToSend) {
@@ -138,7 +136,7 @@ public class JMudClient {
 
 	/**
 	 * Send the text, without a CRLF, to the client.
-	 * 
+	 *
 	 * @param text
 	 */
 	public void sendText(String text) {
@@ -163,7 +161,7 @@ public class JMudClient {
 
 	/**
 	 * Set this Connection object's Connection State.
-	 * 
+	 *
 	 * @param newState
 	 */
 	public void changeConnState(JMudClientState newState) {
