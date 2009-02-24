@@ -1,6 +1,6 @@
 package jmud.engine.behavior.definitions;
 
-import jmud.engine.behavior.BehaviorRegistrar;
+import jmud.engine.behavior.BehaviorManager;
 import jmud.engine.behavior.BehaviorType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
@@ -64,7 +64,7 @@ public abstract class AbstractBehavior {
 	}
 
 	public void selfRegister() {
-		BehaviorRegistrar.getInstance().register(this.getBehaviorType(), this);
+		BehaviorManager.getInstance().register(this.getBehaviorType(), this);
 	}
 	
 	

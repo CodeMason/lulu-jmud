@@ -46,7 +46,7 @@ public class EventBehaviorMap {
 		List<BehaviorType> bts = this.getBehaviorTypeList(jmet);
 		
 		for (BehaviorType bt : bts) {
-			AbstractBehavior ab = BehaviorRegistrar.getInstance().getBehavior(bt);
+			AbstractBehavior ab = BehaviorManager.getInstance().getBehavior(bt);
 			if (ab != null){
 				out.add(ab);
 			}
