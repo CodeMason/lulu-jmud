@@ -354,26 +354,6 @@ public enum JMudClientState {
 		}
 	},
 
-	// DELETECHARACTER {
-	// @Override
-	// public void runEnterJob(Connection c, ConnectionState fromState) {
-	// System.err.println("Returning a NULL object!");
-	// return null;
-	// }
-	//
-	// @Override
-	// public void runStateJob(Connection c) {
-	// }
-	//
-	// @Override
-	// public void runExitJob(Connection c, ConnectionState toState) {
-	// // Disconnect Safety
-	// if (toState == ConnectionState.DISCONNECTED) {
-	// return;
-	// }
-	//
-	// }
-	// },
 	INGAME {
 		@Override
 		public void runEnterJob(JMudClient c, JMudClientState fromState) {
@@ -418,8 +398,6 @@ public enum JMudClientState {
 	};
 
 	public abstract void runExitJob(JMudClient c, JMudClientState toState);
-
 	public abstract void runStateJob(JMudClient c);
-
 	public abstract void runEnterJob(JMudClient c, JMudClientState fromState);
 }
