@@ -1,28 +1,72 @@
 package jmud.engine.behavior;
 
-import jmud.engine.object.JMudObject;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class BehaviorRegistrar {
+	/**
+	 * <code>Holder</code> is loaded on the first execution of
+	 * <code>AccountManager.getInstance()</code> or the first access to
+	 * <code>Holder.INSTANCE</code>, not before.
+	 */
+	private static final class Holder {
+		/**
+		 * The singleton instance.
+		 */
+		private static final BehaviorRegistrar INSTANCE = new BehaviorRegistrar();
 
-	private static ArrayList<String> behaviors = new ArrayList<String>();
+		/**
+		 * <code>Holder</code> is a utility class. Disallowing public/default
+		 * constructor.
+		 */
+		private Holder() {
 
-	public static boolean add(String s) {
-		return behaviors.add(s);
+		}
 	}
 
-	public static boolean contains(String s) {
-		return behaviors.contains(s);
+	/**
+	 * @return the singleton instance
+	 */
+	public static BehaviorRegistrar getInstance() {
+		return Holder.INSTANCE;
+	}
+	
+	private BehaviorRegistrar() {
+	}
+	
+	
+	private Map<String, BehaviorGenerator<? extends AbstractBehavior>> behaviorGens = Collections
+			.synchronizedMap(new HashMap<String, BehaviorGenerator<? extends AbstractBehavior>>());
+
+	public boolean containsBehaviorGen(String name) {
+		return this.behaviorGens.containsKey(name);
 	}
 
-	public static boolean remove(String s) {
-		return behaviors.remove(s);
+	public boolean containsBehaviorGen(
+			BehaviorGenerator<? extends AbstractBehavior> bg) {
+		return this.behaviorGens.containsValue(bg);
 	}
 
-	
+	public Set<String> getListOfBehaviorGenNames() {
+		return this.behaviorGens.keySet();
+	}
 
-	
-	
+	public BehaviorGenerator<? extends AbstractBehavior> putBehaviorGen(
+			BehaviorGenerator<? extends AbstractBehavior> bg) {
+		return this.behaviorGens.put(bg.getClassName(), bg);
+	}
+
+	public BehaviorGenerator<? extends AbstractBehavior> remBehaviorGen(String behaviorName) {
+		return this.behaviorGens.remove(behaviorName);
+	}
+
+	public Collection<BehaviorGenerator<? extends AbstractBehavior>> getAllBehaviorGens() {
+		return behaviorGens.values();
+	}
+
 }
