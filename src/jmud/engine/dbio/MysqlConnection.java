@@ -1,12 +1,7 @@
 package jmud.engine.dbio;
 
-import jmud.engine.account.Account;
-import jmud.engine.character.PlayerCharacter;
 import jmud.engine.core.JMudStatics;
-
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Provides access to the database and functions to return specific data from
