@@ -59,25 +59,12 @@ public class EventBehaviorTest02 {
 		TestUtil.printJMudObjectTree(world);
 
 		/*
-		 * Start a getEvent with default AffectRange
-		 */
-
-		JMudEvent jme = new JMudEvent(JMudEventType.Get, pcSteve, sword);
-		RunEventJob rej = new RunEventJob(jme);
-		rej.selfSubmit();
-
-		TestUtil.pause(500L);
-		System.out.println("\n\n");
-		TestUtil.printJMudObjectTree(world);
-		TestUtil.pause(500L);
-
-		/*
 		 * Start a getEvent with a AffectRange that goes one layer higher in
 		 * Parent Heirarchy
 		 */
 
-		jme = new JMudEvent(JMudEventType.Get, pcSteve, sword, new AffectRange(2, 1));
-		rej = new RunEventJob(jme);
+		JMudEvent jme = new JMudEvent(JMudEventType.Get, pcSteve, sword, new AffectRange(2, 1));
+		RunEventJob rej = new RunEventJob(jme);
 		rej.selfSubmit();
 
 		TestUtil.pause(500L);
