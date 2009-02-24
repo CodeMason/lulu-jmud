@@ -1,5 +1,6 @@
 package jmud.engine.behavior.definitions;
 
+import jmud.engine.behavior.BehaviorType;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
 import jmud.engine.job.definitions.RunEventJob;
@@ -8,51 +9,39 @@ import jmud.engine.object.JMudObjectUtils;
 
 /**
  *
- *
  * @author david.h.loman
  */
 public class GetBehavior extends AbstractBehavior {
-
-	/**
-	 * Default constructor.
-	 */
-	public GetBehavior(JMudObject owner) {
-		super(owner);
-		// Register a Behavior Object of this type to respond to a
-		// EventType.Get
-		this.eventTypesHandled.add(JMudEventType.Get);
+	
+	public GetBehavior() {
+		this.beType = BehaviorType.Get;
 	}
 
-	/**
-	 * @see jmud.engine.behavior.definitions.AbstractBehavior#behave()
-	 * @return true
-	 */
-
 	@Override
-	public final boolean targetBehavior() {
-		JMudObject source = this.event.getSource();
-		JMudObject target = this.event.getTarget();
+	public final boolean targetBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		JMudObject source = jme.getSource();
+		JMudObject target = jme.getTarget();
 
 		//Remove the target's parent
 		JMudObjectUtils.changeParent(source, target);
 		
 		// prep the 'response' JMudEvent
-		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);
-		RunEventJob rej =  new RunEventJob(jme);
+		JMudEvent resJme = new JMudEvent(JMudEventType.Got, target, source);
+		RunEventJob rej =  new RunEventJob(resJme);
 		rej.selfSubmit();
 
 		return true;
 	}
 
 	@Override
-	protected boolean bystanderBehavior() {
+	protected boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
 		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
 		return true;
 	}
 
 	@Override
-	protected boolean sourceBehavior() {
-		// loop back to ccBehavior()
-		return this.bystanderBehavior();
+	protected boolean sourceBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		// loop back to bystanderBehavior()
+		return this.bystanderBehavior(whoToRunThisBehaviorOn, jme);
 	}
 }

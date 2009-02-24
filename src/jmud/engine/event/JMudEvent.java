@@ -44,33 +44,30 @@ public class JMudEvent {
 			System.out.println("Running a JMudEvent::" + this.eventType);
 		}
 
-		// Set success flag
-		boolean hasCompletedSuccessfully = true;
-
 		for (JMudObject j : this.allAffected) {
 
-			AbstractBehavior ab = j.getBehaviorMap().getBehavior(this.eventType);
+			// Get all of the mappings for this eventType that this object has.
+			List<AbstractBehavior> abs = j.getEventBehaviorMap().getBehaviorsForEvent(this.eventType);
 
-			if (ab != null) {
-				ab.setEvent(this);
-				RunBehaviorJob rbj = new RunBehaviorJob(ab);
+			for (AbstractBehavior ab : abs) {
+				RunBehaviorJob rbj = new RunBehaviorJob(j, ab, this);
 				rbj.selfSubmit();
 
-			} else {
-				hasCompletedSuccessfully = false;
 			}
 		}
-		return hasCompletedSuccessfully;
+		return true;
 	}
 
 	private void makeAffectedSets() {
-		// Get all the affected JMudObjects in the area of the Target and Source
+		// Get all the affected JMudObjects in the area of the
+		// Target and Source based on the AffectRange
 		this.targetAffected = JMudObjectUtils.getJmosAffected(this.target, this.affRange);
 		this.sourceAffected = JMudObjectUtils.getJmosAffected(this.source, this.affRange);
-		
-		//Compile the two sets into one for ease of use.
+
+		// Compile the two sets into one for ease of use.
 		this.allAffected = new HashSet<JMudObject>(this.targetAffected);
 		this.allAffected.addAll(this.sourceAffected);
+
 	}
 
 	/*
@@ -109,11 +106,6 @@ public class JMudEvent {
 		return allAffected;
 	}
 
-	
-	
-	
-	
-	
 	// @Override
 	// public String toString() {
 	// return new

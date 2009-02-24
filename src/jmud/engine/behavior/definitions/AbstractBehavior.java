@@ -1,55 +1,22 @@
 package jmud.engine.behavior.definitions;
 
+import jmud.engine.behavior.BehaviorRegistrar;
+import jmud.engine.behavior.BehaviorType;
 import jmud.engine.event.JMudEvent;
-import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Following the command design pattern [GoF], a <code>Behavior</code> is a
- * discrete portion of logic that can be associated with a
- * <code>JMudObject</code> and called in response to a <code>JMudEvent</code>.
- * 
- * <code>Behaviors</code> should check that they are handling the right event.
+ * Base class for all Behaviors to extend from.  A behavior is a reusable object
+ * that contains code to perform actions on an object based on a passed in EventType.
  */
 public abstract class AbstractBehavior {
 
-	// These should be defined in the Subclasses, they are not dynamic
-	protected ArrayList<JMudEventType> eventTypesHandled;
-	protected JMudObject owner;
-	protected JMudEvent event;
-
+	protected BehaviorType beType;
+	
 	/*
 	 * Constructors.
 	 */
-	public AbstractBehavior(JMudObject owner) {
-		this.owner = owner;
-		this.eventTypesHandled = new ArrayList<JMudEventType>();
-	}
-
-	/*
-	 * Getters n Setters
-	 */
-
-	public JMudObject getOwner() {
-		return owner;
-	}
-
-	public void setOwner(JMudObject owner) {
-		this.owner = owner;
-	}
-
-	public JMudEvent getEvent() {
-		return this.event;
-	}
-
-	public void setEvent(JMudEvent jme) {
-		this.event = jme;
-	}
-
-	public final List<JMudEventType> getEventTypesHandled() {
-		return eventTypesHandled;
+	public AbstractBehavior() {
 	}
 
 	/**
@@ -57,25 +24,17 @@ public abstract class AbstractBehavior {
 	 * 
 	 * @return true if behavior completes successfully
 	 */
-	public boolean runBehavior() {
+	public boolean runBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
 
-		if (canHandleEvent(this.event) == false) {
-			return false;
-		}
+		if (whoToRunThisBehaviorOn == jme.getTarget()) {
+			return this.targetBehavior(whoToRunThisBehaviorOn, jme);
 
-		if (this.owner == this.event.getTarget()) {
-			return this.targetBehavior();
-
-		} else if (this.owner == this.event.getSource()) {
-			return this.sourceBehavior();
+		} else if (whoToRunThisBehaviorOn == jme.getSource()) {
+			return this.sourceBehavior(whoToRunThisBehaviorOn, jme);
 
 		} else {
-			return this.bystanderBehavior();
+			return this.bystanderBehavior(whoToRunThisBehaviorOn, jme);
 		}
-	}
-
-	public boolean canHandleEvent(JMudEvent event) {
-		return (event != null) && (this.eventTypesHandled.contains(event.getEventType()));
 	}
 
 	/**
@@ -83,19 +42,14 @@ public abstract class AbstractBehavior {
 	 * 
 	 * @return true if behavior completes successfully
 	 */
-	protected boolean targetBehavior() {
-
-		return true;
-	}
+	protected abstract boolean targetBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme);
 
 	/**
 	 * Execute this code if this Behavior is the Event's source.
 	 * 
 	 * @return true if behavior completes successfully
 	 */
-	protected boolean sourceBehavior() {
-		return true;
-	}
+	protected abstract boolean sourceBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme);
 
 	/**
 	 * Execute this code if this Behavior's Owner has nothing to do with the
@@ -103,8 +57,15 @@ public abstract class AbstractBehavior {
 	 * 
 	 * @return true if behavior completes successfully
 	 */
-	protected boolean bystanderBehavior() {
-		return true;
+	protected abstract boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme);
+
+	public BehaviorType getBehaviorType() {
+		return beType;
 	}
 
+	public void selfRegister() {
+		BehaviorRegistrar.getInstance().register(this.getBehaviorType(), this);
+	}
+	
+	
 }
