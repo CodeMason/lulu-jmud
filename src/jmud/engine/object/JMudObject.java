@@ -51,7 +51,15 @@ public class JMudObject {
 		this(UUID.randomUUID());
 	}
 
+	public JMudObject(String name) {
+		this(UUID.randomUUID(), name);
+	}
+	
 	public JMudObject(UUID uuid) {
+		this(uuid, "DefaultName");
+	}
+
+	public JMudObject(UUID uuid, String name) {
 		this.uuid = uuid;
 		this.displayedName = "";
 		this.behaviorMap = new BehaviorMap();
