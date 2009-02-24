@@ -17,7 +17,7 @@
 package jmud.engine.object;
 
 import jmud.engine.attribute.AttributeMap;
-import jmud.engine.behavior.BehaviorMap;
+import jmud.engine.behavior.EventBehaviorMap;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public class JMudObject {
 	/*
 	 * Mappings for this object
 	 */
-	private BehaviorMap behaviorMap;
+	private EventBehaviorMap eventRehaviorMap;
 	private AttributeMap attributeMap;
 	private JMudObjectRelationMap jmoMap;
 	
@@ -62,7 +62,7 @@ public class JMudObject {
 	public JMudObject(UUID uuid, String name) {
 		this.uuid = uuid;
 		this.displayedName = name;
-		this.behaviorMap = new BehaviorMap();
+		this.eventRehaviorMap = new EventBehaviorMap();
 		this.attributeMap = new AttributeMap();
 		this.jmoMap = new JMudObjectRelationMap();
 	}
@@ -74,8 +74,8 @@ public class JMudObject {
 	public AttributeMap getAttributeMap(){
 		return this.attributeMap;
 	}
-	public BehaviorMap getBehaviorMap(){
-		return this.behaviorMap;
+	public EventBehaviorMap getEventBehaviorMap(){
+		return this.eventRehaviorMap;
 	}
 	public JMudObjectRelationMap getJmoRelMap(){
 		return this.jmoMap;

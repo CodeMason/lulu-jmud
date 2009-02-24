@@ -1,65 +1,59 @@
 package jmud.engine.behavior.definitions;
 
-import jmud.engine.event.JMudEventType;
+import jmud.engine.behavior.BehaviorType;
+import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
 
 /**
- *
- *
+ * 
  * @author david.h.loman
  */
 public class GotBehavior extends AbstractBehavior {
-
-	/**
-	 * Default constructor.
-	 */
-	public GotBehavior(JMudObject owner) {
-		super(owner);
-		// Register a Behavior Object of this type to respond to a
-		// EventType.Get
-		this.eventTypesHandled.add(JMudEventType.Got);
+	
+	public GotBehavior() {
+		this.beType = BehaviorType.Get;
 	}
 
 	/**
-     * What the "getter" does (i.e. the JMudObject getting something)
-     *
-	 * @see jmud.engine.behavior.definitions.AbstractBehavior#behave()
-	 * @return true
+	 * Anything the object that did the 'get' does
+	 * 
+	 * @return
 	 */
 	@Override
-	public final boolean targetBehavior() {
-		// What the owner sees
+	public final boolean targetBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		// What the target sees
 
-		String txt = "You get the " + this.event.getSource().getDisplayedName();
-		this.event.getTarget().sendTextToObject(txt);
+		String txt = "You get the " + jme.getSource().getDisplayedName();
+		jme.getTarget().sendTextToObject(txt);
 
 		return true;
 	}
 
-    /**
-     * Anything a non-participant does
-     * @return
-     */
-    @Override
-	protected boolean bystanderBehavior() {
+	/**
+	 * Anything a non-participant does
+	 * 
+	 * @return
+	 */
+	@Override
+	protected boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
 		// What anyone else sees.
-	   	String txt = this.event.getTarget().getDisplayedName() + " gets the " + this.event.getSource().getDisplayedName();
-		this.owner.sendTextToObject(txt);
+		String txt = jme.getTarget().getDisplayedName() + " gets the " + jme.getSource().getDisplayedName();
+		whoToRunThisBehaviorOn.sendTextToObject(txt);
 
 		return true;
 	}
 
-    /**
-     * Anything the "gotten" object does
-     * @return
-     */
-    @Override
-	protected boolean sourceBehavior() {
-		// What You see.
+	/**
+	 * Anything the "gotten" object does
+	 * 
+	 * @return
+	 */
+	@Override
+	protected boolean sourceBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		// What the source sees.
 
-    	String txt = this.event.getTarget().getDisplayedName() + " picks YOU up!!";
-		this.event.getSource().sendTextToObject(txt);
-
+		String txt = jme.getTarget().getDisplayedName() + " picks YOU up!!";
+		jme.getSource().sendTextToObject(txt);
 
 		return true;
 	}

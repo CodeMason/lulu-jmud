@@ -17,6 +17,8 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.behavior.definitions.AbstractBehavior;
+import jmud.engine.event.JMudEvent;
+import jmud.engine.object.JMudObject;
 
 /**
  * A job that runs the supplied Behavior.
@@ -26,19 +28,23 @@ import jmud.engine.behavior.definitions.AbstractBehavior;
  */
 public class RunBehaviorJob extends AbstractJob {
 
+	private JMudObject whoToRunBehaviorOn;
 	private AbstractBehavior ab;
+	private JMudEvent jme;
 
-	public RunBehaviorJob(AbstractBehavior ab) {
+	public RunBehaviorJob(JMudObject whoToRunBehaviorOn, AbstractBehavior ab, JMudEvent jme) {
 		super();
+		this.whoToRunBehaviorOn = whoToRunBehaviorOn;
 		this.ab = ab;
+		this.jme = jme;
 	}
 
 	@Override
 	public final boolean doJob() {
 		synchronized (this.ab) {
-			// TODO Finish The Run Job Behavior
-			ab.runBehavior();
+			ab.runBehavior(this.whoToRunBehaviorOn, this.jme);
 		}
 		return true;
 	}
+	
 }

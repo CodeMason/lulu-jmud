@@ -63,12 +63,16 @@ public class JMudObjectUtils {
 
 		// Dig our way to the 'top'
 		for (int i = 0; i < pr.getParentHeight(); ++i) {
-			top = top.getJmoRelMap().getParentObject();
+			JMudObject tParent = top.getJmoRelMap().getParentObject();
+			if (tParent == null) {
+				break; //prevents running past the top of the tree.
+			}
+			top = tParent;
 		}
 
 		// Recurse and grab all the objects
-		// Note that ParentHeight is made negative since recurse level 0 is
-		// technically the level that jmo is.
+		// Note that ParentHeight is made negative since:
+		// parent < jmo (which is level 0) < children
 		JMudObjectUtils.addAllChildren(allJmos, jmo, pr.getChildDepth(), (pr.getParentHeight() * -1));
 		return;
 	}
