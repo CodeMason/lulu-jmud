@@ -17,7 +17,7 @@
 package jmud.Behavior;
 
 import jmud.engine.behavior.AttackBehavior;
-import jmud.engine.behavior.BaseBehavior;
+import jmud.engine.behavior.AbstractBehavior;
 import jmud.engine.behavior.BehaviorRegistrar;
 import jmud.engine.object.JMudObject;
 import jmud.event.TestBehavior;
@@ -33,7 +33,7 @@ public class BehaviorFactoryTest{
     @Test
     public void testCreateBehavior(){
         JMudObject testJMudObject = new JMudObject();
-        BaseBehavior testBehavior = BehaviorRegistrar.createBehavior(TestBehavior.class, testJMudObject);
+        AbstractBehavior testBehavior = BehaviorRegistrar.createBehavior(TestBehavior.class, testJMudObject);
         Assert.assertNotNull("BehaviorFactory created null class", testBehavior);
         Assert.assertEquals("BehaviorFactory created instance of incorrect class", TestBehavior.class, testBehavior.getClass());
         Assert.assertSame("BehaviorFactory created instance of Behavior with incorrect JMudObject", testJMudObject, testBehavior.getOwner());
@@ -41,14 +41,14 @@ public class BehaviorFactoryTest{
 
     @Test
     public void testCreateNonBehavior(){
-        BaseBehavior nullBehavior = BehaviorRegistrar.createBehavior(JMudObject.class, new JMudObject());
+        AbstractBehavior nullBehavior = BehaviorRegistrar.createBehavior(JMudObject.class, new JMudObject());
         Assert.assertNull("BehaviorFactory created behavior from invalid class", nullBehavior);
     }
 
     @Test
     public void testCreateMulitpleBehaviors(){
         List<Class> behaviorClasses = Arrays.asList((Class) TestBehavior.class, AttackBehavior.class);
-        List<BaseBehavior> createdBehaviors = BehaviorRegistrar.createBehaviorsFromClasses(behaviorClasses, new JMudObject());
+        List<AbstractBehavior> createdBehaviors = BehaviorRegistrar.createBehaviorsFromClasses(behaviorClasses, new JMudObject());
         Assert.assertEquals("BehaviorFactory created incorrect number of behaviors", createdBehaviors.size(), behaviorClasses.size());
         Assert.assertTrue("BehaviorFactory failed to create specified Behavior instances", instanceOfEachClassExists(behaviorClasses, createdBehaviors));
     }
@@ -56,13 +56,13 @@ public class BehaviorFactoryTest{
     @Test
     public void testCreateMulitpleSameBehaviors(){
         List<Class> behaviorClasses = Arrays.asList((Class) TestBehavior.class, TestBehavior.class);
-        List<BaseBehavior> createdBehaviors = BehaviorRegistrar.createBehaviorsFromClasses(behaviorClasses, new JMudObject());
+        List<AbstractBehavior> createdBehaviors = BehaviorRegistrar.createBehaviorsFromClasses(behaviorClasses, new JMudObject());
         Assert.assertEquals("BehaviorFactory created incorrect number of behaviors", createdBehaviors.size(), behaviorClasses.size());
         Assert.assertEquals("BehaviorFactory failed to create specified Behavior instance", createdBehaviors.get(0).getClass(), TestBehavior.class);
         Assert.assertEquals("BehaviorFactory failed to create specified Behavior instance", createdBehaviors.get(1).getClass(), TestBehavior.class);
     }
 
-    private boolean instanceOfEachClassExists(List<Class> behaviorClasses, List<BaseBehavior> behaviorInstances){
+    private boolean instanceOfEachClassExists(List<Class> behaviorClasses, List<AbstractBehavior> behaviorInstances){
         for(Class behaviorClass : behaviorClasses){
             if(!instanceOfClassExists(behaviorClass, behaviorInstances)){
                 return false;
@@ -71,8 +71,8 @@ public class BehaviorFactoryTest{
         return true;
     }
 
-    private boolean instanceOfClassExists(Class behaviorClass, List<BaseBehavior> behaviorInstances){
-        for(BaseBehavior behavior : behaviorInstances){
+    private boolean instanceOfClassExists(Class behaviorClass, List<AbstractBehavior> behaviorInstances){
+        for(AbstractBehavior behavior : behaviorInstances){
             if(behavior.getClass().equals(behaviorClass)){
                 return true;
             }

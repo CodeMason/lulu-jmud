@@ -8,7 +8,7 @@ import jmud.engine.object.JMudObject;
  *
  * @author david.h.loman
  */
-public class GotBehavior extends BaseBehavior {
+public class GotBehavior extends AbstractBehavior {
 
 	/**
 	 * Default constructor.
@@ -23,7 +23,7 @@ public class GotBehavior extends BaseBehavior {
 	/**
      * What the "getter" does (i.e. the JMudObject getting something)
      *
-	 * @see jmud.engine.behavior.BaseBehavior#behave()
+	 * @see jmud.engine.behavior.AbstractBehavior#behave()
 	 * @return true
 	 */
 	@Override

@@ -4,7 +4,7 @@ package jmud.engine.behavior;
 /**
  *
  */
-public class BehaviorGenerator<T extends BaseBehavior> {
+public class BehaviorGenerator<T extends AbstractBehavior> {
 
 	private String className;
 
@@ -15,6 +15,7 @@ public class BehaviorGenerator<T extends BaseBehavior> {
 		this.className = className;
 	}
 
+	@SuppressWarnings("unchecked")
 	public T newInstance() {
 
 		try {

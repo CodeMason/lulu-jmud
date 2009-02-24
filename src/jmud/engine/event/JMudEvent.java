@@ -1,6 +1,6 @@
 package jmud.engine.event;
 
-import jmud.engine.behavior.BaseBehavior;
+import jmud.engine.behavior.AbstractBehavior;
 import jmud.engine.behavior.BehaviorRegistrar;
 import jmud.engine.job.definitions.AbstractJob;
 import jmud.engine.object.JMudObject;
@@ -23,7 +23,7 @@ public class JMudEvent extends AbstractJob {
 
 	@Override
 	public boolean doJob() {
-        BaseBehavior newB;
+        AbstractBehavior newB;
 		synchronized (System.out) {
 			System.out.println("Running a JMudEvent::" + this.targetEventType);
 		}
@@ -43,14 +43,14 @@ public class JMudEvent extends AbstractJob {
 
 		for (JMudObject ccObject : objectsToNotify) {
 
-			List<BaseBehavior> ccObjectBehaviors = ccObject.getBehaviors(this.getEventType());
+			List<AbstractBehavior> ccObjectBehaviors = ccObject.getBehaviors(this.getEventType());
 
 			if (ccObjectBehaviors == null) {
-				ccObjectBehaviors = new ArrayList<BaseBehavior>();
+				ccObjectBehaviors = new ArrayList<AbstractBehavior>();
 			}
 
 			if (!ccObjectBehaviors.isEmpty()) {
-                for (BaseBehavior b : ccObjectBehaviors) {
+                for (AbstractBehavior b : ccObjectBehaviors) {
                     // ToDo CM: need to be able to instantiate trigger behaviors, which need more than just the owner and event
                     // TriggerBehavior fires another event
                     newB = BehaviorRegistrar.createBehavior(b);
