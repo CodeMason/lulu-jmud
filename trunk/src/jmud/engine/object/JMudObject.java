@@ -29,18 +29,19 @@ public class JMudObject {
 	/**
 	 * Universally Unique Identifier
 	 */
-	private UUID uuid = null;
+	private UUID uuid;
 
 	/**
 	 * Textual name that is displayed in the MUD 
-	 * TODO: DHL: Perhaps this should
-	 * be an Attribute....
 	 */
-	private String displayedName = "";
+	private String displayedName;
 
+	/*
+	 * Mappings for this object
+	 */
 	private BehaviorMap behaviorMap;
 	private AttributeMap attributeMap;
-	private JMudObjectRelationMap JmoRelationMap;
+	private JMudObjectRelationMap jmoMap;
 	
 	
 	/*
@@ -52,7 +53,10 @@ public class JMudObject {
 
 	public JMudObject(UUID uuid) {
 		this.uuid = uuid;
+		this.displayedName = "";
+		this.behaviorMap = new BehaviorMap();
 		this.attributeMap = new AttributeMap();
+		this.jmoMap = new JMudObjectRelationMap();
 	}
 
 	
@@ -65,23 +69,12 @@ public class JMudObject {
 	public BehaviorMap getBehaviorMap(){
 		return this.behaviorMap;
 	}
-	public JMudObjectRelationMap getJmoRelationMap(){
-		return this.JmoRelationMap;
+	public JMudObjectRelationMap getJmoRelMap(){
+		return this.jmoMap;
 	}
-	
-	
-
-
-	/*
-	 * UUID Getter
-	 */
 	public UUID getUUID() {
 		return this.uuid;
 	}
-
-	/*
-	 * Displayed Name Getter/Setter
-	 */
 	public String getDisplayedName() {
 		return displayedName;
 	}

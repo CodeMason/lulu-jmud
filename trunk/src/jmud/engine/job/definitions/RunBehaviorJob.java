@@ -16,7 +16,7 @@
  */
 package jmud.engine.job.definitions;
 
-import jmud.engine.behavior.AbstractBehavior;
+import jmud.engine.behavior.definitions.AbstractBehavior;
 
 /**
  * A job that runs the supplied Behavior.

@@ -6,12 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.engine.behavior.definitions.AbstractBehavior;
+
 
 
 public class BehaviorRegistrar {
+	/*
+	 * BEGIN Singleton Implementation
+	 */
 	/**
 	 * <code>Holder</code> is loaded on the first execution of
-	 * <code>AccountManager.getInstance()</code> or the first access to
+	 * <code>BehaviorRegistrar.getInstance()</code> or the first access to
 	 * <code>Holder.INSTANCE</code>, not before.
 	 */
 	private static final class Holder {
@@ -38,7 +43,9 @@ public class BehaviorRegistrar {
 	
 	private BehaviorRegistrar() {
 	}
-	
+	/*
+	 * END Singleton Implementation
+	 */
 	
 	private Map<String, BehaviorGenerator<? extends AbstractBehavior>> behaviorGens = Collections
 			.synchronizedMap(new HashMap<String, BehaviorGenerator<? extends AbstractBehavior>>());

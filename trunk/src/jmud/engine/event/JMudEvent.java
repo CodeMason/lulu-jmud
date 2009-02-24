@@ -1,53 +1,61 @@
 package jmud.engine.event;
 
-import jmud.engine.behavior.AbstractBehavior;
-import jmud.engine.behavior.BehaviorRegistrar;
-import jmud.engine.job.definitions.AbstractJob;
+import jmud.engine.behavior.definitions.AbstractBehavior;
 import jmud.engine.job.definitions.RunBehaviorJob;
 import jmud.engine.object.JMudObject;
+import jmud.engine.object.JMudObjectUtils;
 
 import java.util.*;
 
 public class JMudEvent {
-	private JMudEventType targetEventType;
+
+	private UUID eventID;
+
+	private JMudEventType eventType;
 
 	private final transient JMudObject source;
 	private final transient JMudObject target;
-	
+	private AffectRange affRange;
 
+	Set<JMudObject> targetAffected;
+	Set<JMudObject> sourceAffected;
+	Set<JMudObject> allAffected;
 
 	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
-		this.targetEventType = eventType;
+		this(eventType, source, target, new AffectRange());
+	}
+
+	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target, AffectRange ar) {
+		this.eventType = eventType;
 		this.source = source;
 		this.target = target;
+		this.affRange = ar;
+		this.eventID = UUID.randomUUID();
+
+		// Call this upon JMudEvent instantiation in order to 'lock in' all the
+		// JMudObjects affected since instantiation and runEvent() may happen at
+		// different times
+		this.makeAffectedSets();
 	}
 
 	public boolean runEvent() {
-        
+
 		synchronized (System.out) {
-			System.out.println("Running a JMudEvent::" + this.targetEventType);
+			System.out.println("Running a JMudEvent::" + this.eventType);
 		}
 
-        Set<JMudObject> objectsToNotify = new HashSet<JMudObject>();
-        
-        //add source's siblings
-		objectsToNotify.addAll(this.source.getParentObject().getAllChildren());
-		
-		//add target's siblings
-		objectsToNotify.addAll(this.target.getParentObject().getAllChildren());
-		
 		// Set success flag
 		boolean hasCompletedSuccessfully = true;
 
-		for (JMudObject ccJmo : objectsToNotify) {
+		for (JMudObject j : this.allAffected) {
 
-			AbstractBehavior ccJmoBehavior = ccJmo.getBehavior(this.getEventType());
+			AbstractBehavior ab = j.getBehaviorMap().getBehavior(this.eventType);
 
-			if (ccJmoBehavior != null) {
-				
-				RunBehaviorJob rbj = new RunBehaviorJob(ccJmoBehavior);
+			if (ab != null) {
+				ab.setEvent(this);
+				RunBehaviorJob rbj = new RunBehaviorJob(ab);
 				rbj.selfSubmit();
-				
+
 			} else {
 				hasCompletedSuccessfully = false;
 			}
@@ -55,36 +63,65 @@ public class JMudEvent {
 		return hasCompletedSuccessfully;
 	}
 
-	public final Map<String, Object> getNamedEventParameters() {
-		return namedEventParameters;
+	private void makeAffectedSets() {
+		// Get all the affected JMudObjects in the area of the Target and Source
+		this.targetAffected = JMudObjectUtils.getJmosAffected(this.target, this.affRange);
+		this.sourceAffected = JMudObjectUtils.getJmosAffected(this.source, this.affRange);
+		
+		//Compile the two sets into one for ease of use.
+		this.allAffected = new HashSet<JMudObject>(this.targetAffected);
+		this.allAffected.addAll(this.sourceAffected);
 	}
 
-	public final JMudEventType getEventType() {
-		return targetEventType;
-	}
-
-	/**
-	 * The object on which the Event initially occurred.
-	 *
-	 * @return The object on which the Event initially occurred.
+	/*
+	 * Getters n Setters
 	 */
-	public final JMudObject getSource() {
-		return this.source;
+
+	public UUID getEventID() {
+		return eventID;
 	}
 
-	/**
-	 * The objects on which the Event is targeted.
-	 *
-	 * @return The object on which the Event initially occurred.
-	 */
-	public final JMudObject getTarget() {
-		return this.target;
+	public JMudEventType getEventType() {
+		return eventType;
 	}
 
-	@Override
-	public String toString() {
-		return new StringBuilder().append("EventID: ").append(this.getUUID()).append("\t EventType: ").append(
-				this.targetEventType).append("\t Source: (").append(this.source.toStringShort()).append(")").append(
-				"\t Target: (").append(this.target.toStringShort()).append(")").toString();
+	public JMudObject getSource() {
+		return source;
 	}
+
+	public JMudObject getTarget() {
+		return target;
+	}
+
+	public AffectRange getPerRange() {
+		return affRange;
+	}
+
+	public Set<JMudObject> getTargetAffected() {
+		return targetAffected;
+	}
+
+	public Set<JMudObject> getSourceAffected() {
+		return sourceAffected;
+	}
+
+	public Set<JMudObject> getAllAffected() {
+		return allAffected;
+	}
+
+	
+	
+	
+	
+	
+	// @Override
+	// public String toString() {
+	// return new
+	// StringBuilder().append("EventID: ").append(this.getUUID()).append
+	// ("\t EventType: ").append(
+	// this.targetEventType).append("\t Source: (").append(this.source.
+	// toStringShort()).append(")").append(
+	//"\t Target: (").append(this.target.toStringShort()).append(")").toString()
+	// ;
+	// }
 }
