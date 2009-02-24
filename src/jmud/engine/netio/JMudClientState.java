@@ -17,6 +17,7 @@
 package jmud.engine.netio;
 
 import jmud.engine.core.JMudStatics;
+import jmud.engine.core.SplashScreenLoader;
 import jmud.engine.job.definitions.*;
 
 public enum JMudClientState {
@@ -39,7 +40,7 @@ public enum JMudClientState {
 		@Override
 		public void runExitJob(JMudClient c, JMudClientState toState) {
 			synchronized (c) {
-				c.sendText(JMudStatics.getSplashScreen());
+				c.sendText(SplashScreenLoader.getSplashScreen());
 			}
 		}
 	},
