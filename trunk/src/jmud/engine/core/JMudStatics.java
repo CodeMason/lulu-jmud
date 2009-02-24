@@ -12,7 +12,6 @@ public class JMudStatics {
     public static final String dbName = "jmud";
 	public static final String dbUName = "jmud_server";
 	public static final String dbPassWd = "jmud";
-	public static final int dbPort = 3306;
 	
     public static final String log4jConfigFile = "log4j.lcf";
     // ToDo CM: load from config so that a different default JobManager can be specified
@@ -27,8 +26,6 @@ public class JMudStatics {
 	public static final String hardcodePasswd = "admin";
 	public static final String[] characters = { "Slinky", "Stinky", "Pinky" };
 
-	// This determines the MAX length of a single line of input from a console.
-    public static final int CONNECTION_READ_BUFFER_SIZE = 8196;
 	public static final int MAX_LOGIN_ATTEMPTS = 3;
 	public static final char CR = '\r';
 	public static final char LF = '\n';
