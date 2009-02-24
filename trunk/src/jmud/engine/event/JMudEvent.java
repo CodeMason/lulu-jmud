@@ -110,6 +110,10 @@ public class JMudEvent {
 		return allAffected;
 	}
 
+	public AffectRange getAffRange() {
+		return affRange;
+	}
+
 	@Override
 	public String toString() {
 		return new StringBuilder().append("EventType: ").append(this.eventType.toString()).append("  Source: ").append(

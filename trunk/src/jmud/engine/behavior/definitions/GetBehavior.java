@@ -26,7 +26,7 @@ public class GetBehavior extends AbstractBehavior {
 		JMudObjectUtils.changeParent(source, target);
 		
 		// prep the 'response' JMudEvent
-		JMudEvent resJme = new JMudEvent(JMudEventType.Got, target, source);
+		JMudEvent resJme = new JMudEvent(JMudEventType.Got, target, source, jme.getAffRange());
 		RunEventJob rej =  new RunEventJob(resJme);
 		rej.selfSubmit();
 
