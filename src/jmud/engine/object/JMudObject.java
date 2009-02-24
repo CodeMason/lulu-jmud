@@ -61,7 +61,7 @@ public class JMudObject {
 
 	public JMudObject(UUID uuid, String name) {
 		this.uuid = uuid;
-		this.displayedName = "";
+		this.displayedName = name;
 		this.behaviorMap = new BehaviorMap();
 		this.attributeMap = new AttributeMap();
 		this.jmoMap = new JMudObjectRelationMap();

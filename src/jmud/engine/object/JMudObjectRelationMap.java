@@ -1,5 +1,6 @@
 package jmud.engine.object;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +56,8 @@ public class JMudObjectRelationMap {
 		return this.remChild(jmo.getDisplayedName());
 	}
 	
-	public Set<JMudObject> getAllChildren() {
-		return (Set<JMudObject>) this.childObjects.values();
+	public Collection<JMudObject> getAllChildren() {
+		return this.childObjects.values();
 	}
 	public Set<String> getAllChildrenNames() {
 		return this.childObjects.keySet();
