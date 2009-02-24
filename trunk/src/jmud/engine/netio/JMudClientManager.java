@@ -29,11 +29,11 @@ import java.util.*;
  * ConnectionManager contains a single NIO selector and all routines for:
  * -Accepting new connections -Handling IO for existing connections
  * -Disconnecting connections.
- * 
+ *
  * We are opting for a single thread/single selector solution for many reasons,
  * all of which can be summed up here:
  * http://rox-xmlrpc.sourceforge.net/niotut/index.html
- * 
+ *
  * @author David Loman
  * @version 0.1
  */
@@ -49,15 +49,15 @@ public class JMudClientManager implements Runnable {
 	private final Map<SocketChannel, JMudClient> sockChanConnMap = new HashMap<SocketChannel, JMudClient>();
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * Constructors
 	 */
 
 	/**
 	 * ConnectionManager Constructor that allows the user to pick only which
 	 * port to bind the listening socket to.
-	 * 
+	 *
 	 * @param port
 	 * @throws IOException
 	 */
@@ -68,7 +68,7 @@ public class JMudClientManager implements Runnable {
 	/**
 	 * ConnectionManager Constructor that allows the user to pick which
 	 * InetAddress AND port to bind the listening socket to.
-	 * 
+	 *
 	 * @param hostAddress
 	 * @param port
 	 * @throws IOException
@@ -93,8 +93,8 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * Accept / New Connection FNs
 	 */
 
@@ -131,14 +131,14 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * Disconnect / Destroy Connection FNs
 	 */
 
 	/**
 	 * Disconnect by Key object.
-	 * 
+	 *
 	 * @param key
 	 *            the key to disconnect
 	 * @return true if the disconnect succeeded
@@ -154,7 +154,7 @@ public class JMudClientManager implements Runnable {
 
 	/**
 	 * Disconnect by SocketChannel.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to disconnect
 	 * @return true if the disconnect succeeded
@@ -167,9 +167,7 @@ public class JMudClientManager implements Runnable {
 
 	/**
 	 * Disconnect by SocketChannel and Connection.
-	 * 
-	 * @param sockChan
-	 *            the SocketChannel to disconnect
+	 *
 	 * @return true if the disconnect succeeded
 	 * @throws IOException
 	 */
@@ -198,8 +196,8 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * Connection ID FNs
 	 */
 
@@ -223,14 +221,14 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * Data IO
 	 */
 
 	/**
 	 * Read all data present on key.
-	 * 
+	 *
 	 * @param key
 	 * @throws IOException
 	 */
@@ -258,7 +256,7 @@ public class JMudClientManager implements Runnable {
 	 * This method is called externally, passing in the SocketChannel to be
 	 * written to and the data to be written. This method simply converts a
 	 * String to a Byte[] and sends the data on.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to be written to
 	 * @param text
@@ -272,7 +270,7 @@ public class JMudClientManager implements Runnable {
 	 * This method is called externally, passing in the SocketChannel to be
 	 * written to and the data to be written. This method sets up a ConnEvent to
 	 * be processed by the selector prior to sending the data.
-	 * 
+	 *
 	 * @param sockChan
 	 *            the SocketChannel to be written to
 	 * @param data
@@ -305,7 +303,7 @@ public class JMudClientManager implements Runnable {
 	 * SocketChannel. Also, the associated Key is set back to OP_READ so we
 	 * don't waste CPU cycles while it waits for more data to write when there
 	 * isn't any coming!
-	 * 
+	 *
 	 * @param key
 	 *            the key whose SocketChannel we're writing to
 	 * @throws IOException
@@ -338,15 +336,14 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * Main Loop And Loop Controls
 	 */
 
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
-	@Override
 	public final void run() {
 		this.runStatus = true;
 		System.out.println("ConnectionManager: Running.");
@@ -479,8 +476,8 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * ConnectionManager Status getters
 	 */
 

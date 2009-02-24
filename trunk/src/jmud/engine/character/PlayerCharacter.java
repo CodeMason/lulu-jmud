@@ -7,7 +7,7 @@ import jmud.engine.object.JMudObject;
 /**
  * <code>Character</code> objects should only represent the data that pertains
  * to an individual character... attribute, name, description, etc.
- * 
+ *
  * @author david.h.loman
  */
 public class PlayerCharacter extends JMudObject implements Persistable {
@@ -17,13 +17,8 @@ public class PlayerCharacter extends JMudObject implements Persistable {
 
 	/**
 	 * Explicit constructor.
-	 * 
-	 * @param iID
-	 *            the ID
-	 * @param name
-	 *            the character's name
-	 * @param desc
-	 *            the description of the character
+	 *
+	 * @param name the character's name
 	 */
 	public PlayerCharacter(final String name) {
 		super();
@@ -50,7 +45,6 @@ public class PlayerCharacter extends JMudObject implements Persistable {
 		return ownerAccountID;
 	}
 
-	@Override
 	public boolean save() {
 		// TODO Finish PlayerCharacter.save()
 		return false;
