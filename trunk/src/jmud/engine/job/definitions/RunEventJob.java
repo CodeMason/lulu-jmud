@@ -17,33 +17,27 @@
 package jmud.engine.job.definitions;
 
 import jmud.engine.event.JMudEvent;
-import jmud.engine.netio.JMudClient;
 
 /**
- * Disconnect a connection
+ * A job that runs the supplied Event.
  * 
- * @author Chris Maguire
- * @date December 5, 2008
+ * @author david.h.loman
+ *
  */
 
 public class RunEventJob extends AbstractJob {
 
-	private JMudClient c;
 	private JMudEvent jme;
 
-	public RunEventJob(JMudClient c, JMudEvent jme) {
+	public RunEventJob(JMudEvent jme) {
 		super();
-		this.c = c;
 		this.jme = jme;
 	}
 
 	@Override
 	public final boolean doJob() {
-		synchronized (this.c) {
-			synchronized (this.jme) {
-				// TODO Finish The Run Job Behavior
-				jme.runEvent();
-			}
+		synchronized (this.jme) {
+			jme.runEvent();
 		}
 		return true;
 	}

@@ -19,12 +19,11 @@ package jmud.engine.job.definitions;
 import jmud.engine.behavior.AbstractBehavior;
 
 /**
- * Disconnect a connection
+ * A job that runs the supplied Behavior.
  * 
- * @author Chris Maguire
- * @date December 5, 2008
+ * @author david.h.loman
+ *
  */
-
 public class RunBehaviorJob extends AbstractJob {
 
 	private AbstractBehavior ab;
