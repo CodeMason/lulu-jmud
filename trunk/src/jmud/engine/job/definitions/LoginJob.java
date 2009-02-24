@@ -18,7 +18,7 @@ package jmud.engine.job.definitions;
 
 import jmud.engine.account.Account;
 import jmud.engine.account.AccountManager;
-import jmud.engine.core.JMudStatics;
+import jmud.engine.config.JMudConfig;
 import jmud.engine.netio.JMudClient;
 import jmud.engine.netio.JMudClientState;
 
@@ -89,12 +89,16 @@ public class LoginJob extends AbstractClientJob {
 					a.incrementLoginAttempts();
 					a.save();
 					AccountManager.getInstance().unloadAccont(a);
-										
+					
+					//Pull data from config
+					String s = JMudConfig.getInstance().getConfigElement("maxLoginAttempts");
+					int max = Integer.parseInt(s);
+					
 					this.c.sendCRLF();
 					this.c.sendTextLn("Username and password do not match ("
-							+ (JMudStatics.MAX_LOGIN_ATTEMPTS - a.getLoginAttempts()) + " tries left.)");
+							+ (max - a.getLoginAttempts()) + " tries left.)");
 
-					if (a.getLoginAttempts() >= JMudStatics.MAX_LOGIN_ATTEMPTS) {
+					if (a.getLoginAttempts() >= max) {
 						this.c.sendTextLn("\n\nNumber of tries exceeded.");
 						this.c.sendCRLFs(2);
 						this.c.changeConnState(JMudClientState.DISCONNECTED);
