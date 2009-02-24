@@ -1,4 +1,6 @@
-package jmud.engine.netio;
+package jmud.engine.netIO;
+
+import jmud.engine.core.JMudStatics;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -9,173 +11,184 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 
-import jmud.engine.core.JMudStatics;
-
 public class CommandBuffer {
+    private ArrayList<Character> charBuffer;
+    private ArrayList<String> completeCmds;
 
-	private ArrayList<Character> charBuf;
-	private ArrayList<String> completeCmds;
+    /**
+     * Default constructor.
+     */
+    public CommandBuffer() {
+        this.completeCmds = new ArrayList<String>();
+        this.charBuffer = new ArrayList<Character>();
+    }
 
-	/**
-	 * Default constructor.
-	 */
-	public CommandBuffer() {
-		this.completeCmds = new ArrayList<String>();
-		this.charBuf = new ArrayList<Character>();
-	}
+    public void write(byte[] data) throws IOException {
+        this.write(data, data.length);
+    }
 
-	public void write(byte[] data) throws IOException {
-		this.write(data, data.length);
-	}
+    public void write(byte[] bytes, int length) throws IOException {
 
-	public void write(byte[] data, int dataLen) throws IOException {
+        if (bytes.length < 1) {
+            return;
+        }
 
-		// ID-10-T check
-		if (data.length < 1) {
-			return;
-		}
-		if (dataLen > data.length) {
-			dataLen = data.length;
-		}
+        if (length > bytes.length) {
+            length = bytes.length;
+        }
 
-		char c;
+        char c;
 
-		for (int i = 0; i < dataLen; ++i) {
-			c = (char) data[i]; // Here we simply cast our 8bit Char to a 16-bit
-			// char
+        for (int i = 0; i < length; ++i) {
+            c = (char) bytes[i];
 
-			synchronized (this.charBuf) {
-				this.charBuf.add(c);
-			}
-		}
+            synchronized (this.charBuffer) {
+                this.charBuffer.add(c);
+            }
+        }
 
-	}
+    }
 
-	public void write(SocketChannel sc) throws ClosedChannelException {
-		try {
-			// Byte here represents a 8Bit char
-			ByteBuffer bb = ByteBuffer.allocate(128);
+    public void readFrom(SocketChannel socketChannel) throws ClosedChannelException {
+        try {
+            ByteBuffer eightBitCharBuffer = ByteBuffer.allocate(128);
 
-			int read = sc.read(bb);
-			if (read == -1) {
-				throw new IOException();
-			}
-			while (read > 0) {
-				bb.flip();
+            int read = socketChannel.read(eightBitCharBuffer);
+            if (read == -1) {
+                throw new IOException();
+            }
 
-				this.write(bb.array(), bb.limit());
-				bb.clear();
-				read = sc.read(bb);
-				if (read == -1) {
-					throw new IOException();
-				}
-			}
+            while (read > 0) {
+                eightBitCharBuffer.flip();
 
-		} catch (IOException e) {
-			// Transform the IOException into a ClosedChannelExcpetion and throw
-			// it.
-			throw new ClosedChannelException();
-		}
-	}
+                this.write(eightBitCharBuffer.array(), eightBitCharBuffer.limit());
+                eightBitCharBuffer.clear();
 
-	public void write(InputStream is) throws IOException {
-		DataInputStream dis;
-		char c;
+                read = socketChannel.read(eightBitCharBuffer);
+                if (read == -1) {
+                    throw new IOException();
+                }
+            }
 
-		try {
-			dis = new DataInputStream(is);
-			while (dis.available() >= 2) {
-				c = dis.readChar();
-				System.out.println("CommandBuffer.write() new char: '" + c + "'");
-				synchronized (this.charBuf) {
-					this.charBuf.add(c);
-				}
-			}
-		} catch (EOFException eofe) {
-			// Read all there is to read!
-			return;
-		}
-	}
+        } catch (IOException e) {
+            throw new ClosedChannelException();
+        }
+    }
 
-	public void parseBuffer() {
-		int crIndex;
-		int i;
-		String cmd;
-		char[] ca;
+    public void readFrom(InputStream is) throws IOException {
+        DataInputStream inputStream;
+        char input;
 
-		// Obtain lock on the charBuf
-		synchronized (this.charBuf) {
-			// Check to see if there is a CR:
-			crIndex = this.charBuf.indexOf(JMudStatics.CR);
+        try {
+            inputStream = new DataInputStream(is);
+            while (inputStream.available() >= 2) {
+                input = inputStream.readChar();
 
-			// no complete command yet.
-			if (crIndex == -1) {
-				return;
-			}
+                System.out.println("CommandBuffer.write() new char: '" + input + "'");
 
-			while (crIndex != -1) {
+                synchronized (this.charBuffer) {
+                    this.charBuffer.add(input);
+                }
+            }
+        } catch (EOFException eofe) {
+            // we're done
+        }
+    }
 
-				// Now check to see if there its a CRLF or just a CR:
-				// Make sure that crIndex isn't at the end of the array
-				// (prevents array index overrun)
-				if (crIndex < (this.charBuf.size() - 1)) {
-					// And if crIndex + 1 is a LF, then delete it.
-					if (this.charBuf.get(crIndex + 1) == JMudStatics.LF) {
-						this.charBuf.remove(crIndex + 1);
-					}
-				}
+    public void parseCommands() {
+        int crIndex;
+        String cmd;
+        char[] chars;
 
-				ca = new char[crIndex + 1];
+        synchronized (this.charBuffer) {
+            crIndex = findCarriageReturnPos();
 
-				for (i = 0; i <= crIndex; ++i) {
-					ca[i] = this.charBuf.remove(0);
-				}
+            if (isCommandComplete(crIndex)) {
+                return;
+            }
 
-				cmd = new String(ca);
-				cmd = cmd.replace(JMudStatics.CR + "", "");
-				cmd = cmd.replace(JMudStatics.LF + "", "");
-				
-				System.out.println("CommandBuffer.Parse() new command: '" + cmd.replace("\r", "").replace("\n", "") + "'");
-				// Lock on the command list:
-				synchronized (this.completeCmds) {
-					this.completeCmds.add(cmd);
-				}
+            while (!isCommandComplete(crIndex)) {
 
-				// prep for next loop
-				crIndex = this.charBuf.indexOf(JMudStatics.CR);
-			}
-		}
-	}
+                if (!isLastChar(crIndex) && nextCharIsLF(crIndex)) {
+                    deleteNextChar(crIndex);
+                }
 
-	public int cmdCount() {
-		synchronized (this.completeCmds) {
-			return this.completeCmds.size();
-		}
-	}
+                cmd = removeCRLF(getStringFromCharBuffer(crIndex));
 
-	public boolean hasNextCommand() {
-		return (this.cmdCount() > 0);
-	}
+                System.out.println("CommandBuffer.Parse() new command: \"" + cmd + "\"");
 
-	public String getNextCommand() {
-		String s = "";
-		if (this.hasNextCommand()) {
-			synchronized (this.completeCmds) {
-				s += this.completeCmds.remove(0);
-			}
-		}
-		return s;
-	}
-	
-	public String toString() {
-		String out = "";
-		out+= "CharacterBuffer is: " + this.charBuf.size() + " characters long.\n";
-		out += "Completed Command Queue:\n";
-		for (String s : this.completeCmds) {
-			out += "\t-" + s.replace("\r", "\\r").replace("\n","\\n") + "\n";
-		}
-				
-		return out;
-	}
+                synchronized (this.completeCmds) {
+                    this.completeCmds.add(cmd);
+                }
 
+                crIndex = findCarriageReturnPos();
+            }
+        }
+    }
+
+    private String getStringFromCharBuffer(int crIndex) {
+        char[] chars;
+        chars = new char[crIndex + 1];
+
+        for (int i = 0; i <= crIndex; ++i) {
+            chars[i] = this.charBuffer.remove(0);
+        }
+        return new String(chars);
+    }
+
+    private int findCarriageReturnPos() {
+        int crIndex;
+        crIndex = this.charBuffer.indexOf(JMudStatics.CR);
+        return crIndex;
+    }
+
+    private String removeCRLF(String cmd) {
+        cmd = cmd.replace(String.valueOf(JMudStatics.CR), "");
+        cmd = cmd.replace(String.valueOf(JMudStatics.LF), "");
+        return cmd;
+    }
+
+    private void deleteNextChar(int crIndex) {
+        this.charBuffer.remove(crIndex + 1);
+    }
+
+    private boolean nextCharIsLF(int crIndex) {
+        return this.charBuffer.get(crIndex + 1) == JMudStatics.LF;
+    }
+
+    private boolean isLastChar(int crIndex) {
+        return crIndex == (this.charBuffer.size());
+    }
+
+    private boolean isCommandComplete(int crIndex) {
+        return crIndex == -1;
+    }
+
+    public int cmdCount() {
+        synchronized (this.completeCmds) {
+            return this.completeCmds.size();
+        }
+    }
+
+    public boolean hasNextCommand() {
+        return (this.cmdCount() > 0);
+    }
+
+    public String getNextCommand() {
+        if (this.hasNextCommand()) {
+            synchronized (this.completeCmds) {
+                return this.completeCmds.remove(0);
+            }
+        }
+        return "";
+    }
+
+    public String toString() {
+        String out = "CharacterBuffer is: " + this.charBuffer.size() + " characters long.\n Completed Command Queue:\n";
+        for (String s : this.completeCmds) {
+            out += "\t-" + s.replace("\r", "\\r").replace("\n", "\\n") + "\n";
+        }
+
+        return out;
+    }
 }
