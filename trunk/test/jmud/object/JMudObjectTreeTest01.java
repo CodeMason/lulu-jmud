@@ -13,7 +13,7 @@ public class JMudObjectTreeTest01 {
    private JMudObject orc0;
 
    private void getTestJMudObjects(final JMudObject root) {
-      bag = root.getChildObject("room").getChildObject("bag");
+      bag = root.getJmoRelMap().("room").getChildObject("bag");
       pcSteve = root.getChildObject("room").getChildObject("pcSteve");
       orc0 = root.getChildObject("room").getChildObject("orc0");
    }

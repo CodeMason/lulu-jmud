@@ -17,9 +17,9 @@ public class JMudEvent {
 	private final transient JMudObject target;
 	private AffectRange affRange;
 
-	Set<JMudObject> targetAffected;
-	Set<JMudObject> sourceAffected;
-	Set<JMudObject> allAffected;
+	private Set<JMudObject> targetAffected;
+	private Set<JMudObject> sourceAffected;
+	private Set<JMudObject> allAffected;
 
 	public JMudEvent(final JMudEventType eventType, final JMudObject source, final JMudObject target) {
 		this(eventType, source, target, new AffectRange());
@@ -41,13 +41,17 @@ public class JMudEvent {
 	public boolean runEvent() {
 
 		synchronized (System.out) {
-			System.out.println("Running a JMudEvent::" + this.eventType);
+			System.out.println("Running a " + this.eventType.toString() + " Event.");
+			System.out.println(this.allAffected.size() + " JMOs are affected by this event.\n");
 		}
 
 		for (JMudObject j : this.allAffected) {
-
 			// Get all of the mappings for this eventType that this object has.
 			List<AbstractBehavior> abs = j.getEventBehaviorMap().getBehaviorsForEvent(this.eventType);
+
+			if (abs == null) {
+				continue;
+			}
 
 			for (AbstractBehavior ab : abs) {
 				RunBehaviorJob rbj = new RunBehaviorJob(j, ab, this);
@@ -106,14 +110,9 @@ public class JMudEvent {
 		return allAffected;
 	}
 
-	// @Override
-	// public String toString() {
-	// return new
-	// StringBuilder().append("EventID: ").append(this.getUUID()).append
-	// ("\t EventType: ").append(
-	// this.targetEventType).append("\t Source: (").append(this.source.
-	// toStringShort()).append(")").append(
-	//"\t Target: (").append(this.target.toStringShort()).append(")").toString()
-	// ;
-	// }
+	@Override
+	public String toString() {
+		return new StringBuilder().append("EventType: ").append(this.eventType.toString()).append("  Source: ").append(
+				this.source.getDisplayedName()).append("   Target: ").append(this.target.getDisplayedName()).toString();
+	}
 }

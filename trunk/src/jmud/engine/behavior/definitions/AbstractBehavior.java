@@ -6,13 +6,14 @@ import jmud.engine.event.JMudEvent;
 import jmud.engine.object.JMudObject;
 
 /**
- * Base class for all Behaviors to extend from.  A behavior is a reusable object
- * that contains code to perform actions on an object based on a passed in EventType.
+ * Base class for all Behaviors to extend from. A behavior is a reusable object
+ * that contains code to perform actions on an object based on a passed in
+ * EventType.
  */
 public abstract class AbstractBehavior {
 
 	protected BehaviorType beType;
-	
+
 	/*
 	 * Constructors.
 	 */
@@ -25,7 +26,9 @@ public abstract class AbstractBehavior {
 	 * @return true if behavior completes successfully
 	 */
 	public boolean runBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
-
+//		synchronized (System.out) {
+//			System.out.println("Running a " + this.beType.toString() + " behavior. (" + jme.toString() + ")");
+//		}
 		if (whoToRunThisBehaviorOn == jme.getTarget()) {
 			return this.targetBehavior(whoToRunThisBehaviorOn, jme);
 
@@ -66,6 +69,5 @@ public abstract class AbstractBehavior {
 	public void selfRegister() {
 		BehaviorManager.getInstance().register(this.getBehaviorType(), this);
 	}
-	
-	
+
 }

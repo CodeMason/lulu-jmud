@@ -36,7 +36,7 @@ public class EventBehaviorPerformanceTest{
    @Before
    public void setup(){
        JobManager.getInstance().init(NUM_JOB_WORKERS);
-       JMudEventRegistrar.getLazyLoadedInstance();
+       JMudEventRegistrar.getInstance();
        root = TestUtil.buildObjectTree(NUM_PARENT_OBJECTS);
    }
 
