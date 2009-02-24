@@ -56,7 +56,7 @@ public class BehaviorRegistrar {
 		return this.behaviorGens.keySet();
 	}
 
-	public BehaviorGenerator<? extends AbstractBehavior> putBehaviorGen(
+	public BehaviorGenerator<? extends AbstractBehavior> registerBehaviorGen(
 			BehaviorGenerator<? extends AbstractBehavior> bg) {
 		return this.behaviorGens.put(bg.getClassName(), bg);
 	}

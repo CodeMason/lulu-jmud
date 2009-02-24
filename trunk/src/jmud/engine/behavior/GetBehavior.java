@@ -31,8 +31,9 @@ public class GetBehavior extends AbstractBehavior {
 		JMudObject source = this.event.getSource();
 		JMudObject target = this.event.getTarget();
 
-        // ToDo CM: I don't think I could be trusted to do this on my own every time :)
+		//Remove the target's parent
 		target.setParentObject(null);
+		
 		source.addChild(target);
 	
 		// prep the 'response' JMudEvent

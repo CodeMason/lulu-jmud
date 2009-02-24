@@ -3,11 +3,12 @@ package jmud.engine.event;
 import jmud.engine.behavior.AbstractBehavior;
 import jmud.engine.behavior.BehaviorRegistrar;
 import jmud.engine.job.definitions.AbstractJob;
+import jmud.engine.job.definitions.RunBehaviorJob;
 import jmud.engine.object.JMudObject;
 
 import java.util.*;
 
-public class JMudEvent extends AbstractJob {
+public class JMudEvent {
 	private JMudEventType targetEventType;
 
 	private final transient JMudObject source;
@@ -21,43 +22,32 @@ public class JMudEvent extends AbstractJob {
 		this.target = target;
 	}
 
-	@Override
-	public boolean doJob() {
-        AbstractBehavior newB;
+	public boolean runEvent() {
+        
 		synchronized (System.out) {
 			System.out.println("Running a JMudEvent::" + this.targetEventType);
 		}
 
         Set<JMudObject> objectsToNotify = new HashSet<JMudObject>();
+        
         //add source's siblings
 		objectsToNotify.addAll(this.source.getParentObject().getAllChildren());
 		
 		//add target's siblings
 		objectsToNotify.addAll(this.target.getParentObject().getAllChildren());
 		
-		//Huh?!
-		objectsToNotify.addAll(JMudEventRegistrar.getLazyLoadedInstance().getTargetObjects(this.target, this.getEventType()));
-
 		// Set success flag
 		boolean hasCompletedSuccessfully = true;
 
-		for (JMudObject ccObject : objectsToNotify) {
+		for (JMudObject ccJmo : objectsToNotify) {
 
-			List<AbstractBehavior> ccObjectBehaviors = ccObject.getBehaviors(this.getEventType());
+			AbstractBehavior ccJmoBehavior = ccJmo.getBehavior(this.getEventType());
 
-			if (ccObjectBehaviors == null) {
-				ccObjectBehaviors = new ArrayList<AbstractBehavior>();
-			}
-
-			if (!ccObjectBehaviors.isEmpty()) {
-                for (AbstractBehavior b : ccObjectBehaviors) {
-                    // ToDo CM: need to be able to instantiate trigger behaviors, which need more than just the owner and event
-                    // TriggerBehavior fires another event
-                    newB = BehaviorRegistrar.createBehavior(b);
-                    newB.setEvent(this);
-					newB.selfSubmit();
-				}
-
+			if (ccJmoBehavior != null) {
+				
+				RunBehaviorJob rbj = new RunBehaviorJob(ccJmoBehavior);
+				rbj.selfSubmit();
+				
 			} else {
 				hasCompletedSuccessfully = false;
 			}
