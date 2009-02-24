@@ -50,8 +50,9 @@ public class Generators {
 		for (int i = 0; i < numOfOrcs; ++i) {
 			orc = new JMudObject();
 			orc.setDisplayedName("Orc #" + orc.getUUID().toString().substring(1, 6));
-			room.getJmoRelMap().addChild(orc);
 
+			orc.getEventBehaviorMap();
+			
 			JMudObject weap;
 			if ((Math.random() * 100) > 50) {
 				weap = new JMudObject("Axe");
@@ -61,6 +62,10 @@ public class Generators {
 
 			orc.getJmoRelMap().addChild(weap);
 
+			
+			
+			
+			room.getJmoRelMap().addChild(orc);
 		}
 	}
 
