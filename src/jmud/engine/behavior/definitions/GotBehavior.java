@@ -1,4 +1,4 @@
-package jmud.engine.behavior;
+package jmud.engine.behavior.definitions;
 
 import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
@@ -23,7 +23,7 @@ public class GotBehavior extends AbstractBehavior {
 	/**
      * What the "getter" does (i.e. the JMudObject getting something)
      *
-	 * @see jmud.engine.behavior.AbstractBehavior#behave()
+	 * @see jmud.engine.behavior.definitions.AbstractBehavior#behave()
 	 * @return true
 	 */
 	@Override

@@ -1,11 +1,9 @@
-package jmud.engine.behavior;
+package jmud.engine.behavior.definitions;
 
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
 import jmud.engine.object.JMudObject;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,31 +14,18 @@ import java.util.List;
  * <code>Behaviors</code> should check that they are handling the right event.
  */
 public abstract class AbstractBehavior {
-	
-	protected List<JMudEventType> eventTypesHandled;
+
+	// These should be defined in the Subclasses, they are not dynamic
+	protected ArrayList<JMudEventType> eventTypesHandled;
 	protected JMudObject owner;
-	protected String name;
 	protected JMudEvent event;
 
 	/*
 	 * Constructors.
 	 */
-	public AbstractBehavior() {
-		this("", null);
-	}
-
-	public AbstractBehavior(String name) {
-		this(name + "", null);
-	}
-
 	public AbstractBehavior(JMudObject owner) {
-		this("", owner);
-	}
-
-	public AbstractBehavior(String name, JMudObject owner) {
-		this.name = name;
 		this.owner = owner;
-		this.eventTypesHandled = Collections.synchronizedList(new ArrayList<JMudEventType>());
+		this.eventTypesHandled = new ArrayList<JMudEventType>();
 	}
 
 	/*
@@ -58,17 +43,15 @@ public abstract class AbstractBehavior {
 	public JMudEvent getEvent() {
 		return this.event;
 	}
+
 	public void setEvent(JMudEvent jme) {
 		this.event = jme;
 	}
-	
 
 	public final List<JMudEventType> getEventTypesHandled() {
 		return eventTypesHandled;
 	}
-	
-	
-	
+
 	/**
 	 * perform this <code>Behavior's</code> behavior.
 	 * 
@@ -101,7 +84,7 @@ public abstract class AbstractBehavior {
 	 * @return true if behavior completes successfully
 	 */
 	protected boolean targetBehavior() {
-		
+
 		return true;
 	}
 
@@ -124,4 +107,4 @@ public abstract class AbstractBehavior {
 		return true;
 	}
 
-	}
+}

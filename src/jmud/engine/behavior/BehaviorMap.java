@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import jmud.engine.behavior.definitions.AbstractBehavior;
 import jmud.engine.event.JMudEventType;
 
 public class BehaviorMap {

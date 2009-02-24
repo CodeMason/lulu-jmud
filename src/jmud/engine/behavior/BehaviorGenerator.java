@@ -1,5 +1,7 @@
 package jmud.engine.behavior;
 
+import jmud.engine.behavior.definitions.AbstractBehavior;
+
 
 /**
  *

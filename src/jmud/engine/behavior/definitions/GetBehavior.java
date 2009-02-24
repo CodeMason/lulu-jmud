@@ -1,8 +1,10 @@
-package jmud.engine.behavior;
+package jmud.engine.behavior.definitions;
 
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventType;
+import jmud.engine.job.definitions.RunEventJob;
 import jmud.engine.object.JMudObject;
+import jmud.engine.object.JMudObjectUtils;
 
 /**
  *
@@ -22,7 +24,7 @@ public class GetBehavior extends AbstractBehavior {
 	}
 
 	/**
-	 * @see jmud.engine.behavior.AbstractBehavior#behave()
+	 * @see jmud.engine.behavior.definitions.AbstractBehavior#behave()
 	 * @return true
 	 */
 
@@ -32,14 +34,12 @@ public class GetBehavior extends AbstractBehavior {
 		JMudObject target = this.event.getTarget();
 
 		//Remove the target's parent
-		target.setParentObject(null);
+		JMudObjectUtils.adopt(source, target);
 		
-		source.addChild(target);
-	
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);
-
-		jme.selfSubmit();
+		RunEventJob rej =  new RunEventJob(jme);
+		rej.selfSubmit();
 
 		return true;
 	}

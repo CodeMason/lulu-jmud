@@ -22,6 +22,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class JMudObjectManager {
+	/*
+	 * BEGIN Singleton Implementation
+	 */
 	/**
 	 * <code>Holder</code> is loaded on the first execution of
 	 * <code>JMudObjectManager.getInstance()</code> or the first access to
@@ -54,33 +57,14 @@ public class JMudObjectManager {
 	 * constructor.
 	 */
 	protected JMudObjectManager() {
+		this.uuidMap = Collections.synchronizedMap(new HashMap<UUID, JMudObject>());
 	}
+	/*
+	 * END Singleton Implementation
+	 */
 
 	private Map<UUID, JMudObject> uuidMap = null;
 
-	public void init() {
-		this.uuidMap = Collections.synchronizedMap(new HashMap<UUID, JMudObject>());
-
-		// load the tree from the DB
-		this.loadJMudObjectTreeFromDB();
-
-	}
-
-	private void loadJMudObjectTreeFromDB() {
-		// TODO stubbed JMudObject load from DB here.
-
-//		//Get the JMudObject from the Database
-//		JMudObject jmo = null; //stubbed.
-//
-//		//Look up the parent by UUID
-//		UUID parentID = jmo.getParentObject().getUUID();
-//		JMudObject parent = JMudObjectManager.getInstance().getJMudObject(parentID);
-//
-//		//Attach
-//		parent.addChildObject(jmo);
-//
-//		return;
-	}
 
 	public JMudObject getJMudObject(UUID uuid) {
 		return uuidMap.get(uuid);

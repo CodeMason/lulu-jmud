@@ -1,5 +1,8 @@
 package jmud.engine.behavior;
 
+import jmud.engine.behavior.definitions.GetBehavior;
+import jmud.engine.behavior.definitions.GotBehavior;
+
 public class BuiltinBehaviorLoader {
 
 	public static void load() {
