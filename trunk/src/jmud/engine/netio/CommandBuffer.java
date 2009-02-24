@@ -1,4 +1,4 @@
-package jmud.engine.netIO;
+package jmud.engine.netio;
 
 import jmud.engine.core.JMudStatics;
 
