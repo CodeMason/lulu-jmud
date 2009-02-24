@@ -33,7 +33,8 @@ public class JMudObject {
 	private UUID uuid = null;
 
 	/**
-	 * Textual name that is displayed in the MUD TODO: DHL: Perhaps this should
+	 * Textual name that is displayed in the MUD 
+	 * TODO: DHL: Perhaps this should
 	 * be an Attribute....
 	 */
 	private String displayedName = "";
