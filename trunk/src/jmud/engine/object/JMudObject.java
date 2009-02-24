@@ -17,7 +17,7 @@
 package jmud.engine.object;
 
 import jmud.engine.attribute.Attribute;
-import jmud.engine.behavior.BaseBehavior;
+import jmud.engine.behavior.AbstractBehavior;
 import jmud.engine.event.JMudEventType;
 
 import java.util.*;
@@ -57,8 +57,8 @@ public class JMudObject {
 	/**
 	 * A mapping of events to behaviors
 	 */
-	private Map<JMudEventType, BaseBehavior> behaviorMap = Collections
-			.synchronizedMap(new HashMap<JMudEventType, BaseBehavior>());
+	private Map<JMudEventType, AbstractBehavior> behaviorMap = Collections
+			.synchronizedMap(new HashMap<JMudEventType, AbstractBehavior>());
 
 	/**
 	 * A mapping of Attribute names to Attribute references
@@ -182,11 +182,11 @@ public class JMudObject {
 	 * Behavior Map Routines
 	 */
 
-	public boolean containsBehavior(BaseBehavior b) {
+	public boolean containsBehavior(AbstractBehavior b) {
 		return behaviorMap.containsValue(b);
 	}
 
-	public BaseBehavior getBehavior(JMudEventType jmet) {
+	public AbstractBehavior getBehavior(JMudEventType jmet) {
 		return behaviorMap.get(jmet);
 	}
 
@@ -194,16 +194,16 @@ public class JMudObject {
 		return behaviorMap.keySet();
 	}
 
-	public BaseBehavior addBehavior(JMudEventType jmet, BaseBehavior b) {
+	public AbstractBehavior addBehavior(JMudEventType jmet, AbstractBehavior b) {
 		return behaviorMap.put(jmet, b);
 	}
 
-	public BaseBehavior removeBehavior(JMudEventType jmet) {
+	public AbstractBehavior removeBehavior(JMudEventType jmet) {
 		return behaviorMap.remove(jmet);
 	}
 
-	public Set<BaseBehavior> getBehaviors() {
-		return (Set<BaseBehavior>) behaviorMap.values();
+	public Set<AbstractBehavior> getBehaviors() {
+		return (Set<AbstractBehavior>) behaviorMap.values();
 	}
 
 	

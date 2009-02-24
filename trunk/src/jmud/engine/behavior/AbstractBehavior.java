@@ -15,7 +15,7 @@ import java.util.List;
  * 
  * <code>Behaviors</code> should check that they are handling the right event.
  */
-public class BaseBehavior {
+public abstract class AbstractBehavior {
 	
 	protected List<JMudEventType> eventTypesHandled;
 	protected JMudObject owner;
@@ -25,19 +25,19 @@ public class BaseBehavior {
 	/*
 	 * Constructors.
 	 */
-	public BaseBehavior() {
+	public AbstractBehavior() {
 		this("", null);
 	}
 
-	public BaseBehavior(String name) {
+	public AbstractBehavior(String name) {
 		this(name + "", null);
 	}
 
-	public BaseBehavior(JMudObject owner) {
+	public AbstractBehavior(JMudObject owner) {
 		this("", owner);
 	}
 
-	public BaseBehavior(String name, JMudObject owner) {
+	public AbstractBehavior(String name, JMudObject owner) {
 		this.name = name;
 		this.owner = owner;
 		this.eventTypesHandled = Collections.synchronizedList(new ArrayList<JMudEventType>());
