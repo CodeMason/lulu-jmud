@@ -2,13 +2,11 @@ package jmud.engine.config;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,17 +74,27 @@ public class JMudConfig {
 	}
 
 	/*
+	 * Getters
+	 */
+	
+	public String getUsingFile() {
+		return this.usingFile;
+	}
+	
+	/*
 	 * File IO
 	 */
 
 	public boolean loadConfig() {
 		// Try to load the default
 		if (readConfigFromFile(this.defaultFile) == false) {
-
 			// Make a default file
-			this.makeDefaultConfigFile();
-			// try again, only this time return the result regardless
-			return this.readConfigFromFile(this.defaultFile);
+			this.makeDefaultConfigFile(this.defaultFile);
+			
+			// try again
+			if( this.readConfigFromFile(this.defaultFile) == false) {
+				return false;
+			}
 		}
 		this.usingFile = this.defaultFile;
 		return true;
@@ -94,9 +102,14 @@ public class JMudConfig {
 
 	public boolean loadConfig(String pathAndFile) {
 		if (this.readConfigFromFile(pathAndFile) == false) {
-			return this.loadConfig();
-		}
+			// Make a default file
+			this.makeDefaultConfigFile(pathAndFile);
 
+			// try again
+			if( this.readConfigFromFile(pathAndFile) == false) {
+				return false;
+			}
+		}
 		this.usingFile = pathAndFile;
 		return true;
 	}
@@ -167,9 +180,9 @@ public class JMudConfig {
 		return true;
 	}
 
-	private boolean makeDefaultConfigFile() {
+	private boolean makeDefaultConfigFile(String pathAndFile) {
 		try {
-			File f = new File(this.defaultFile);
+			File f = new File(pathAndFile);
 			FileWriter fw = new FileWriter(f);
 			BufferedWriter bw = new BufferedWriter(fw);
 
@@ -221,6 +234,8 @@ public class JMudConfig {
 		}
 
 		try {
+			System.out.println("Writing Config File: " + this.usingFile);
+
 			File f = new File(this.defaultFile);
 			FileWriter fw = new FileWriter(f);
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -237,6 +252,7 @@ public class JMudConfig {
 			for (String key : keys) {
 				String value = this.configElements.get(key);
 				bw.write(key + "=" + value + "\n\n");
+				System.out.println("Wrote config element: " + key + "=" + value);
 			}
 
 			bw.close();
