@@ -34,7 +34,7 @@ public class GetBehavior extends AbstractBehavior {
 		JMudObject target = this.event.getTarget();
 
 		//Remove the target's parent
-		JMudObjectUtils.adopt(source, target);
+		JMudObjectUtils.changeParent(source, target);
 		
 		// prep the 'response' JMudEvent
 		JMudEvent jme = new JMudEvent(JMudEventType.Got, target, source);

@@ -37,7 +37,7 @@ public class JMudObjectUtils {
 		return;
 	}
 
-	public static void adopt(JMudObject parent, JMudObject child) {
+	public static void changeParent(JMudObject parent, JMudObject child) {
 
 		// First, orphan the child.
 		JMudObjectUtils.orphan(child);
@@ -101,7 +101,7 @@ public class JMudObjectUtils {
 
 	private static void addAllChildren(Set<JMudObject> masterSet, JMudObject jmo, int maxDepth, int curDepth) {
 		// Get children
-		Set<JMudObject> children = jmo.getJmoRelMap().getAllChildren();
+		Set<JMudObject> children = (Set<JMudObject>) jmo.getJmoRelMap().getAllChildren();
 
 		// Check to see if there ARE any children
 		if (children == null || children.size() <= 0) {
