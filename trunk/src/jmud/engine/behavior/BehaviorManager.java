@@ -7,7 +7,7 @@ import java.util.Set;
 
 import jmud.engine.behavior.definitions.AbstractBehavior;
 
-public class BehaviorRegistrar {
+public class BehaviorManager {
 	/*
 	 * BEGIN Singleton Implementation
 	 */
@@ -20,7 +20,7 @@ public class BehaviorRegistrar {
 		/**
 		 * The singleton instance.
 		 */
-		private static final BehaviorRegistrar INSTANCE = new BehaviorRegistrar();
+		private static final BehaviorManager INSTANCE = new BehaviorManager();
 
 		/**
 		 * <code>Holder</code> is a utility class. Disallowing public/default
@@ -34,11 +34,11 @@ public class BehaviorRegistrar {
 	/**
 	 * @return the singleton instance
 	 */
-	public static BehaviorRegistrar getInstance() {
+	public static BehaviorManager getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	private BehaviorRegistrar() {
+	private BehaviorManager() {
 	}
 
 	/*
