@@ -1,49 +1,21 @@
 package jmud.engine.object;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class JMudObjectRelationMap {
-//	/**
-//	 * A mapping of sibling JMudObjects and their relation
-//	 */
-//	private Map<String, JMudObject> siblingConnectionMap = Collections
-//			.synchronizedMap(new HashMap<String, JMudObject>());
-//
 	/**
-	 * A set of child JMudObjects
+	 * A Map of JMudObject.DisplayedName to JMudObjects
 	 */
-	private Set<JMudObject> childObjects = Collections.synchronizedSet(new HashSet<JMudObject>());
+	private Map<String, JMudObject> childObjects = Collections.synchronizedMap(new HashMap<String, JMudObject>());
 
 	/**
 	 * Reference to a Parent JMudObject, if one exists
 	 */
 	private JMudObject parentObject;
 
-	/*
-	 * Sibling Map routines
-	 */
-
-//	public Set<String> getAllSiblingRelations() {
-//		return this.siblingConnectionMap.keySet();
-//	}
-//
-//	public JMudObject getSiblingByRelation(String relation) {
-//		return this.siblingConnectionMap.get(relation);
-//	}
-//
-//	public Set<JMudObject> getAllSiblings() {
-//		return (Set<JMudObject>) this.siblingConnectionMap.values();
-//	}
-//
-//	public void addSibling(String relation, JMudObject sibling) {
-//		this.siblingConnectionMap.put(relation, sibling);
-//	}
-//
-//	public JMudObject remSiblingByRelation(String relation) {
-//		return this.siblingConnectionMap.remove(relation);
-//	}
 
 	/*
 	 * Parent JMudObject Getter/Setter
@@ -63,19 +35,31 @@ public class JMudObjectRelationMap {
 	/*
 	 * Child JMudObject Set routines
 	 */
-	public boolean addChild(JMudObject jmo) {
-		return this.childObjects.add(jmo);
+	public void addChild(JMudObject jmo) {
+		this.childObjects.put(jmo.getDisplayedName(), jmo);
 	}
 
 	public boolean hasChild(JMudObject jmo) {
-		return this.childObjects.contains(jmo);
+		return this.childObjects.containsValue(jmo);
 	}
 
-	public boolean remChild(JMudObject jmo) {
-		return this.childObjects.remove(jmo);
+	public boolean hasChild(String name) {
+		return this.childObjects.containsKey(name);
 	}
+
+	public JMudObject remChild(String name) {
+		return this.childObjects.remove(name);
+	}
+	
+	public JMudObject remChild(JMudObject jmo) {
+		return this.remChild(jmo.getDisplayedName());
+	}
+	
 	public Set<JMudObject> getAllChildren() {
-		return this.childObjects;
+		return (Set<JMudObject>) this.childObjects.values();
+	}
+	public Set<String> getAllChildrenNames() {
+		return this.childObjects.keySet();
 	}
 	
 	
