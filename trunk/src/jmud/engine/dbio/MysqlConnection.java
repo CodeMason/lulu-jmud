@@ -1,6 +1,6 @@
 package jmud.engine.dbio;
 
-import jmud.engine.core.JMudStatics;
+import jmud.engine.config.JMudConfig;
 import java.sql.*;
 
 /**
@@ -21,16 +21,20 @@ public class MysqlConnection {
 	 * Use values from JMudStatics and create a DB connection.
 	 */
 	public static java.sql.Connection makeNewConnection() {
-
 		/*
 		 * use the default constructor for the jdbc driver class to create a new
 		 * instance to obtain a connection object the driver package com
 		 * directory must be in the same directory as the jmud source
 		 */
+
+		String dbUrl = JMudConfig.getInstance().getConfigElement("dbUrl");
+		String dbName = JMudConfig.getInstance().getConfigElement("dbName");
+		String dbUName = JMudConfig.getInstance().getConfigElement("dbUName");
+		String dbPassWd = JMudConfig.getInstance().getConfigElement("dbPassWd");
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			return DriverManager.getConnection(JMudStatics.dbUrl + JMudStatics.dbName, JMudStatics.dbUName,
-					JMudStatics.dbPassWd);
+			return DriverManager.getConnection(dbUrl + dbName, dbUName, dbPassWd);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
