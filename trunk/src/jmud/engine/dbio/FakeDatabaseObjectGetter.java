@@ -52,7 +52,8 @@ public class FakeDatabaseObjectGetter implements DatabaseObjectGetter{
         JMudObject jmudObject;
 
         for(String objectName : objectNames){
-            jmudObject = new JMudObject(objectName);
+            jmudObject = new JMudObject();
+            jmudObject.setDisplayedName(objectName);
             jmudObjectUUIDsByName.put(objectName, jmudObject.getUUID());
             jmudObjectsByUUID.put(jmudObject.getUUID(), jmudObject);
         }
