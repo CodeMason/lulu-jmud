@@ -87,11 +87,11 @@ public class TestUtil{
 		StringBuilder s = new StringBuilder();
 		// Build tabs
 		for (int i = 0; i < lvl; ++i) {
-			s.append("\t");
+			s.append(" |-> ");
 		}
 
-		// attach the UUID:
-		s.append(jmo.toString());
+		// attach the name:
+		s.append(jmo.getDisplayedName());
 
 		// Print the string
 		System.out.println(s.toString());

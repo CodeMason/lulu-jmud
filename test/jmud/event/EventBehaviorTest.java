@@ -17,6 +17,9 @@
 package jmud.event;
 
 import jmud.engine.behavior.*;
+import jmud.engine.behavior.definitions.AbstractBehavior;
+import jmud.engine.behavior.definitions.GetBehavior;
+import jmud.engine.behavior.definitions.GotBehavior;
 import jmud.engine.event.JMudEvent;
 import jmud.engine.event.JMudEventParticipantRole;
 import jmud.engine.event.JMudEventRegistrar;
@@ -43,7 +46,7 @@ public class EventBehaviorTest{
     @Before
    public void setup(){
        JobManager.getInstance().init(NUM_JOB_WORKERS);
-       JMudEventRegistrar.getLazyLoadedInstance();
+       JMudEventRegistrar.getInstance();
        loadTestJMudObjects(TestUtil.buildSimpleJMudObjectTree());
        addBehaviorsToJMudObjects();
    }
@@ -165,7 +168,7 @@ public class EventBehaviorTest{
         List<Class> behaviorClassesToAdd = Arrays.asList((Class) GetBehavior.class, GotBehavior.class, AttackBehavior.class, AttackedBehavior.class);
 
         for(JMudObject objectNeedingBehavior : objectsNeedingBehaviors){
-            for(AbstractBehavior behavior : BehaviorRegistrar.createBehaviorsFromClasses(behaviorClassesToAdd, objectNeedingBehavior)){
+            for(AbstractBehavior behavior : BehaviorManager.createBehaviorsFromClasses(behaviorClassesToAdd, objectNeedingBehavior)){
                 objectNeedingBehavior.registerBehaviorForEventTypesHandled(behavior);
             }
         }

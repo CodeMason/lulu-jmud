@@ -1,5 +1,6 @@
 package jmud.engine.object;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -73,7 +74,7 @@ public class JMudObjectUtils {
 		// Recurse and grab all the objects
 		// Note that ParentHeight is made negative since:
 		// parent < jmo (which is level 0) < children
-		JMudObjectUtils.addAllChildren(allJmos, jmo, pr.getChildDepth(), (pr.getParentHeight() * -1));
+		JMudObjectUtils.addAllChildren(allJmos, top, pr.getChildDepth(), (pr.getParentHeight() * -1));
 		return;
 	}
 
@@ -105,7 +106,7 @@ public class JMudObjectUtils {
 
 	private static void addAllChildren(Set<JMudObject> masterSet, JMudObject jmo, int maxDepth, int curDepth) {
 		// Get children
-		Set<JMudObject> children = (Set<JMudObject>) jmo.getJmoRelMap().getAllChildren();
+		Collection<JMudObject> children = jmo.getJmoRelMap().getAllChildren();
 
 		// Check to see if there ARE any children
 		if (children == null || children.size() <= 0) {
@@ -119,7 +120,7 @@ public class JMudObjectUtils {
 		++curDepth;
 
 		// If we are at maxDepth, do NOT recurse
-		if (curDepth == maxDepth) {
+		if (curDepth >= maxDepth) {
 			return;
 		}
 

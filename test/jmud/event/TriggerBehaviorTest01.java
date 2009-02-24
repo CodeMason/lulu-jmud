@@ -18,9 +18,9 @@ package jmud.event;
 
 import jmud.engine.behavior.AttackBehavior;
 import jmud.engine.behavior.AttackedBehavior;
-import jmud.engine.behavior.GetBehavior;
-import jmud.engine.behavior.GotBehavior;
 import jmud.engine.behavior.TriggerBehavior;
+import jmud.engine.behavior.definitions.GetBehavior;
+import jmud.engine.behavior.definitions.GotBehavior;
 import jmud.engine.event.*;
 import jmud.engine.job.JobManager;
 import jmud.engine.object.JMudObject;
@@ -53,7 +53,7 @@ public class TriggerBehaviorTest01{
 
       JobManager.getInstance().init(NUM_JOB_WORKERS);
 
-      JMudEventRegistrar.getLazyLoadedInstance();
+      JMudEventRegistrar.getInstance();
 
       JMudObject root = TestUtil.buildSimpleJMudObjectTree();
 

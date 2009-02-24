@@ -4,22 +4,21 @@ import jmud.engine.object.JMudObject;
 
 public class Generators {
 
-	public static JMudObject generateSimpleWorld(){
+	public static JMudObject generateSimpleWorld() {
 		JMudObject world = new JMudObject("World");
-		
-		//Make 4 rooms with random stuff in it.
-		Generators.generateRooms(world, 4);
-		
-		for (JMudObject room : world.getJmoRelMap().getAllChildren()){
-			//Add 1-4 orcs
-			Generators.addOrcs(room, (int)(Math.random() * 3)+1);
+
+		// Make 4 rooms with random stuff in it.
+		Generators.generateRooms(world, 4, 4);
+
+		for (JMudObject room : world.getJmoRelMap().getAllChildren()) {
+			// Add 1-4 orcs
+			Generators.addOrcs(room, (int) (Math.random() * 3) + 1);
 		}
-		
+
 		return world;
 	}
-	
-	
-	public static void generateRooms(JMudObject world, int numOfRoomsToGenerate) {
+
+	public static void generateRooms(JMudObject world, int numOfRoomsToGenerate, int items) {
 		JMudObject room;
 		for (int i = 0; i < numOfRoomsToGenerate; ++i) {
 			room = new JMudObject();
@@ -27,17 +26,16 @@ public class Generators {
 			world.getJmoRelMap().addChild(room);
 
 			JMudObject thing;
-			int res = (int) (Math.random() * 100);
-			if (res > 80) {
+
+			if (items > 2) {
 				thing = new JMudObject("A Golden Ring");
 				room.getJmoRelMap().addChild(thing);
 			}
-			if (res > 50) {
+			if (items > 1) {
 				thing = new JMudObject("A Bent Piece of Metal");
 				room.getJmoRelMap().addChild(thing);
 			}
-
-			if (res > 30) {
+			if (items > 0) {
 				thing = new JMudObject("A Chair");
 				room.getJmoRelMap().addChild(thing);
 			}
@@ -52,7 +50,7 @@ public class Generators {
 			orc.setDisplayedName("Orc #" + orc.getUUID().toString().substring(1, 6));
 
 			orc.getEventBehaviorMap();
-			
+
 			JMudObject weap;
 			if ((Math.random() * 100) > 50) {
 				weap = new JMudObject("Axe");
@@ -62,9 +60,6 @@ public class Generators {
 
 			orc.getJmoRelMap().addChild(weap);
 
-			
-			
-			
 			room.getJmoRelMap().addChild(orc);
 		}
 	}

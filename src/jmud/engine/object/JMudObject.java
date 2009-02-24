@@ -98,7 +98,7 @@ public class JMudObject {
 	 */
 	
 	public void sendTextToObject(String text) {
-		System.out.println(text);
+		System.out.println("To "  + this.displayedName + "'s console: " + text);
 	}
 	
 	

@@ -11,7 +11,7 @@ import jmud.engine.object.JMudObject;
 public class GotBehavior extends AbstractBehavior {
 	
 	public GotBehavior() {
-		this.beType = BehaviorType.Get;
+		this.beType = BehaviorType.Got;
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class GotBehavior extends AbstractBehavior {
 	public final boolean targetBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
 		// What the target sees
 
-		String txt = "You get the " + jme.getSource().getDisplayedName();
+		String txt = "You get the " + jme.getSource().getDisplayedName() + ".";
 		jme.getTarget().sendTextToObject(txt);
 
 		return true;
@@ -37,7 +37,7 @@ public class GotBehavior extends AbstractBehavior {
 	@Override
 	protected boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
 		// What anyone else sees.
-		String txt = jme.getTarget().getDisplayedName() + " gets the " + jme.getSource().getDisplayedName();
+		String txt = jme.getTarget().getDisplayedName() + " gets the " + jme.getSource().getDisplayedName() + ".";
 		whoToRunThisBehaviorOn.sendTextToObject(txt);
 
 		return true;

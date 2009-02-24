@@ -29,14 +29,25 @@ public class EventBehaviorMap {
 		return behaviorMap.keySet();
 	}
 
-	public List<BehaviorType> putEventBehaviorMapping(JMudEventType jmet, List<BehaviorType> bt) {
-		return behaviorMap.put(jmet, bt);
-	}
-
 	public List<BehaviorType> removeBehaviorTypes(JMudEventType jmet) {
 		return behaviorMap.remove(jmet);
 	}
 
+	public void addMapping(JMudEventType jmet, BehaviorType bt) {
+		//First get the List:
+		List<BehaviorType> bs = this.getBehaviorTypeList(jmet);
+
+		if (bs == null) {
+			bs = Collections.synchronizedList(new ArrayList<BehaviorType>());
+			bs.add(bt);
+			this.behaviorMap.put(jmet,bs);
+		} else {
+			bs.add(bt);
+		}
+	}
+	
+	
+	
 	/*
 	 * Helper FN
 	 */
@@ -44,6 +55,10 @@ public class EventBehaviorMap {
 		List<AbstractBehavior> out = Collections.synchronizedList(new ArrayList<AbstractBehavior>());
 		
 		List<BehaviorType> bts = this.getBehaviorTypeList(jmet);
+		
+		if (bts == null) {
+			return out;
+		}
 		
 		for (BehaviorType bt : bts) {
 			AbstractBehavior ab = BehaviorManager.getInstance().getBehavior(bt);
