@@ -7,10 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import jmud.engine.config.JMudConfig;
+import jmud.engine.config.JMudConfigElement;
 
 public class SplashScreenLoader {
 	public static String getSplashScreen() {
-		String ssFile = JMudConfig.getInstance().getConfigElement("splashScreenFileName");
+		String ssFile = JMudConfig.getInstance().getConfigElement(JMudConfigElement.splashScreenFileName);
 
 		//Check to see if there is a ConfigElement
 		if (ssFile != null && ssFile.length() > 0) {
