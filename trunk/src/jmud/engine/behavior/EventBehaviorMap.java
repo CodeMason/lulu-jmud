@@ -11,38 +11,40 @@ import jmud.engine.behavior.definitions.AbstractBehavior;
 import jmud.engine.event.JMudEventType;
 
 public class EventBehaviorMap {
-	/**
-	 * A mapping of events to behaviors
-	 */
-	private Map<JMudEventType, List<BehaviorType>> behaviorMap = Collections
+
+	private Map<JMudEventType, List<BehaviorType>> eventBehaviorMap = Collections
 			.synchronizedMap(new HashMap<JMudEventType, List<BehaviorType>>());
 
+	/*
+	 * Delegates
+	 */
+	
 	public boolean containsEventType(JMudEventType jmet) {
-		return behaviorMap.containsKey(jmet);
+		return eventBehaviorMap.containsKey(jmet);
 	}
 
-	public List<BehaviorType> getBehaviorTypeList(JMudEventType jmet) {
-		return behaviorMap.get(jmet);
+	public List<BehaviorType> getBehaviorTypes(JMudEventType jmet) {
+		return eventBehaviorMap.get(jmet);
 	}
 
 	public Set<JMudEventType> getEventTypes() {
-		return behaviorMap.keySet();
+		return eventBehaviorMap.keySet();
 	}
 
 	public List<BehaviorType> removeBehaviorTypes(JMudEventType jmet) {
-		return behaviorMap.remove(jmet);
+		return eventBehaviorMap.remove(jmet);
 	}
 
 	public void addMapping(JMudEventType jmet, BehaviorType bt) {
 		//First get the List:
-		List<BehaviorType> bs = this.getBehaviorTypeList(jmet);
+		List<BehaviorType> behaviorTypes = this.getBehaviorTypes(jmet);
 
-		if (bs == null) {
-			bs = Collections.synchronizedList(new ArrayList<BehaviorType>());
-			bs.add(bt);
-			this.behaviorMap.put(jmet,bs);
+		if (behaviorTypes == null) {
+			behaviorTypes = Collections.synchronizedList(new ArrayList<BehaviorType>());
+			behaviorTypes.add(bt);
+			this.eventBehaviorMap.put(jmet,behaviorTypes);
 		} else {
-			bs.add(bt);
+			behaviorTypes.add(bt);
 		}
 	}
 	
@@ -54,7 +56,7 @@ public class EventBehaviorMap {
 	public List<AbstractBehavior> getBehaviorsForEvent(JMudEventType jmet) {
 		List<AbstractBehavior> out = Collections.synchronizedList(new ArrayList<AbstractBehavior>());
 		
-		List<BehaviorType> bts = this.getBehaviorTypeList(jmet);
+		List<BehaviorType> bts = this.getBehaviorTypes(jmet);
 		
 		if (bts == null) {
 			return out;

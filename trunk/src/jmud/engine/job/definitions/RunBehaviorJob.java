@@ -29,20 +29,20 @@ import jmud.engine.object.JMudObject;
 public class RunBehaviorJob extends AbstractJob {
 
 	private JMudObject whoToRunBehaviorOn;
-	private AbstractBehavior ab;
-	private JMudEvent jme;
+	private AbstractBehavior behaviorToRun;
+	private JMudEvent event;
 
 	public RunBehaviorJob(JMudObject whoToRunBehaviorOn, AbstractBehavior ab, JMudEvent jme) {
 		super();
 		this.whoToRunBehaviorOn = whoToRunBehaviorOn;
-		this.ab = ab;
-		this.jme = jme;
+		this.behaviorToRun = ab;
+		this.event = jme;
 	}
 
 	@Override
 	public final boolean doJob() {
-		synchronized (this.ab) {
-			ab.runBehavior(this.whoToRunBehaviorOn, this.jme);
+		synchronized (this.behaviorToRun) {
+			behaviorToRun.run(this.whoToRunBehaviorOn, this.event);
 		}
 		return true;
 	}

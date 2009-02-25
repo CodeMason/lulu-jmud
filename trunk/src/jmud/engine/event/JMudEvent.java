@@ -46,17 +46,15 @@ public class JMudEvent {
 		}
 
 		for (JMudObject j : this.allAffected) {
-			// Get all of the mappings for this eventType that this object has.
-			List<AbstractBehavior> abs = j.getEventBehaviorMap().getBehaviorsForEvent(this.eventType);
+			List<AbstractBehavior> abstractBehaviors = this.getMappingsForEventType(j);
 
-			if (abs == null) {
+			if (abstractBehaviors == null) {
 				continue;
 			}
 
-			for (AbstractBehavior ab : abs) {
+			for (AbstractBehavior ab : abstractBehaviors) {
 				RunBehaviorJob rbj = new RunBehaviorJob(j, ab, this);
 				rbj.selfSubmit();
-
 			}
 		}
 		return true;
@@ -71,7 +69,10 @@ public class JMudEvent {
 		// Compile the two sets into one for ease of use.
 		this.allAffected = new HashSet<JMudObject>(this.targetAffected);
 		this.allAffected.addAll(this.sourceAffected);
+	}
 
+	private List<AbstractBehavior> getMappingsForEventType(JMudObject j) {
+		return j.getEventBehaviorMap().getBehaviorsForEvent(this.eventType);
 	}
 
 	/*

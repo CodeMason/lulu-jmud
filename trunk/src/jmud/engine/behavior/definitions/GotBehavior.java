@@ -9,9 +9,9 @@ import jmud.engine.object.JMudObject;
  * @author david.h.loman
  */
 public class GotBehavior extends AbstractBehavior {
-	
+
 	public GotBehavior() {
-		this.beType = BehaviorType.Got;
+		this.behaviorType = BehaviorType.Got;
 	}
 
 	/**
@@ -21,11 +21,7 @@ public class GotBehavior extends AbstractBehavior {
 	 */
 	@Override
 	public final boolean targetBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
-		// What the target sees
-
-		String txt = "You get the " + jme.getSource().getDisplayedName() + ".";
-		jme.getTarget().sendTextToObject(txt);
-
+		jme.getTarget().sendTextToObject(this.getMessageToTarget(whoToRunThisBehaviorOn, jme));
 		return true;
 	}
 
@@ -36,10 +32,7 @@ public class GotBehavior extends AbstractBehavior {
 	 */
 	@Override
 	protected boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
-		// What anyone else sees.
-		String txt = jme.getTarget().getDisplayedName() + " gets the " + jme.getSource().getDisplayedName() + ".";
-		whoToRunThisBehaviorOn.sendTextToObject(txt);
-
+		whoToRunThisBehaviorOn.sendTextToObject(this.getMessageToBystander(whoToRunThisBehaviorOn, jme));
 		return true;
 	}
 
@@ -50,11 +43,23 @@ public class GotBehavior extends AbstractBehavior {
 	 */
 	@Override
 	protected boolean sourceBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
-		// What the source sees.
-
-		String txt = jme.getTarget().getDisplayedName() + " picks YOU up!!";
-		jme.getSource().sendTextToObject(txt);
-
+		jme.getSource().sendTextToObject(this.getMessageToSource(whoToRunThisBehaviorOn, jme));
 		return true;
 	}
+
+	@Override
+	protected String getMessageToTarget(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		return "You get the " + jme.getSource().getDisplayedName() + ".";
+	}
+
+	@Override
+	protected String getMessageToBystander(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		return jme.getTarget().getDisplayedName() + " gets the " + jme.getSource().getDisplayedName() + ".";
+	}
+
+	@Override
+	protected String getMessageToSource(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		return jme.getTarget().getDisplayedName() + " picks YOU up!!";
+	}
+
 }
