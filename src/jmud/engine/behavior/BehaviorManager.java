@@ -48,27 +48,31 @@ public class BehaviorManager {
 	/*
 	 * BehaviorType to AbstractBehavior mapping.
 	 */
-	private Map<BehaviorType, AbstractBehavior> behaviorGens = Collections
+	private Map<BehaviorType, AbstractBehavior> typeBehaviorMap = Collections
 			.synchronizedMap(new HashMap<BehaviorType, AbstractBehavior>());
 
-	public boolean containsBehaviorType(BehaviorType key) {
-		return behaviorGens.containsKey(key);
+	
+	/*
+	 * typeBehaviorMap Delegates
+	 */
+	public boolean containsBehaviorType(BehaviorType bt) {
+		return typeBehaviorMap.containsKey(bt);
 	}
 
-	public AbstractBehavior getBehavior(BehaviorType key) {
-		return behaviorGens.get(key);
+	public AbstractBehavior getBehavior(BehaviorType bt) {
+		return typeBehaviorMap.get(bt);
 	}
 
 	public Set<BehaviorType> getAllRegisteredBehaviorTypes() {
-		return behaviorGens.keySet();
+		return typeBehaviorMap.keySet();
 	}
 
-	public AbstractBehavior register(BehaviorType key, AbstractBehavior value) {
-		return behaviorGens.put(key, value);
+	public AbstractBehavior register(BehaviorType bt, AbstractBehavior ab) {
+		return typeBehaviorMap.put(bt, ab);
 	}
 
-	public AbstractBehavior removeBehaviorType(BehaviorType key) {
-		return behaviorGens.remove(key);
+	public AbstractBehavior removeBehaviorType(BehaviorType bt) {
+		return typeBehaviorMap.remove(bt);
 	}
 
 

@@ -14,7 +14,7 @@ import jmud.engine.object.JMudObjectUtils;
 public class GetBehavior extends AbstractBehavior {
 	
 	public GetBehavior() {
-		this.beType = BehaviorType.Get;
+		this.behaviorType = BehaviorType.Get;
 	}
 
 	@Override
@@ -26,8 +26,8 @@ public class GetBehavior extends AbstractBehavior {
 		JMudObjectUtils.changeParent(source, target);
 		
 		// prep the 'response' JMudEvent
-		JMudEvent resJme = new JMudEvent(JMudEventType.Got, target, source, jme.getAffRange());
-		RunEventJob rej =  new RunEventJob(resJme);
+		JMudEvent responseJme = new JMudEvent(JMudEventType.Got, target, source, jme.getAffRange());
+		RunEventJob rej =  new RunEventJob(responseJme);
 		rej.selfSubmit();
 
 		return true;
@@ -35,8 +35,7 @@ public class GetBehavior extends AbstractBehavior {
 
 	@Override
 	protected boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
-		// If I get a GetEvent, and I am not the target... I dont care! Ignore!
-		return true;
+		return this.ignoreEvent();
 	}
 
 	@Override

@@ -8,11 +8,11 @@ import jmud.engine.object.JMudObject;
 /**
  * Base class for all Behaviors to extend from. A behavior is a reusable object
  * that contains code to perform actions on an object based on a passed in
- * EventType.
+ * Event.
  */
 public abstract class AbstractBehavior {
 
-	protected BehaviorType beType;
+	protected BehaviorType behaviorType;
 
 	/*
 	 * Constructors.
@@ -25,10 +25,8 @@ public abstract class AbstractBehavior {
 	 * 
 	 * @return true if behavior completes successfully
 	 */
-	public boolean runBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
-//		synchronized (System.out) {
-//			System.out.println("Running a " + this.beType.toString() + " behavior. (" + jme.toString() + ")");
-//		}
+	public boolean run(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+
 		if (whoToRunThisBehaviorOn == jme.getTarget()) {
 			return this.targetBehavior(whoToRunThisBehaviorOn, jme);
 
@@ -63,11 +61,24 @@ public abstract class AbstractBehavior {
 	protected abstract boolean bystanderBehavior(JMudObject whoToRunThisBehaviorOn, JMudEvent jme);
 
 	public BehaviorType getBehaviorType() {
-		return beType;
+		return behaviorType;
 	}
 
 	public void selfRegister() {
 		BehaviorManager.getInstance().register(this.getBehaviorType(), this);
 	}
 
+	protected boolean ignoreEvent() {
+		return true;
+	}
+	
+	protected String getMessageToTarget(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		return "";
+	}
+	protected String getMessageToSource(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		return "";
+	}
+	protected String getMessageToBystander(JMudObject whoToRunThisBehaviorOn, JMudEvent jme) {
+		return "";
+	}
 }
