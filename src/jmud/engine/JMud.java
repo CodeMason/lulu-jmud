@@ -4,6 +4,7 @@ import java.io.IOException;
 import jmud.engine.behavior.BehaviorManager;
 import jmud.engine.behavior.BuiltinBehaviorLoader;
 import jmud.engine.config.JMudConfig;
+import jmud.engine.config.JMudConfigElement;
 import jmud.engine.job.JobManager;
 import jmud.engine.netio.JMudClientManager;
 
@@ -131,11 +132,21 @@ public class JMud implements Runnable {
 		// Load the 'built-in' Behaviors
 		BuiltinBehaviorLoader.load();
 
-		// initialize JobManager with 10 worker
-		this.jobMan.init(10);
+		Integer numOfWorkers = -1;
 
-		
-		
+		// Attempt to get the Config setting for numOfWorkers
+		if (this.config.containsConfigElement(JMudConfigElement.numOfWorkers)) {
+			if ((numOfWorkers = JMudConfigElement.numOfWorkers.getCurrentValueAsInteger()) == null) {
+				numOfWorkers = JMudConfigElement.numOfWorkers.getDefaultValueAsInteger();
+			}
+		}
+
+		if (numOfWorkers == null || numOfWorkers < 1) {
+			numOfWorkers = 1;
+		}
+
+		this.jobMan.init(numOfWorkers);
+
 		
 		// initialize and start JMudClientManager
 		try {
