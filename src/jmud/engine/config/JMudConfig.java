@@ -59,24 +59,28 @@ public class JMudConfig {
 	 * Element Searching/Replacing
 	 */
 	public boolean containsConfigElement(JMudConfigElement key) {
-		return configElements.containsKey(key);
+		return this.configElements.containsKey(key);
 	}
 
 	public String getConfigElement(JMudConfigElement key) {
-		return configElements.get(key);
+		return this.configElements.get(key);
 	}
 
 	public String putConfigElement(JMudConfigElement key, String value) {
-		return configElements.put(key, value);
+		return this.configElements.put(key, value);
 	}
 
 	public String remConfigElement(JMudConfigElement key) {
-		return configElements.remove(key);
+		return this.configElements.remove(key);
 	}
 
+	public void clearAllElements() {
+		this.configElements.clear();
+	}
 	/*
 	 * Getters
 	 */
+
 
 	public String getUsingFile() {
 		return this.usingFile;
@@ -226,6 +230,7 @@ public class JMudConfig {
 			System.out.println("Writing Config File: " + this.usingFile);
 
 			File f = new File(this.defaultFile);
+			System.out.println(f.delete());
 			FileWriter fw = new FileWriter(f);
 			BufferedWriter bw = new BufferedWriter(fw);
 
@@ -241,7 +246,7 @@ public class JMudConfig {
 			for (JMudConfigElement key : keys) {
 				String value = this.configElements.get(key);
 				bw.write("#" + key.getDescription() + "\n");
-				bw.write(key.toString() + "=" + key.getDefaultValue() + "\n");
+				bw.write(key.toString() + "=" + value + "\n");
 				bw.write("\n");
 
 				System.out.println("Wrote config element: " + key + "=" + value);
@@ -249,6 +254,7 @@ public class JMudConfig {
 
 			bw.close();
 			fw.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
