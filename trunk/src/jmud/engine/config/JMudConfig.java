@@ -48,7 +48,8 @@ public class JMudConfig {
 	/*
 	 * Simple Key, Value map for config Elements read from file
 	 */
-	private Map<String, String> configElements = Collections.synchronizedMap(new HashMap<String, String>());
+	private Map<JMudConfigElement, String> configElements = Collections
+			.synchronizedMap(new HashMap<JMudConfigElement, String>());
 	private final String defaultFile = "jmud.config";
 	private final char commentChar = '#';
 
@@ -58,29 +59,29 @@ public class JMudConfig {
 	 * Element Searching/Replacing
 	 */
 	public boolean containsConfigElement(JMudConfigElement key) {
-		return configElements.containsKey(key.toString());
+		return configElements.containsKey(key);
 	}
 
 	public String getConfigElement(JMudConfigElement key) {
-		return configElements.get(key.toString());
+		return configElements.get(key);
 	}
 
 	public String putConfigElement(JMudConfigElement key, String value) {
-		return configElements.put(key.toString(), value);
+		return configElements.put(key, value);
 	}
 
 	public String remConfigElement(JMudConfigElement key) {
-		return configElements.remove(key.toString());
+		return configElements.remove(key);
 	}
 
 	/*
 	 * Getters
 	 */
-	
+
 	public String getUsingFile() {
 		return this.usingFile;
 	}
-	
+
 	/*
 	 * File IO
 	 */
@@ -90,9 +91,9 @@ public class JMudConfig {
 		if (readConfigFromFile(this.defaultFile) == false) {
 			// Make a default file
 			this.makeDefaultConfigFile(this.defaultFile);
-			
+
 			// try again
-			if( this.readConfigFromFile(this.defaultFile) == false) {
+			if (this.readConfigFromFile(this.defaultFile) == false) {
 				return false;
 			}
 		}
@@ -102,12 +103,12 @@ public class JMudConfig {
 
 	public boolean loadConfig(String pathAndFile) {
 		if (this.readConfigFromFile(pathAndFile) == false) {
-			
+
 			// IF that file fails to load, make a default file
 			this.makeDefaultConfigFile(pathAndFile);
 
 			// try to load again
-			if( this.readConfigFromFile(pathAndFile) == false) {
+			if (this.readConfigFromFile(pathAndFile) == false) {
 				return false;
 			}
 		}
@@ -156,8 +157,15 @@ public class JMudConfig {
 				String key = lineArr[0].trim();
 				String value = lineArr[1].trim();
 				if (key.length() > 0 && value.length() > 0) {
-					this.configElements.put(key, value);
-					System.out.println("Read config element: " + key + "=" + value);
+					try {
+						JMudConfigElement jmce = JMudConfigElement.valueOf(key);
+
+						this.configElements.put(jmce, value);
+						System.out.println("Read config element: " + jmce.toString() + "=" + value);
+					} catch (IllegalArgumentException iae) {
+						//couldn't parse 'key' into one of the enums
+						continue;
+					}
 				}
 			}
 			// close file reader
@@ -195,10 +203,9 @@ public class JMudConfig {
 
 			for (JMudConfigElement jmce : JMudConfigElement.values()) {
 				bw.write("#" + jmce.getDescription() + "\n");
-				bw.write(jmce.toString() + "="  +jmce.getDefaultValue() + "\n");
+				bw.write(jmce.toString() + "=" + jmce.getDefaultValue() + "\n");
 				bw.write("\n");
 			}
-
 
 			bw.close();
 			fw.close();
@@ -229,11 +236,14 @@ public class JMudConfig {
 			bw.write("#####################################################\n");
 			bw.write("\n");
 
-			Set<String> keys = this.configElements.keySet();
+			Set<JMudConfigElement> keys = this.configElements.keySet();
 
-			for (String key : keys) {
+			for (JMudConfigElement key : keys) {
 				String value = this.configElements.get(key);
-				bw.write(key + "=" + value + "\n\n");
+				bw.write("#" + key.getDescription() + "\n");
+				bw.write(key.toString() + "=" + key.getDefaultValue() + "\n");
+				bw.write("\n");
+
 				System.out.println("Wrote config element: " + key + "=" + value);
 			}
 
@@ -250,8 +260,8 @@ public class JMudConfig {
 	public void printConfig() {
 		System.out.println("\nCurrent Configuration Elements:\n");
 
-		Set<String> keys = this.configElements.keySet();
-		for (String key : keys) {
+		Set<JMudConfigElement> keys = this.configElements.keySet();
+		for (JMudConfigElement key : keys) {
 			String value = this.configElements.get(key);
 			System.out.println(key + "=" + value + "");
 		}
