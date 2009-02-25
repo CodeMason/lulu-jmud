@@ -1,6 +1,7 @@
 package jmud.config;
 
 import jmud.engine.config.JMudConfig;
+import jmud.engine.config.JMudConfigElement;
 
 public class MakeDefaultConfigFileTest {
 
@@ -18,7 +19,7 @@ public class MakeDefaultConfigFileTest {
 		JMudConfig.getInstance().printConfig();
 		System.out.println("\n\n\n");
 		
-		JMudConfig.getInstance().putConfigElement("dbPassWd", "NunyaDamnBidness");
+		JMudConfig.getInstance().putConfigElement(JMudConfigElement.dbPassWd, "NunyaDamnBidness");
 		JMudConfig.getInstance().printConfig();
 		System.out.println("\n\n\n");
 		

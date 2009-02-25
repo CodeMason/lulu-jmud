@@ -57,20 +57,20 @@ public class JMudConfig {
 	/*
 	 * Element Searching/Replacing
 	 */
-	public boolean containsConfigElement(String key) {
-		return configElements.containsKey(key);
+	public boolean containsConfigElement(JMudConfigElement key) {
+		return configElements.containsKey(key.toString());
 	}
 
-	public String getConfigElement(String key) {
-		return configElements.get(key);
+	public String getConfigElement(JMudConfigElement key) {
+		return configElements.get(key.toString());
 	}
 
-	public String putConfigElement(String key, String value) {
-		return configElements.put(key, value);
+	public String putConfigElement(JMudConfigElement key, String value) {
+		return configElements.put(key.toString(), value);
 	}
 
-	public String remConfigElement(String key) {
-		return configElements.remove(key);
+	public String remConfigElement(JMudConfigElement key) {
+		return configElements.remove(key.toString());
 	}
 
 	/*
@@ -155,7 +155,6 @@ public class JMudConfig {
 				String[] lineArr = line.split("=");
 				String key = lineArr[0].trim();
 				String value = lineArr[1].trim();
-
 				if (key.length() > 0 && value.length() > 0) {
 					this.configElements.put(key, value);
 					System.out.println("Read config element: " + key + "=" + value);
@@ -194,30 +193,12 @@ public class JMudConfig {
 			bw.write("#####################################################\n");
 			bw.write("\n");
 
-			bw.write("#The JDBC protocol, path and port" + "\n");
-			bw.write("dbURL=jdbc:mysql://localhost:3306/" + "\n");
-			bw.write("" + "\n");
-			bw.write("#The JDBC database name" + "\n");
-			bw.write("dbName=jmud" + "\n");
-			bw.write("" + "\n");
-			bw.write("#The Username & password used to connect to the Database" + "\n");
-			bw.write("dbUName=jmud_server" + "\n");
-			bw.write("dbPassWd=jmud" + "\n");
-			bw.write("" + "\n");
-			bw.write("#Maximum allowed attempts to login before the account is locked" + "\n");
-			bw.write("maxLoginAttempts=3" + "\n");
-			bw.write("" + "\n");
-			bw.write("#Splashscreen text file" + "\n");
-			bw.write("splashScreenFileName=splashScreen.txt" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
-			bw.write("" + "\n");
+			for (JMudConfigElement jmce : JMudConfigElement.values()) {
+				bw.write("#" + jmce.getDescription() + "\n");
+				bw.write(jmce.toString() + "="  +jmce.getDefaultValue() + "\n");
+				bw.write("\n");
+			}
+
 
 			bw.close();
 			fw.close();

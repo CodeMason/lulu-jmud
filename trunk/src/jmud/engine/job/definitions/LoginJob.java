@@ -19,6 +19,7 @@ package jmud.engine.job.definitions;
 import jmud.engine.account.Account;
 import jmud.engine.account.AccountManager;
 import jmud.engine.config.JMudConfig;
+import jmud.engine.config.JMudConfigElement;
 import jmud.engine.netio.JMudClient;
 import jmud.engine.netio.JMudClientState;
 
@@ -91,7 +92,7 @@ public class LoginJob extends AbstractClientJob {
 					AccountManager.getInstance().unloadAccont(a);
 					
 					//Pull data from config
-					String s = JMudConfig.getInstance().getConfigElement("maxLoginAttempts");
+					String s = JMudConfig.getInstance().getConfigElement(JMudConfigElement.maxLoginAttempts);
 					int max = Integer.parseInt(s);
 					
 					this.c.sendCRLF();

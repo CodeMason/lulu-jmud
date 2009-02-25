@@ -1,6 +1,8 @@
 package jmud.engine.dbio;
 
 import jmud.engine.config.JMudConfig;
+import jmud.engine.config.JMudConfigElement;
+
 import java.sql.*;
 
 /**
@@ -27,10 +29,10 @@ public class MysqlConnection {
 		 * directory must be in the same directory as the jmud source
 		 */
 
-		String dbUrl = JMudConfig.getInstance().getConfigElement("dbUrl");
-		String dbName = JMudConfig.getInstance().getConfigElement("dbName");
-		String dbUName = JMudConfig.getInstance().getConfigElement("dbUName");
-		String dbPassWd = JMudConfig.getInstance().getConfigElement("dbPassWd");
+		String dbUrl = JMudConfig.getInstance().getConfigElement(JMudConfigElement.dbUrl);
+		String dbName = JMudConfig.getInstance().getConfigElement(JMudConfigElement.dbName);
+		String dbUName = JMudConfig.getInstance().getConfigElement(JMudConfigElement.dbUName);
+		String dbPassWd = JMudConfig.getInstance().getConfigElement(JMudConfigElement.dbPassWd);
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
