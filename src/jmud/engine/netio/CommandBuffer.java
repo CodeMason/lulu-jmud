@@ -37,14 +37,28 @@ public class CommandBuffer {
             length = bytes.length;
         }
 
-        char c;
-
+        char c = 0;
+        char lastc = 0;
+        
         for (int i = 0; i < length; ++i) {
             c = (char) bytes[i];
 
+            //Convert NL to CR only if the last char wasn't a CR
+            if (c == JMudStatics.NL) {
+            	if (lastc != JMudStatics.CR) {
+            		//if the last character wasn't a NL, make this one a CR
+            		c = JMudStatics.CR;
+            	} else {
+            		//But if the last char WAS a nl, we 
+            		//don't want to put two CR's in a row
+            		continue;
+            	}
+            }
+            
             synchronized (this.charBuffer) {
                 this.charBuffer.add(c);
             }
+            lastc = c;
         }
 
     }
@@ -98,7 +112,6 @@ public class CommandBuffer {
     public void parseCommands() {
         int crIndex;
         String cmd;
-//        char[] chars;
 
         synchronized (this.charBuffer) {
             crIndex = findCarriageReturnPos();
@@ -109,11 +122,7 @@ public class CommandBuffer {
 
             while (!isCommandComplete(crIndex)) {
 
-                if (!isLastChar(crIndex) && nextCharIsLF(crIndex)) {
-                    deleteNextChar(crIndex);
-                }
-
-                cmd = removeCRLF(getStringFromCharBuffer(crIndex));
+                cmd = getStringFromCharBuffer(crIndex);
 
                 System.out.println("CommandBuffer.Parse() new command: \"" + cmd + "\"");
 
@@ -128,11 +137,19 @@ public class CommandBuffer {
 
     private String getStringFromCharBuffer(int crIndex) {
         char[] chars;
-        chars = new char[crIndex + 1];
+        //No need for crIndex + 1... 
+        //we already know that last char is a \r
+        chars = new char[crIndex];
 
-        for (int i = 0; i <= crIndex; ++i) {
+        for (int i = 0; i < crIndex; ++i) {
             chars[i] = this.charBuffer.remove(0);
         }
+        
+        //now remove that stray \r
+        if (this.charBuffer.get(0) == JMudStatics.CR) {
+        	this.charBuffer.remove(0);
+        }
+        
         return new String(chars);
     }
 
@@ -142,24 +159,10 @@ public class CommandBuffer {
         return crIndex;
     }
 
-    private String removeCRLF(String cmd) {
-        cmd = cmd.replace(String.valueOf(JMudStatics.CR), "");
-        cmd = cmd.replace(String.valueOf(JMudStatics.NL), "");
-        return cmd;
-    }
-
-    private void deleteNextChar(int crIndex) {
-        this.charBuffer.remove(crIndex + 1);
-    }
-
-    private boolean nextCharIsLF(int crIndex) {
-        return this.charBuffer.get(crIndex + 1) == JMudStatics.NL;
-    }
-
-    private boolean isLastChar(int crIndex) {
-        return crIndex == (this.charBuffer.size());
-    }
-
+    
+    //The verbage here is confusing:
+    //If the command IS complete, then crIndex will not be -1
+    //And the function will return false... ??
     private boolean isCommandComplete(int crIndex) {
         return crIndex == -1;
     }
