@@ -502,4 +502,14 @@ public class JMudClientManager implements Runnable {
 		return this.myThread;
 	}
 
+	/*
+	 * JMudClient getter:
+	 */
+	public Collection<JMudClient> getAllJMudClients() {
+		return sockChanConnMap.values();
+	}
+
+	
+	
+	
 }

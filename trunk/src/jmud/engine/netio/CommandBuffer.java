@@ -90,20 +90,11 @@ public class CommandBuffer {
     }
 
     public void readFrom(InputStream is) throws IOException {
-        DataInputStream inputStream;
-        char input;
-
         try {
-            inputStream = new DataInputStream(is);
-            while (inputStream.available() >= 2) {
-                input = inputStream.readChar();
+            byte[] byteArray = new byte[is.available()];
+            is.read(byteArray);
 
-                System.out.println("CommandBuffer.write() new char: '" + input + "'");
-
-                synchronized (this.charBuffer) {
-                    this.charBuffer.add(input);
-                }
-            }
+            this.write(byteArray);
         } catch (EOFException eofe) {
             // we're done
         }
@@ -187,7 +178,7 @@ public class CommandBuffer {
     }
 
     public String toString() {
-        String out = "CharacterBuffer is: " + this.charBuffer.size() + " characters long.\n Completed Command Queue:\n";
+        String out = "CharacterBuffer is: " + this.charBuffer.size() + " characters long.\nCompleted Command Queue:\n";
         for (String s : this.completeCmds) {
             out += "\t-" + s.replace("\r", "\\r").replace("\n", "\\n") + "\n";
         }

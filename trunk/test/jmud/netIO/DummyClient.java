@@ -3,6 +3,7 @@ package jmud.netIO;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class DummyClient {
@@ -19,17 +20,10 @@ public class DummyClient {
 		this.dos = null;
 	}
 
-	public boolean connect(String addy, int port) {
-		try {
-			
+	public void connect(InetAddress addy, int port) throws IOException {
 			this.sock = new Socket(addy, port);
 			this.dis = new DataInputStream(this.sock.getInputStream());
 			this.dos = new DataOutputStream(this.sock.getOutputStream());
-
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
 	}
 
 	public Socket getSock() {
