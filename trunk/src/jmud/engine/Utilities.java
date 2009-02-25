@@ -6,15 +6,15 @@ public class Utilities {
 		try {
 			Short sh = Short.parseShort(s);
 			return sh;
-		} catch (NumberFormatException nfe) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
-	public static Integer stringToInt(String s) {
+	public static Integer stringToInteger(String s) {
 		try {
 			Integer sh = Integer.parseInt(s);
 			return sh;
-		} catch (NumberFormatException nfe) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -22,7 +22,7 @@ public class Utilities {
 		try {
 			Long sh = Long.parseLong(s);
 			return sh;
-		} catch (NumberFormatException nfe) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -30,7 +30,7 @@ public class Utilities {
 		try {
 			Float sh = Float.parseFloat(s);
 			return sh;
-		} catch (NumberFormatException nfe) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -39,7 +39,7 @@ public class Utilities {
 		try {
 			Double sh = Double.parseDouble(s);
 			return sh;
-		} catch (NumberFormatException nfe) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
