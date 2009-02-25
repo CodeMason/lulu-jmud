@@ -25,8 +25,8 @@ import java.nio.channels.spi.SelectorProvider;
 import java.util.*;
 
 /**
- * ConnectionManager is a Runnable class that manages all Connections.
- * ConnectionManager contains a single NIO selector and all routines for:
+ * JMudClientManager is a Runnable class that manages all Connections.
+ * JMudClientManager contains a single NIO selector and all routines for:
  * -Accepting new connections -Handling IO for existing connections
  * -Disconnecting connections.
  *
@@ -55,7 +55,7 @@ public class JMudClientManager implements Runnable {
 	 */
 
 	/**
-	 * ConnectionManager Constructor that allows the user to pick only which
+	 * JMudClientManager Constructor that allows the user to pick only which
 	 * port to bind the listening socket to.
 	 *
 	 * @param port
@@ -66,7 +66,7 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/**
-	 * ConnectionManager Constructor that allows the user to pick which
+	 * JMudClientManager Constructor that allows the user to pick which
 	 * InetAddress AND port to bind the listening socket to.
 	 *
 	 * @param hostAddress
@@ -85,7 +85,7 @@ public class JMudClientManager implements Runnable {
 		InetSocketAddress inetSocketAddress = new InetSocketAddress(hostAddress, port);
 		serverChannel.socket().bind(inetSocketAddress);
 
-		System.out.println("ConnectionManager is configured to listen at: " + hostAddress.getCanonicalHostName()
+		System.out.println("JMudClientManager is configured to listen at: " + hostAddress.getCanonicalHostName()
 				+ " on port: " + port);
 
 		// register an interest in Accepting new connections.
@@ -109,7 +109,7 @@ public class JMudClientManager implements Runnable {
 		// Configure
 		this.createNewConnection(sc);
 
-		System.out.println("ConnectionManager: Total Connections now: " + this.sockChanConnMap.size());
+		System.out.println("JMudClientManager: Total Connections now: " + this.sockChanConnMap.size());
 	}
 
 	private JMudClient createNewConnection(SocketChannel sc) throws IOException {
@@ -121,7 +121,7 @@ public class JMudClientManager implements Runnable {
 		JMudClient c = new JMudClient(this, sc);
 		c.changeConnState(JMudClientState.CONNECTED);
 
-		System.out.println("ConnectionManager: New Connection. ID: " + c.getConnectionID());
+		System.out.println("JMudClientManager: New Connection. ID: " + c.getConnectionID());
 
 		// Map the SocketChannel to the Connection
 		this.sockChanConnMap.put(sc, c);
@@ -145,7 +145,7 @@ public class JMudClientManager implements Runnable {
 	 * @throws IOException
 	 */
 	private boolean disconnect(final SelectionKey key) {
-		System.out.println("ConnectionManager.disconnect(SelectionKey): key=" + key.toString());
+		System.out.println("JMudClientManager.disconnect(SelectionKey): key=" + key.toString());
 		this.disconnect((SocketChannel) key.channel());
 
 		key.cancel();
@@ -161,7 +161,7 @@ public class JMudClientManager implements Runnable {
 	 * @throws IOException
 	 */
 	private boolean disconnect(final SocketChannel sockChan) {
-		System.out.println("ConnectionManager.disconnect(SocketChannel): sockChan=" + sockChan.toString());
+		System.out.println("JMudClientManager.disconnect(SocketChannel): sockChan=" + sockChan.toString());
 		return this.disconnect(this.sockChanConnMap.get(sockChan));
 	}
 
@@ -172,7 +172,7 @@ public class JMudClientManager implements Runnable {
 	 * @throws IOException
 	 */
 	public boolean disconnect(final JMudClient c) {
-		System.out.println("ConnectionManager.disconnect(Connection): c=" + c.toString());
+		System.out.println("JMudClientManager.disconnect(Connection): c=" + c.toString());
 		this.sockChanConnMap.remove(c.getSocketChannel());
 
 		// TODO What to do with the orphaned Connection? Probably perform Player
@@ -186,11 +186,11 @@ public class JMudClientManager implements Runnable {
 		try {
 			c.getSocketChannel().close();
 		} catch (IOException e) {
-			System.err.println("ConnectionManager.disconnect(Connection): Failed to close socket connection.");
+			System.err.println("JMudClientManager.disconnect(Connection): Failed to close socket connection.");
 			e.printStackTrace();
 		}
 
-		System.out.println("ConnectionManager.disconnect(Connection): Total Connections: "
+		System.out.println("JMudClientManager.disconnect(Connection): Total Connections: "
 				+ this.sockChanConnMap.size());
 		return c.getSocketChannel().isConnected();
 	}
@@ -242,7 +242,7 @@ public class JMudClientManager implements Runnable {
 			try {
 				c = this.createNewConnection(sc);
 			} catch (IOException e) {
-				System.err.println("Failed to create new Connection in ConnectionManager.readIncoming()");
+				System.err.println("Failed to create new Connection in JMudClientManager.readIncoming()");
 			}
 		}
 
@@ -346,15 +346,15 @@ public class JMudClientManager implements Runnable {
 	 */
 	public final void run() {
 		this.runStatus = true;
-		System.out.println("ConnectionManager: Running.");
+		System.out.println("JMudClientManager: Running.");
 		while (this.runCmd) {
 			this.processPendingEvents();
 			this.blockForSelectOnRegisteredChannels();
 			this.handleNewEvents();
 		}
-		System.out.println("ConnectionManager: Shutting down...");
+		System.out.println("JMudClientManager: Shutting down...");
 		this.shutdown();
-		System.out.println("ConnectionManager: Shutdown.");
+		System.out.println("JMudClientManager: Shutdown.");
 	}
 
 	private void shutdown() {
@@ -364,7 +364,7 @@ public class JMudClientManager implements Runnable {
 				try {
 					s.close();
 				} catch (IOException e) {
-					System.err.println("ConnectionManager.shutdown() -> SocketChannel.close() failed.");
+					System.err.println("JMudClientManager.shutdown() -> SocketChannel.close() failed.");
 				}
 			}
 			this.selector.close();
@@ -376,14 +376,14 @@ public class JMudClientManager implements Runnable {
 	}
 
 	/**
-	 * This method sets up the thread to run, loads in the ConnectionManager,
+	 * This method sets up the thread to run, loads in the JMudClientManager,
 	 * sets the ThreadRun Command to true and starts the thread.
 	 */
 	public final void start() {
-		System.out.println("ConnectionManager: Received Startup Command.");
+		System.out.println("JMudClientManager: Received Startup Command.");
 		this.runCmd = true;
 		this.runStatus = true;
-		this.myThread = new Thread(this, "ConnectionManager-Thread");
+		this.myThread = new Thread(this, "JMudClientManager-Thread");
 		this.myThread.start();
 	}
 
@@ -391,7 +391,7 @@ public class JMudClientManager implements Runnable {
 	 * Sets the thread's run command to false and wakes the selector.
 	 */
 	public final void stop() {
-		System.out.println("ConnectionManager: Received Shutdown Command.");
+		System.out.println("JMudClientManager: Received Shutdown Command.");
 		this.runCmd = false;
 		this.selector.wakeup();
 	}
@@ -478,25 +478,25 @@ public class JMudClientManager implements Runnable {
 	/*
 	 *
 	 *
-	 * ConnectionManager Status getters
+	 * JMudClientManager Status getters
 	 */
 
 	/**
-	 * @return the ConnectionManager's main loop run command
+	 * @return the JMudClientManager's main loop run command
 	 */
 	public final boolean getRunCmd() {
 		return this.runCmd;
 	}
 
 	/**
-	 * @return the ConnectionManager's main loop run status
+	 * @return the JMudClientManager's main loop run status
 	 */
 	public final boolean getRunStatus() {
 		return this.runStatus;
 	}
 
 	/**
-	 * @return the Thread this ConnectionManager's is running in.
+	 * @return the Thread this JMudClientManager's is running in.
 	 */
 	public final Thread getThread() {
 		return this.myThread;

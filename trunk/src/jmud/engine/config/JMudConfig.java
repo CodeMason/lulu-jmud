@@ -102,10 +102,11 @@ public class JMudConfig {
 
 	public boolean loadConfig(String pathAndFile) {
 		if (this.readConfigFromFile(pathAndFile) == false) {
-			// Make a default file
+			
+			// IF that file fails to load, make a default file
 			this.makeDefaultConfigFile(pathAndFile);
 
-			// try again
+			// try to load again
 			if( this.readConfigFromFile(pathAndFile) == false) {
 				return false;
 			}
