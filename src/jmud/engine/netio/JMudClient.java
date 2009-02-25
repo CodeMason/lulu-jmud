@@ -95,7 +95,7 @@ public class JMudClient {
 			this.disconnect();
 		}
 
-		System.err.println(this.cmdBuf.toString());
+		//System.err.println(this.cmdBuf.toString());
 
 		// If a valid command exists, then route it and generate a job.
 		if (!this.cmdBuf.hasNextCommand()) {
