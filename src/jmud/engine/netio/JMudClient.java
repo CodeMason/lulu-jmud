@@ -113,7 +113,7 @@ public class JMudClient {
 	public void sendCRLFs(int numberOfCRLFs) {
 		StringBuilder crlfs = new StringBuilder();
 		for (int i = 0; i < numberOfCRLFs; ++i) {
-			crlfs.append(JMudStatics.CRLF);
+			crlfs.append(JMudStatics.CRNL);
 		}
 		this.sendText(crlfs.toString());
 	}
@@ -122,7 +122,7 @@ public class JMudClient {
 	 * Send a CRLF to the client.
 	 */
 	public void sendCRLF() {
-		this.sendText(JMudStatics.CRLF);
+		this.sendText(JMudStatics.CRNL);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class JMudClient {
 	 * @param textToSend
 	 */
 	public void sendTextLn(String textToSend) {
-		this.sendText(textToSend + JMudStatics.CRLF);
+		this.sendText(textToSend + JMudStatics.CRNL);
 	}
 
 	/**

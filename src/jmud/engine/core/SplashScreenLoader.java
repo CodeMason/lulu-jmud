@@ -60,16 +60,16 @@ public class SplashScreenLoader {
 		}
 	}
 
-	private static final String DEFAULT_SPLASH_SCREEN = new StringBuffer().append(JMudStatics.CRLF).append(
-			"_________ _______           ______  ").append(JMudStatics.CRLF).append(
-			"\\__    _/(       )|\\     /|(  __  \\ ").append(JMudStatics.CRLF).append(
-			"   )  (  | () () || )   ( || (  \\  )").append(JMudStatics.CRLF).append(
-			"   |  |  | || || || |   | || |   ) |").append(JMudStatics.CRLF).append(
-			"   |  |  | |(_)| || |   | || |   | |").append(JMudStatics.CRLF).append(
-			"   |  |  | |   | || |   | || |   ) |").append(JMudStatics.CRLF).append(
-			"|\\_)  )  | )   ( || (___) || (__/  )").append(JMudStatics.CRLF).append(
-			"(____/   |/     \\|(_______)(______/ ").append(JMudStatics.CRLF).append("The Java Mud Framework.").append(
-			JMudStatics.CRLF).append(JMudStatics.CRLF).append("---------------------------------").append(
-			JMudStatics.CRLF).toString();
+	private static final String DEFAULT_SPLASH_SCREEN = new StringBuffer().append(JMudStatics.CRNL).append(
+			"_________ _______           ______  ").append(JMudStatics.CRNL).append(
+			"\\__    _/(       )|\\     /|(  __  \\ ").append(JMudStatics.CRNL).append(
+			"   )  (  | () () || )   ( || (  \\  )").append(JMudStatics.CRNL).append(
+			"   |  |  | || || || |   | || |   ) |").append(JMudStatics.CRNL).append(
+			"   |  |  | |(_)| || |   | || |   | |").append(JMudStatics.CRNL).append(
+			"   |  |  | |   | || |   | || |   ) |").append(JMudStatics.CRNL).append(
+			"|\\_)  )  | )   ( || (___) || (__/  )").append(JMudStatics.CRNL).append(
+			"(____/   |/     \\|(_______)(______/ ").append(JMudStatics.CRNL).append("The Java Mud Framework.").append(
+			JMudStatics.CRNL).append(JMudStatics.CRNL).append("---------------------------------").append(
+			JMudStatics.CRNL).toString();
 
 }

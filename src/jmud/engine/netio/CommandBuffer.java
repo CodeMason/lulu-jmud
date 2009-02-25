@@ -98,7 +98,7 @@ public class CommandBuffer {
     public void parseCommands() {
         int crIndex;
         String cmd;
-        char[] chars;
+//        char[] chars;
 
         synchronized (this.charBuffer) {
             crIndex = findCarriageReturnPos();
@@ -144,7 +144,7 @@ public class CommandBuffer {
 
     private String removeCRLF(String cmd) {
         cmd = cmd.replace(String.valueOf(JMudStatics.CR), "");
-        cmd = cmd.replace(String.valueOf(JMudStatics.LF), "");
+        cmd = cmd.replace(String.valueOf(JMudStatics.NL), "");
         return cmd;
     }
 
@@ -153,7 +153,7 @@ public class CommandBuffer {
     }
 
     private boolean nextCharIsLF(int crIndex) {
-        return this.charBuffer.get(crIndex + 1) == JMudStatics.LF;
+        return this.charBuffer.get(crIndex + 1) == JMudStatics.NL;
     }
 
     private boolean isLastChar(int crIndex) {
