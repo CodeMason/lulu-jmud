@@ -2,7 +2,6 @@ package jmud.engine.netio;
 
 import jmud.engine.core.JMudStatics;
 
-import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
